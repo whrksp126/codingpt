@@ -1,4 +1,4 @@
-package com.codingpt
+package com.ghmate.codingpt
 
 import com.facebook.react.ReactActivity
 import com.facebook.react.ReactActivityDelegate

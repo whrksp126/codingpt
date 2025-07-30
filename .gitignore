@@ -73,3 +73,24 @@ yarn-error.log
 !.yarn/releases
 !.yarn/sdks
 !.yarn/versions
+
+
+# env
+.env.local
+.env.dev
+.env.stg
+.env
+
+
+# Android
+android/app/debug.keystore
+android/app/build/
+
+# iOS
+ios/build/
+
+# macOS / 에디터
+*.swp
+*.swo
+.vscode/
+.watchmanconfig
