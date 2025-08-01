@@ -32,47 +32,45 @@
 
 
 import React, { useState } from 'react';
-import { SafeAreaView } from 'react-native';
-import { AuthProvider } from './src/contexts/AuthContext';
+import { SafeAreaView, ActivityIndicator, View } from 'react-native';
+
+// Context
+import { AuthProvider, useAuth } from './src/contexts/AuthContext';
 import { LessonProvider } from './src/contexts/LessonContext';
-import { UserProvider } from './src/contexts/UserContext';
-import "./global.css"; // nativewind
+import { useUser, UserProvider } from './src/contexts/UserContext';
 
 // Navigation
 import AuthNavigator from './src/navigation/AuthNavigator';
 import AppNavigator from './src/navigation/AppNavigator';
 
+import "./global.css"; // nativewind
 
-function App() {
-  const [isLoggedIn, setIsLoggedIn] = useState(false);
+function Main() {
+  const { isLoggedIn, loading } = useAuth();
 
-  const handleLoginSuccess = () => {
-    setIsLoggedIn(true);
-  };
+  if (loading) {
+    return (
+      <View className="flex-1 justify-center items-center bg-white">
+        <ActivityIndicator size="large" />
+      </View>
+    );
+  }
 
-  const handleLogout = () => {
-    setIsLoggedIn(false);
-  };
+  return (
+    <SafeAreaView className="flex-1 bg-gray-50">
+      {isLoggedIn ? <AppNavigator /> : <AuthNavigator />}
+    </SafeAreaView>
+  );
+}
 
+export default function App() {
   return (
     <UserProvider>
       <AuthProvider>
         <LessonProvider>
-          <SafeAreaView className="flex-1 bg-gray-50">
-            {isLoggedIn ? (
-              <AppNavigator onLogout={handleLogout} />
-            ) : (
-              <AuthNavigator onLoginSuccess={handleLoginSuccess} />
-            )}
-          </SafeAreaView>
+          <Main />
         </LessonProvider>
       </AuthProvider>
     </UserProvider>
   );
 }
-
-export default App;
-
-// export default function App() {
-//   return <Myclass />;
-// }

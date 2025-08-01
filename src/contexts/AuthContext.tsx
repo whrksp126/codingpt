@@ -1,88 +1,66 @@
-import React, { createContext, useState, ReactNode } from 'react';
+import React, { createContext, useContext, useEffect, useState, ReactNode } from 'react';
+import AsyncStorage from '@react-native-async-storage/async-storage';
+import BootSplash from 'react-native-bootsplash';
+import { authService } from '../services/authService';
 
-interface User {
-  id: string;
-  name: string;
-  email: string;
+// 로그인 상태 관리 인터페이스
+interface AuthContextProps {
+  isLoggedIn: boolean;
+  login: (accessToken: string, refreshToken: string) => Promise<void>;
+  logout: () => Promise<void>;
+  loading: boolean;
 }
 
-interface AuthContextType {
-  user: User | null;
-  isLoading: boolean;
-  login: (email: string, password: string) => Promise<void>;
-  signup: (name: string, email: string, password: string) => Promise<void>;
-  logout: () => void;
-}
+// 컨텍스트 생성
+const AuthContext = createContext<AuthContextProps>({
+  isLoggedIn: false,
+  login: async () => {},
+  logout: async () => {},
+  loading: true,
+});
 
-export const AuthContext = createContext<AuthContextType | undefined>(undefined);
+export const AuthProvider: React.FC<{ children: React.ReactNode }> = ({ children }) => {
+  const [isLoggedIn, setIsLoggedIn] = useState(false);
+  const [loading, setLoading] = useState(true);
 
-interface AuthProviderProps {
-  children: ReactNode;
-}
+  useEffect(() => {
+    const checkLogin = async () => {
+      try {
+        const token = await AsyncStorage.getItem('accessToken');
+        if (!token) return;
 
-export const AuthProvider: React.FC<AuthProviderProps> = ({ children }) => {
-  const [user, setUser] = useState<User | null>(null);
-  const [isLoading, setIsLoading] = useState(false);
+        const res = await authService.check(token);
+        if (res.success) {
+          setIsLoggedIn(true);
+        }
+      } catch (err) {
+        console.log('자동 로그인 실패:', err);
+      } finally {
+        setLoading(false);
+        await BootSplash.hide({ fade: true }); // ✅ 상태 판별 끝난 후 스플래시 종료
+      }
+    };
 
-  const login = async (email: string, password: string) => {
-    setIsLoading(true);
-    try {
-      // TODO: 실제 로그인 API 호출
-      console.log('로그인 시도:', email, password);
-      
-      // Mock user data
-      const mockUser: User = {
-        id: '1',
-        name: '사용자',
-        email: email,
-      };
-      
-      setUser(mockUser);
-    } catch (error) {
-      console.error('로그인 실패:', error);
-      throw error;
-    } finally {
-      setIsLoading(false);
-    }
+    checkLogin();
+  }, []);
+
+  const login = async (accessToken: string, refreshToken: string) => {
+    await AsyncStorage.setItem('accessToken', accessToken);
+    await AsyncStorage.setItem('refreshToken', refreshToken);
+    setIsLoggedIn(true);
   };
 
-  const signup = async (name: string, email: string, password: string) => {
-    setIsLoading(true);
-    try {
-      // TODO: 실제 회원가입 API 호출
-      console.log('회원가입 시도:', name, email, password);
-      
-      // Mock user data
-      const mockUser: User = {
-        id: '1',
-        name: name,
-        email: email,
-      };
-      
-      setUser(mockUser);
-    } catch (error) {
-      console.error('회원가입 실패:', error);
-      throw error;
-    } finally {
-      setIsLoading(false);
-    }
-  };
-
-  const logout = () => {
-    setUser(null);
-  };
-
-  const value: AuthContextType = {
-    user,
-    isLoading,
-    login,
-    signup,
-    logout,
+  const logout = async () => {
+    await authService.logout();
+    await AsyncStorage.multiRemove(['accessToken', 'refreshToken']);
+    setIsLoggedIn(false);
   };
 
   return (
-    <AuthContext.Provider value={value}>
+    <AuthContext.Provider value={{ isLoggedIn, login, logout, loading }}>
       {children}
     </AuthContext.Provider>
   );
-}; 
+};
+
+export const useAuth = () => useContext(AuthContext);

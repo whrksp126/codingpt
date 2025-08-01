@@ -3,61 +3,56 @@ import { View, Text, Alert, TouchableOpacity, Image, SafeAreaView } from 'react-
 import { GoogleSignin } from '@react-native-google-signin/google-signin';
 import Config from 'react-native-config';
 import AsyncStorage from '@react-native-async-storage/async-storage';
+
 import { useUser } from '../../contexts/UserContext';
+import { useAuth } from '../../contexts/AuthContext';
+
 import AuthStorage from '../../utils/storage';
 import { getTotalStudyDays } from '../../utils/heatmapUtils';
+
 import { authService } from '../../services/authService';
 import userService from '../../services/userService';
+
 import BootSplash from 'react-native-bootsplash';
 
 interface LoginScreenProps {
   navigation: any;
-  onLoginSuccess?: () => void;
 }
 
-const LoginScreen: React.FC<LoginScreenProps> = ({ navigation, onLoginSuccess }) => {
+const LoginScreen: React.FC<LoginScreenProps> = ({ navigation }) => {
   const [loading, setLoading] = useState(false);
-  const { setUser } = useUser(); // Context setter 불러오기
+  const { setUser } = useUser();
+  const { login } = useAuth(); // ✅ authContext 사용
 
   useEffect(() => {
     const init = async () => {
-      console.log('GOOGLE_WEB_CLIENT_ID', Config.GOOGLE_WEB_CLIENT_ID);
-      console.log('GOOGLE_IOS_CLIENT_ID', Config.GOOGLE_IOS_CLIENT_ID);
       GoogleSignin.configure({
-        webClientId: Config.GOOGLE_WEB_CLIENT_ID || 'your_web_client_id_here',
-        iosClientId: Config.GOOGLE_IOS_CLIENT_ID || 'your_ios_client_id_here',
+        webClientId: Config.GOOGLE_WEB_CLIENT_ID || '',
+        iosClientId: Config.GOOGLE_IOS_CLIENT_ID || '',
         offlineAccess: true,
       });
-  
-      // 스플래시 숨기기 (temp)
+
       await BootSplash.hide({ fade: true });
     };
-  
+
     init();
   }, []);
 
   const signInWithGoogle = async () => {
     setLoading(true);
     try {
-      console.log('signInWithGoogle');
-      await GoogleSignin.signOut();
-      console.log('signOut');
+      await GoogleSignin.signOut(); // 캐시 삭제 후 재로그인
       await GoogleSignin.hasPlayServices();
-      console.log('hasPlayServices');
       await GoogleSignin.signIn();
-      console.log('signIn');
       const tokens = await GoogleSignin.getTokens();
-      console.log('getTokens');
       const idToken = tokens.idToken;
-      console.log('idToken', idToken);
+
       if (!idToken) {
         Alert.alert('오류', 'ID Token이 존재하지 않습니다.');
-        setLoading(false);
         return;
       }
-      console.log('sendIdTokenToServer');
+
       await sendIdTokenToServer(idToken);
-      console.log('sendIdTokenToServer end');
     } catch (error) {
       console.error('Google 로그인 실패:', error);
       Alert.alert('로그인 실패', 'Google 로그인 중 오류가 발생했습니다.');
@@ -74,36 +69,29 @@ const LoginScreen: React.FC<LoginScreenProps> = ({ navigation, onLoginSuccess })
 
         if (!user) {
           Alert.alert('로그인 실패', '사용자 정보를 가져올 수 없습니다.');
-          return; // ❗ 로그인 흐름 중단
+          return;
         }
-        
-        // 1. 토큰 저장
-        await AsyncStorage.setItem('accessToken', accessToken);
-        await AsyncStorage.setItem('refreshToken', refreshToken);
 
-        // 2. 총 학습일수 불러오기 및 저장
+        // 1. 로그인 상태 반영 (context 내부에서 토큰 저장)
+        await login(accessToken, refreshToken); // ✅ 핵심 변경
+
+        // 2. 학습일수 저장
         let studyDays = 0;
         try {
           const heatmap = await userService.getStudyHeatmap();
           studyDays = getTotalStudyDays(heatmap);
           await AuthStorage.setStudyDays(studyDays);
-          console.log('총 학습일수 저장 완료:', studyDays);
         } catch (e) {
           console.warn('총 학습일수 저장 실패 (무시됨):', e);
         }
 
         // 3. 사용자 정보 저장
         const userWithStudyDays = { ...user, studyDays };
-        await AuthStorage.setUserData(userWithStudyDays); // AsyncStorage
-        setUser(userWithStudyDays); // Context 저장
+        await AuthStorage.setUserData(userWithStudyDays);
+        setUser(userWithStudyDays);
 
-
-        // 4. 다음 화면 이동
-        if (onLoginSuccess) {
-          onLoginSuccess();
-        } else {
-          navigation.replace('Home');
-        }
+        // 4. 홈으로 이동
+        navigation.replace('home'); // ✅ currentScreen이 home인 경우 AppNavigator로 진입
       } else {
         Alert.alert('로그인 실패', '서버 인증에 실패했습니다.');
       }

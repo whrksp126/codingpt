@@ -111,7 +111,17 @@ async function refreshAccessToken(): Promise<string | null> {
     if (!res.ok) throw new Error('재발급 실패');
 
     const data = await res.json();
-    return data.accessToken; // 새 토큰 반환
+    const newAccessToken = data.accessToken;
+    const newRefreshToken = data.refreshToken;
+
+    if (newAccessToken) {
+      await AsyncStorage.setItem('accessToken', newAccessToken);
+    }
+    if (newRefreshToken) {
+      await AsyncStorage.setItem('refreshToken', newRefreshToken);
+    }
+
+    return newAccessToken; // 새 토큰 반환
   } catch (err) {
     console.error('accessToken 재발급 실패:', err);
     return null;

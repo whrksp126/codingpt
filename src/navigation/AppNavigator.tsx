@@ -2,6 +2,9 @@ import React, { useState } from 'react';
 import { View, Text, TouchableOpacity, StyleSheet } from 'react-native';
 import { House, BookBookmark, Storefront, User } from 'phosphor-react-native';
 
+// Contetxt
+import { useAuth } from '../contexts/AuthContext';
+
 // Screens
 import HomeScreen from '../screens/HomeScreen';
 import MyPageScreen from '../screens/MyPageScreen';
@@ -12,13 +15,10 @@ import SectionScreen from '../screens/Lesson/SectionScreen';
 import SlideScreen from '../screens/Lesson/SlideScreen';
 import LoginScreen from '../screens/Auth/LoginScreen';
 
-interface AppNavigatorProps {
-  onLogout: () => void;
-}
-
-const AppNavigator: React.FC<AppNavigatorProps> = ({ onLogout }) => {
+const AppNavigator = () => {
   const [currentScreen, setCurrentScreen] = useState('home');
   const [navigationParams, setNavigationParams] = useState<any>({});
+  const { logout } = useAuth(); // ✅ context 사용
 
   const navigate = (screen: string, params?: any) => {
     setCurrentScreen(screen);
@@ -42,7 +42,7 @@ const AppNavigator: React.FC<AppNavigatorProps> = ({ onLogout }) => {
       case 'store':
         return <StoreScreen navigation={nav} />;
       case 'my':
-        return <MyPageScreen navigation={nav} onLogout={onLogout} />;
+        return <MyPageScreen navigation={nav} onLogout={logout} />; // 여기서만 context 함수 전달
       case 'lessonDetail':
         return <LessonDetailScreen navigation={nav} route={route} />;
       case 'section':
@@ -89,22 +89,15 @@ const AppNavigator: React.FC<AppNavigatorProps> = ({ onLogout }) => {
 
   return (
     <View style={styles.container}>
-      <View style={styles.content}>
-        {renderScreen()}
-      </View>
+      <View style={styles.content}>{renderScreen()}</View>
       {renderTabBar()}
     </View>
   );
 };
 
 const styles = StyleSheet.create({
-  container: {
-    flex: 1,
-    backgroundColor: '#F8F9FA',
-  },
-  content: {
-    flex: 1,
-  },
+  container: { flex: 1, backgroundColor: '#F8F9FA' },
+  content: { flex: 1 },
   tabBar: {
     flexDirection: 'row',
     backgroundColor: '#FFFFFF',
@@ -113,20 +106,9 @@ const styles = StyleSheet.create({
     height: 60,
     paddingHorizontal: 10,
   },
-  tabItem: {
-    flex: 1,
-    alignItems: 'center',
-    justifyContent: 'center',
-  },
-  tabText: {
-    fontSize: 10,
-    color: '#6C757D',
-    marginTop: 4,
-  },
-  activeTabText: {
-    color: '#FFC107',
-    fontWeight: '600',
-  },
+  tabItem: { flex: 1, alignItems: 'center', justifyContent: 'center' },
+  tabText: { fontSize: 10, color: '#6C757D', marginTop: 4 },
+  activeTabText: { color: '#FFC107', fontWeight: '600' },
 });
 
-export default AppNavigator; 
+export default AppNavigator;
