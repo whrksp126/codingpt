@@ -1,7 +1,12 @@
 import AsyncStorage from '@react-native-async-storage/async-storage';
 import Config from 'react-native-config';
+import { Platform } from 'react-native';
 // API 기본 설정
-const API_URL = Config.API_URL; 
+
+// 플랫폼별 API URL 설정
+const API_URL = Platform.OS === 'android' 
+  ? Config.ANDROID_API_URL 
+  : Config.IOS_API_URL; 
 
 // HTTP 메서드 타입
 type HttpMethod = 'GET' | 'POST' | 'PUT' | 'DELETE';
