@@ -11,16 +11,16 @@ import { authService } from '../services/authService';
 import userService from '../services/userService';
 import { Gear } from 'phosphor-react-native';
 import dayjs from 'dayjs';
+import { useAuth } from '../contexts/AuthContext';
 
 interface MyPageScreenProps {
   navigation: any;
-  onLogout: () => void;
 }
 
-const MyPageScreen: React.FC<MyPageScreenProps> = ({ navigation, onLogout }) => {
+const MyPageScreen: React.FC<MyPageScreenProps> = () => {
   const { user } = useUser(); // user 데이터
   const [heatmap, setHeatmap] = useState<Record<string, number>>({});
-
+  const { logout } = useAuth();
   useEffect(() => {
     const fetchHeatmap = async () => {
       try {
@@ -67,7 +67,7 @@ const MyPageScreen: React.FC<MyPageScreenProps> = ({ navigation, onLogout }) => 
               console.log('로그아웃 완료');
               
               // 4. App.tsx의 isLoggedIn 상태를 false로 변경
-              onLogout();
+              logout();
             } catch (error) {
               console.error('로그아웃 실패:', error);
               Alert.alert('오류', '로그아웃 중 오류가 발생했습니다.');

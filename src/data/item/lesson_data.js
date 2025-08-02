@@ -1,4 +1,4 @@
-const 상점에서_등록한_강의 = {
+export const html = {
     
   // 강의 정보
   id: 1,
@@ -13,15 +13,17 @@ const 상점에서_등록한_강의 = {
     // 강의에 등록된 클래스 목록, 클래스는 레슨이 여러개임
     // 독립된 class 데이터임, 상점의 아이템은 클래스를 참조함
     {
-        "class": "HTML 기초 강의",
+        "title": "HTML 기초 강의",
         "description": "HTML을 처음 접하는 입문자를 위한 기초 강의입니다. 웹 구조 이해부터 태그, 속성, 시맨틱 구조, 실습까지 HTML의 기본기를 탄탄하게 다집니다.",
+        "progress": 0,
         "sections": [
           {
-            "sectionTitle": "HTML이란 무엇인가?",
+            "title": "HTML이란 무엇인가?",
+            "progress" : 1,
             "lessons": [
               { 
                 "id" : "lesson_00001",
-                "lessonTitle": "웹과 브라우저의 동작 원리",
+                "title": "웹과 브라우저의 동작 원리",
                 "sliders" : [
                   {
                     "id": "slide_0001",
@@ -304,11 +306,12 @@ const 상점에서_등록한_강의 = {
                       }
                     ]
                   }
-                ]
+                ],
+                "isCompleted": true,
               },
               { 
                 "id" : "lesson_00002",
-                "lessonTitle": "HTML의 역할과 중요성",
+                "title": "HTML의 역할과 중요성",
                 "sliders" : [
                   {
                     "id": "slide_0007",
@@ -517,11 +520,12 @@ const 상점에서_등록한_강의 = {
                     ]
                   }
                                   
-                ]
+                ],
+                "isCompleted": false,
               },
               { 
                 "id": "lesson_00003",
-                "lessonTitle": "HTML 파일 구조 소개",
+                "title": "HTML 파일 구조 소개",
                 "sliders": [
                   {
                     "id": "slide_0001",
@@ -765,17 +769,19 @@ const 상점에서_등록한_강의 = {
                       }
                     ]
                   }                                                                                                
-                ]
+                ],
+                "isCompleted": false,
               }
             ],
             "concept": "# HTML이란 무엇인가?\n\nHTML(HyperText Markup Language)은 웹 페이지의 **기본 구조를 정의하는 마크업 언어**입니다. 우리가 웹에서 보는 모든 텍스트, 이미지, 버튼 등의 구성요소들은 HTML로 작성된 문서를 통해 브라우저가 해석하여 화면에 출력됩니다.\n\n---\n\n## 📌 웹과 브라우저의 동작 원리\n\n- 사용자가 웹 주소를 입력하면, **브라우저는 서버로부터 HTML 파일을 요청**합니다.\n- 받은 HTML을 **해석(parsing)** 하고, 여기에 포함된 **CSS, JS, 이미지 등의 리소스**도 추가로 로딩합니다.\n- 최종적으로 브라우저는 **렌더링 엔진**을 통해 시각적으로 사용자에게 페이지를 보여줍니다.\n\n---\n\n## 📌 HTML의 역할과 중요성\n\n- 콘텐츠의 **구조(Structure)** 를 정의합니다.\n- 웹 접근성 및 검색엔진 최적화(SEO)에 핵심적인 역할을 합니다.\n- CSS와 JavaScript와 함께 동작하여 **웹의 시각적 스타일**과 **동작**을 제어할 수 있도록 기반을 제공합니다.\n\n> 💡 HTML은 콘텐츠의 \"의미\"를 표현하는 언어입니다. 예: `<h1>`은 가장 중요한 제목이라는 의미를 가집니다.\n\n---\n\n## 📌 HTML 파일의 기본 구조\n\nHTML 문서는 일반적으로 아래와 같은 구조를 가집니다:\n\n```html\n<!DOCTYPE html>\n<html>\n  <head>\n    <meta charset=\"UTF-8\">\n    <title>문서 제목</title>\n  </head>\n  <body>\n    <h1>여기는 제목입니다</h1>\n    <p>여기는 단락 내용입니다</p>\n  </body>\n</html>\n```\n\n- `<!DOCTYPE html>`: HTML5 문서임을 선언\n- `<html>`: 문서 전체를 감싸는 루트 요소\n- `<head>`: 제목, 문자 인코딩, 외부 리소스 등 메타 정보\n- `<body>`: 사용자가 실제로 보게 되는 콘텐츠\n\n---\n\nHTML은 **웹의 뼈대**이며, CSS와 JS 없이도 의미 있는 콘텐츠를 표현할 수 있도록 설계되어 있습니다."
           },
           {
-            "sectionTitle": "HTML 기본 문법",
+            "title": "HTML 기본 문법",
+            "progress" : 0,
             "lessons": [
               { 
                 "id": "lesson_00004",
-                "lessonTitle": "HTML 주석 <!-- -->",
+                "title": "HTML 주석 <!-- -->",
                 "sliders": [
                   {
                     "id": "slide_0001",
@@ -918,11 +924,12 @@ const 상점에서_등록한_강의 = {
                       }
                     ]
                   }                                                                                
-                ]
+                ],
+                "isCompleted": false,
               },
               { 
                 "id": "lesson_00005",
-                "lessonTitle": "들여쓰기와 코드 정렬 규칙",
+                "title": "들여쓰기와 코드 정렬 규칙",
                 "sliders": [
                   {
                     "id": "slide_0001",
@@ -1048,11 +1055,12 @@ const 상점에서_등록한_강의 = {
                       }
                     ]
                   },                                                                                                
-                ]
+                ],
+                "isCompleted": false,
               },
               { 
                 "id": "lesson_00006",
-                "lessonTitle": "공백과 줄바꿈 처리",
+                "title": "공백과 줄바꿈 처리",
                 "sliders": [
                   {
                     "id": "slide_0001",
@@ -1155,17 +1163,19 @@ const 상점에서_등록한_강의 = {
                       }
                     ]
                   }                                               
-                ]
+                ],
+                "isCompleted": false,
               }
             ],
             "concept": "# HTML 기본 문법\n\nHTML을 작성할 때 지켜야 할 기본적인 규칙들을 알아봅시다. 이 규칙들을 따르면 코드가 깔끔해지고 다른 개발자들이 이해하기 쉬워집니다.\n\n---\n\n## 📌 HTML 주석 <!-- -->\n\n주석은 코드에 설명을 추가하거나 일시적으로 코드를 비활성화할 때 사용합니다.\n\n```html\n<!-- 이것은 주석입니다 -->\n<h1>제목</h1>\n<!-- \n  여러 줄로\n  주석을 작성할 수도 있습니다\n-->\n```\n\n> 💡 주석은 브라우저에서 보이지 않지만, 개발자가 코드를 이해하는 데 도움을 줍니다.\n\n---\n\n## 📌 들여쓰기와 코드 정렬 규칙\n\nHTML은 들여쓰기가 필수는 아니지만, 가독성을 위해 권장됩니다:\n\n```html\n<!DOCTYPE html>\n<html>\n  <head>\n    <title>제목</title>\n  </head>\n  <body>\n    <h1>메인 제목</h1>\n    <p>단락 내용</p>\n  </body>\n</html>\n```\n\n**들여쓰기 규칙:**\n- 보통 2칸 또는 4칸 공백 사용\n- 중첩된 요소는 부모보다 들여쓰기\n- 일관성 있게 사용하는 것이 중요\n\n---\n\n## 📌 공백과 줄바꿈 처리\n\nHTML에서 공백과 줄바꿈은 특별한 규칙이 있습니다:\n\n```html\n<p>이 텍스트는     여러 공백이 있어도\n하나의 공백으로 처리됩니다.</p>\n```\n\n**HTML 공백 처리 규칙:**\n- 연속된 공백은 하나로 합쳐짐\n- 줄바꿈도 공백으로 처리\n- `<pre>` 태그를 사용하면 원본 그대로 표시\n\n```html\n<pre>\n이 텍스트는\n원본 그대로\n표시됩니다.\n</pre>\n```\n\n> 💡 공백을 정확히 표현하려면 `&nbsp;` (non-breaking space)를 사용할 수 있습니다."
           },
           {
-            "sectionTitle": "HTML 문서의 기본 구조",
+            "title": "HTML 문서의 기본 구조",
+            "progress" : 0,
             "lessons": [
               { 
                 "id": "lesson_00007",
-                "lessonTitle": "<!DOCTYPE>과 <html> 태그",
+                "title": "<!DOCTYPE>과 <html> 태그",
                 "sliders": [
                   {
                     "modules": [
@@ -1262,11 +1272,12 @@ const 상점에서_등록한_강의 = {
                       }
                     ]
                   }
-                ]              
+                ],
+                "isCompleted": false,
               },
               { 
                 "id": "lesson_00008",
-                "lessonTitle": "<head>와 <body>의 의미",
+                "title": "<head>와 <body>의 의미",
                 "sliders": [
                   {
                     "modules": [
@@ -1346,11 +1357,12 @@ const 상점에서_등록한_강의 = {
                       }
                     ]
                   }
-                ]              
+                ],
+                "isCompleted": false,
               },
               { 
                 "id": "lesson_00009",
-                "lessonTitle": "메타 정보와 <title> 태그",
+                "title": "메타 정보와 <title> 태그",
                 "sliders": [
                   {
                     "modules": [
@@ -1425,27 +1437,29 @@ const 상점에서_등록한_강의 = {
                       }
                     ]
                   }
-                ]
-                
+                ],
+                "isCompleted": false,
               }
             ],
             "concept": "# HTML 문서의 기본 구조\n\n모든 HTML 문서는 일정한 구조를 따릅니다. 이 구조를 이해하면 웹 페이지가 어떻게 구성되는지 알 수 있습니다.\n\n---\n\n## 📌 <!DOCTYPE>과 <html> 태그\n\n**<!DOCTYPE html>**\n- HTML 문서의 첫 번째 줄에 위치\n- 브라우저에게 \"이 문서는 HTML5로 작성되었다\"고 알려줌\n- 대소문자 구분 없음 (HTML5에서는 `<!DOCTYPE html>`만 사용)\n\n**<html> 태그**\n- 모든 HTML 요소의 루트(최상위) 요소\n- `lang` 속성으로 언어 지정 가능\n\n```html\n<!DOCTYPE html>\n<html lang=\"ko\">\n  <!-- 모든 HTML 내용이 여기에 들어갑니다 -->\n</html>\n```\n\n---\n\n## 📌 <head>와 <body>의 의미\n\n**<head> 섹션**\n- 문서의 메타 정보를 담는 영역\n- 사용자에게 보이지 않는 정보들\n- 제목, 문자 인코딩, CSS/JS 링크 등\n\n**<body> 섹션**\n- 사용자가 실제로 보게 되는 콘텐츠\n- 텍스트, 이미지, 링크 등 모든 시각적 요소\n\n```html\n<!DOCTYPE html>\n<html>\n  <head>\n    <!-- 메타 정보들 -->\n  </head>\n  <body>\n    <!-- 사용자가 보는 콘텐츠 -->\n  </body>\n</html>\n```\n\n---\n\n## 📌 메타 정보와 <title> 태그\n\n**<title> 태그**\n- 브라우저 탭에 표시되는 제목\n- 검색 엔진에서도 중요한 역할\n- `<head>` 안에 반드시 포함되어야 함\n\n**<meta> 태그**\n- 문서의 다양한 메타 정보를 정의\n- 문자 인코딩, 뷰포트, 설명 등\n\n```html\n<head>\n  <meta charset=\"UTF-8\">\n  <meta name=\"viewport\" content=\"width=device-width, initial-scale=1.0\">\n  <meta name=\"description\" content=\"페이지 설명\">\n  <title>페이지 제목</title>\n</head>\n```\n\n**주요 메타 태그:**\n- `charset=\"UTF-8\"`: 문자 인코딩 (한글 지원)\n- `viewport`: 모바일 반응형 설정\n- `description`: 검색 결과에 표시될 설명\n\n> 💡 `<title>`은 검색 엔진 최적화(SEO)에 매우 중요합니다!"
           },
           {
-            "sectionTitle": "HTML 태그 속성 이해",
+            "title": "HTML 태그 속성 이해",
+            "progress" : 0,
             "lessons": [
-              { "lessonTitle": "속성이란 무엇인가?" },
-              { "lessonTitle": "자주 쓰이는 속성들 (id, class, title, alt)" },
-              { "lessonTitle": "글로벌 속성과 커스텀 속성" }
+              { "title": "속성이란 무엇인가?" },
+              { "title": "자주 쓰이는 속성들 (id, class, title, alt)" },
+              { "title": "글로벌 속성과 커스텀 속성" }
             ],
             "concept": "# HTML 태그 속성 이해\n\nHTML 태그는 속성(attributes)을 가질 수 있습니다. 속성은 태그의 동작이나 모양을 추가로 정의해주는 역할을 합니다.\n\n---\n\n## 📌 속성이란 무엇인가?\n\n**속성(Attribute)**\n- HTML 요소에 추가 정보를 제공\n- `이름=\"값\"` 형태로 작성\n- 시작 태그에만 위치\n\n```html\n<img src=\"image.jpg\" alt=\"설명\" width=\"300\" height=\"200\">\n```\n\n위 예시에서:\n- `src`: 이미지 파일 경로\n- `alt`: 대체 텍스트\n- `width`, `height`: 크기 설정\n\n**속성 작성 규칙:**\n- 속성명은 소문자 권장\n- 값은 따옴표로 감싸기 (권장)\n- 여러 속성은 공백으로 구분\n\n---\n\n## 📌 자주 쓰이는 속성들\n\n**id 속성**\n- 요소에 고유한 식별자 부여\n- 페이지 내에서 하나만 존재해야 함\n- CSS나 JavaScript에서 특정 요소를 선택할 때 사용\n\n```html\n<h1 id=\"main-title\">메인 제목</h1>\n```\n\n**class 속성**\n- 여러 요소에 같은 스타일 적용\n- 공백으로 여러 클래스 지정 가능\n- CSS에서 스타일링에 주로 사용\n\n```html\n<p class=\"highlight important\">중요한 내용</p>\n```\n\n**title 속성**\n- 마우스 오버 시 툴팁 표시\n- 요소에 대한 추가 설명 제공\n\n```html\n<a href=\"#\" title=\"클릭하면 상세 정보를 볼 수 있습니다\">더보기</a>\n```\n\n**alt 속성**\n- 이미지가 로드되지 않을 때 표시될 텍스트\n- 스크린 리더 사용자를 위한 접근성\n\n```html\n<img src=\"photo.jpg\" alt=\"아름다운 풍경 사진\">\n```\n\n---\n\n## 📌 글로벌 속성과 커스텀 속성\n\n**글로벌 속성**\n- 모든 HTML 요소에서 사용 가능한 속성\n- `id`, `class`, `title`, `style` 등\n\n**커스텀 속성 (data-*)**\n- 개발자가 자유롭게 정의 가능\n- JavaScript에서 데이터 저장용으로 활용\n\n```html\n<div data-user-id=\"123\" data-role=\"admin\">사용자 정보</div>\n```\n\n> 💡 속성은 HTML을 더욱 유연하고 강력하게 만들어줍니다!"
           },
           {
-            "sectionTitle": "자주 쓰이는 HTML 전역 속성",
+            "title": "자주 쓰이는 HTML 전역 속성",
+            "progress" : 0,
             "lessons": [
               {
                 "id": "lesson_00010",
-                "lessonTitle": "tabindex로 키보드 포커스 제어",
+                "title": "tabindex로 키보드 포커스 제어",
                 "sliders": [
                   {
                     "modules": [
@@ -1515,135 +1529,150 @@ const 상점에서_등록한_강의 = {
                       }
                     ]
                   }
-                ]              
+                ],
+                "isCompleted": false,            
               },
               { 
                 "id": "lesson_00011",
-                "lessonTitle": "data-* 속성으로 JS와 데이터 연결",
+                "title": "data-* 속성으로 JS와 데이터 연결",
                 "sliders": [
                   
-                ]
+                ],
+                "isCompleted": false,            
               },
-              { "lessonTitle": "숨김 처리: hidden 속성" },
-              { "lessonTitle": "사용자 수정 허용: contenteditable" }
+              { "title": "숨김 처리: hidden 속성" },
+              { "title": "사용자 수정 허용: contenteditable" }
             ],
             "concept": "# 자주 쓰이는 HTML 전역 속성\n\n전역 속성은 모든 HTML 요소에서 사용할 수 있는 속성입니다. 이들을 활용하면 더욱 풍부한 웹 페이지를 만들 수 있습니다.\n\n---\n\n## 📌 tabindex로 키보드 포커스 제어\n\n**tabindex 속성**\n- 키보드 Tab 키로 요소 간 이동 순서 제어\n- 접근성과 사용자 경험 향상에 중요\n\n```html\n<input type=\"text\" tabindex=\"1\" placeholder=\"첫 번째 입력\">\n<input type=\"text\" tabindex=\"2\" placeholder=\"두 번째 입력\">\n<button tabindex=\"3\">제출</button>\n```\n\n**tabindex 값의 의미:**\n- `0`: 기본 순서 (권장)\n- `양수`: 지정된 순서로 이동\n- `-1`: Tab으로 접근 불가, JavaScript로만 포커스 가능\n\n> 💡 tabindex는 접근성을 위해 매우 중요한 속성입니다!\n\n---\n\n## 📌 data-* 속성으로 JS와 데이터 연결\n\n**data-* 속성**\n- 개발자가 자유롭게 정의 가능한 커스텀 속성\n- JavaScript에서 데이터 저장 및 접근용\n\n```html\n<div data-user-id=\"123\" data-role=\"admin\" data-status=\"active\">\n  사용자 정보\n</div>\n```\n\n**JavaScript에서 접근:**\n```javascript\nconst element = document.querySelector('div');\nconsole.log(element.dataset.userId); // \"123\"\nconsole.log(element.dataset.role); // \"admin\"\n```\n\n**사용 예시:**\n- 사용자 정보 저장\n- 설정값 전달\n- 동적 콘텐츠 관리\n\n---\n\n## 📌 숨김 처리: hidden 속성\n\n**hidden 속성**\n- 요소를 화면에서 숨김\n- 스크린 리더에서도 접근 불가\n- CSS `display: none`과 유사\n\n```html\n<div hidden>이 내용은 보이지 않습니다</div>\n<p>이 내용은 보입니다</p>\n```\n\n**hidden vs CSS display:none:**\n- `hidden`: 의미적으로 숨김 (권장)\n- `display: none`: 시각적으로만 숨김\n\n**조건부 표시 예시:**\n```html\n<div id=\"message\" hidden>메시지가 없습니다</div>\n```\n\n---\n\n## 📌 사용자 수정 허용: contenteditable\n\n**contenteditable 속성**\n- 사용자가 요소 내용을 직접 편집 가능\n- 간단한 텍스트 에디터 구현에 활용\n\n```html\n<div contenteditable=\"true\">\n  이 텍스트를 클릭하면 편집할 수 있습니다\n</div>\n```\n\n**contenteditable 값:**\n- `true`: 편집 가능\n- `false`: 편집 불가 (기본값)\n- `inherit`: 부모 요소 상속\n\n**실용적 활용:**\n- 메모장 기능\n- 실시간 협업 도구\n- 사용자 피드백 폼\n\n> 💡 contenteditable은 사용자 경험을 향상시키는 강력한 기능입니다!"
           },
           {
-            "sectionTitle": "텍스트 콘텐츠 태그",
+            "title": "텍스트 콘텐츠 태그",
+            "progress" : 0,
             "lessons": [
-              { "lessonTitle": "제목을 만드는 <h1>~<h6>" },
-              { "lessonTitle": "단락을 만드는 <p>와 줄바꿈 <br>" },
-              { "lessonTitle": "강조 태그 <strong>, <em>" },
-              { "lessonTitle": "기타 텍스트 관련 태그들" }
+              { "title": "제목을 만드는 <h1>~<h6>" },
+              { "title": "단락을 만드는 <p>와 줄바꿈 <br>" },
+              { "title": "강조 태그 <strong>, <em>" },
+              { "title": "기타 텍스트 관련 태그들" }
             ],
             "concept": "# 텍스트 콘텐츠 태그\n\n웹 페이지의 텍스트 콘텐츠를 구조화하고 의미를 부여하는 HTML 태그들을 알아봅시다.\n\n---\n\n## 📌 제목을 만드는 <h1>~<h6>\n\n**제목 태그의 계층 구조**\n- `<h1>`: 가장 중요한 제목 (페이지당 하나 권장)\n- `<h2>`: 주요 섹션 제목\n- `<h3>`: 하위 섹션 제목\n- `<h4>`, `<h5>`, `<h6>`: 더 세분화된 제목\n\n```html\n<h1>웹 개발 기초</h1>\n<h2>HTML 기초</h2>\n<h3>HTML 태그란?</h3>\n<h4>기본 태그들</h4>\n```\n\n**제목 사용 원칙:**\n- 논리적 순서로 사용 (h1 → h2 → h3)\n- 건너뛰지 않기 (h1 다음에 h3 사용 금지)\n- 검색 엔진 최적화(SEO)에 중요\n\n> 💡 제목 태그는 웹 페이지의 구조를 나타내는 중요한 역할을 합니다!\n\n---\n\n## 📌 단락을 만드는 <p>와 줄바꿈 <br>\n\n**<p> 태그 (Paragraph)**\n- 텍스트의 단락을 정의\n- 자동으로 위아래 여백 추가\n- 의미적으로 연결된 텍스트 그룹\n\n```html\n<p>첫 번째 단락입니다. 이 내용은 하나의 의미 단위입니다.</p>\n<p>두 번째 단락입니다. 새로운 주제나 내용을 시작합니다.</p>\n```\n\n**<br> 태그 (Line Break)**\n- 강제 줄바꿈\n- 단락 구분이 아닌 단순 줄바꿈\n- 시(poetry)나 주소 등에서 활용\n\n```html\n<p>첫 번째 줄<br>두 번째 줄<br>세 번째 줄</p>\n```\n\n**언제 사용할까?**\n- `<p>`: 새로운 주제나 내용 시작\n- `<br>`: 같은 내용 내에서 줄바꿈만 필요\n\n---\n\n## 📌 강조 태그 <strong>, <em>\n\n**<strong> 태그**\n- **강한 강조** (볼드체)\n- 매우 중요한 내용\n- 스크린 리더에서 강조해서 읽음\n\n**<em> 태그**\n- *약한 강조* (이탤릭체)\n- 특별한 의미나 어조\n- 스크린 리더에서 어조 변화로 읽음\n\n```html\n<p>이것은 <strong>매우 중요한</strong> 내용입니다.</p>\n<p>그리고 이것은 <em>특별한 의미</em>를 가진 내용입니다.</p>\n```\n\n**시각적 vs 의미적:**\n- `<b>`, `<i>`: 시각적 스타일만 (권장하지 않음)\n- `<strong>`, `<em>`: 의미적 강조 (권장)\n\n---\n\n## 📌 기타 텍스트 관련 태그들\n\n**<mark> 태그**\n- 하이라이트 표시\n- 검색 결과에서 키워드 강조 등\n\n```html\n<p>검색 결과: <mark>HTML</mark>에 대한 정보입니다.</p>\n```\n\n**<small> 태그**\n- 작은 텍스트 (저작권, 면책조항 등)\n- 의미적으로 덜 중요한 내용\n\n```html\n<p>본문 내용</p>\n<small>© 2024 모든 권리 보유</small>\n```\n\n**<code> 태그**\n- 인라인 코드 표시\n- 프로그래밍 코드나 명령어\n\n```html\n<p>HTML에서 <code>&lt;h1&gt;</code> 태그를 사용합니다.</p>\n```\n\n**<pre> 태그**\n- 미리 포맷된 텍스트\n- 공백과 줄바꿈 그대로 유지\n- 코드 블록에 활용\n\n```html\n<pre>\nfunction hello() {\n  console.log(\"Hello World!\");\n}\n</pre>\n```\n\n> 💡 각 태그는 의미를 가지고 있으므로, 단순한 스타일링보다는 의미에 맞게 사용하는 것이 중요합니다!"
           },
           {
-            "sectionTitle": "링크와 이미지",
+            "title": "링크와 이미지",
+            "progress" : 0,
             "lessons": [
-              { "lessonTitle": "링크를 만드는 <a> 태그" },
-              { "lessonTitle": "이미지를 삽입하는 <img> 태그" },
-              { "lessonTitle": "상대경로 vs 절대경로" }
+              { "title": "링크를 만드는 <a> 태그" },
+              { "title": "이미지를 삽입하는 <img> 태그" },
+              { "title": "상대경로 vs 절대경로" }
             ],
             "concept": "# 링크와 이미지\n\n웹의 핵심 기능인 링크와 이미지를 다루는 HTML 태그들을 알아봅시다.\n\n---\n\n## 📌 링크를 만드는 <a> 태그\n\n**<a> 태그 (Anchor)**\n- 웹 페이지 간 연결을 만드는 태그\n- 하이퍼링크의 기본 요소\n\n```html\n<a href=\"https://www.example.com\">외부 사이트로 이동</a>\n```\n\n**주요 속성들:**\n- `href`: 링크 주소 (필수)\n- `target`: 링크 열기 방식\n- `title`: 툴팁 텍스트\n\n**target 속성 값:**\n- `_self`: 현재 창에서 열기 (기본값)\n- `_blank`: 새 창/탭에서 열기\n- `_parent`: 부모 프레임에서 열기\n- `_top`: 최상위 창에서 열기\n\n```html\n<a href=\"https://example.com\" target=\"_blank\" title=\"새 창에서 열기\">\n  새 창에서 열기\n</a>\n```\n\n**내부 링크 (앵커 링크):**\n```html\n<h2 id=\"section1\">섹션 1</h2>\n<a href=\"#section1\">섹션 1으로 이동</a>\n```\n\n> 💡 링크는 웹의 핵심 기능이므로 접근성과 사용자 경험을 고려해야 합니다!\n\n---\n\n## 📌 이미지를 삽입하는 <img> 태그\n\n**<img> 태그**\n- 웹 페이지에 이미지를 삽입\n- 빈 태그 (닫는 태그 없음)\n\n```html\n<img src=\"image.jpg\" alt=\"이미지 설명\">\n```\n\n**필수 속성:**\n- `src`: 이미지 파일 경로\n- `alt`: 대체 텍스트 (접근성 필수)\n\n**추가 속성들:**\n- `width`, `height`: 크기 지정\n- `title`: 툴팁 텍스트\n- `loading`: 로딩 방식\n\n```html\n<img src=\"photo.jpg\" \n     alt=\"아름다운 풍경 사진\" \n     width=\"300\" \n     height=\"200\" \n     title=\"클릭하면 확대\">\n```\n\n**alt 속성의 중요성:**\n- 이미지 로드 실패 시 표시\n- 스크린 리더 사용자를 위한 설명\n- 검색 엔진 최적화(SEO)\n\n**좋은 alt 텍스트 예시:**\n- ❌ `alt=\"이미지\"`\n- ✅ `alt=\"푸른 하늘과 흰 구름이 있는 풍경 사진\"`\n\n---\n\n## 📌 상대경로 vs 절대경로\n\n**절대경로 (Absolute Path)**\n- 웹사이트의 루트부터 시작하는 전체 주소\n- 항상 같은 위치를 가리킴\n\n```html\n<img src=\"https://www.example.com/images/logo.png\">\n<a href=\"https://www.google.com\">구글</a>\n```\n\n**상대경로 (Relative Path)**\n- 현재 파일 위치를 기준으로 한 경로\n- 파일 구조에 따라 경로가 달라짐\n\n```html\n<!-- 같은 폴더의 파일 -->\n<img src=\"image.jpg\">\n\n<!-- 하위 폴더의 파일 -->\n<img src=\"images/photo.jpg\">\n\n<!-- 상위 폴더의 파일 -->\n<img src=\"../images/logo.png\">\n\n<!-- 루트 폴더의 파일 -->\n<img src=\"/images/banner.jpg\">\n```\n\n**경로 기호:**\n- `./`: 현재 폴더 (생략 가능)\n- `../`: 상위 폴더\n- `/`: 루트 폴더\n\n**언제 어떤 것을 사용할까?**\n- **절대경로**: 외부 사이트 링크, CDN 이미지\n- **상대경로**: 같은 사이트 내 파일들\n\n> 💡 상대경로는 사이트 이전 시에도 유지되므로 내부 파일에는 상대경로를 권장합니다!"
           },
           {
-            "sectionTitle": "목록과 표",
+            "title": "목록과 표",
+            "progress" : 0,
             "lessons": [
-              { "lessonTitle": "순서 있는 목록 <ol>" },
-              { "lessonTitle": "순서 없는 목록 <ul>" },
-              { "lessonTitle": "목록 아이템 <li>" },
-              { "lessonTitle": "표를 만드는 <table> 구조" },
-              { "lessonTitle": "<tr>, <td>, <th>의 차이점" }
+              { "title": "순서 있는 목록 <ol>" },
+              { "title": "순서 없는 목록 <ul>" },
+              { "title": "목록 아이템 <li>" },
+              { "title": "표를 만드는 <table> 구조" },
+              { "title": "<tr>, <td>, <th>의 차이점" }
             ],
             "concept": "# 목록과 표\n\nHTML에서 정보를 구조적으로 표현할 때 목록과 표를 자주 사용합니다. 각각의 태그가 어떤 역할을 하는지 알아봅시다.\n\n---\n\n## 📌 순서 있는 목록 `<ol>`\n\n- `<ol>`(ordered list)은 항목에 번호가 매겨진 목록을 만듭니다.\n- 각 항목은 `<li>`(list item)로 작성합니다.\n\n```html\n<ol>\n  <li>첫 번째 항목</li>\n  <li>두 번째 항목</li>\n  <li>세 번째 항목</li>\n</ol>\n```\n\n> 💡 자동으로 1, 2, 3... 번호가 붙습니다. `type` 속성으로 숫자/알파벳 등 스타일 변경 가능!\n\n---\n\n## 📌 순서 없는 목록 `<ul>`\n\n- `<ul>`(unordered list)은 순서가 없는 점(•) 목록을 만듭니다.\n- 마찬가지로 각 항목은 `<li>`로 작성합니다.\n\n```html\n<ul>\n  <li>사과</li>\n  <li>바나나</li>\n  <li>오렌지</li>\n</ul>\n```\n\n> 💡 `type` 속성으로 원, 네모 등 마커 모양을 바꿀 수 있습니다.\n\n---\n\n## 📌 목록 아이템 `<li>`\n\n- `<li>`는 `<ol>` 또는 `<ul>` 안에서만 사용합니다.\n- 한 목록 안에 여러 `<li>`를 넣어 항목을 나열합니다.\n\n```html\n<ul>\n  <li>HTML</li>\n  <li>CSS</li>\n  <li>JavaScript</li>\n</ul>\n```\n\n---\n\n## 📌 표를 만드는 `<table>` 구조\n\n- `<table>`은 행과 열로 이루어진 표를 만듭니다.\n- `<tr>`(table row): 표의 한 행\n- `<td>`(table data): 표의 데이터 셀\n- `<th>`(table header): 표의 제목 셀(굵게, 가운데 정렬)\n\n```html\n<table>\n  <tr>\n    <th>이름</th>\n    <th>나이</th>\n  </tr>\n  <tr>\n    <td>홍길동</td>\n    <td>25</td>\n  </tr>\n  <tr>\n    <td>김영희</td>\n    <td>30</td>\n  </tr>\n</table>\n```\n\n> 💡 표는 데이터를 정리해서 보여줄 때 유용합니다. `<caption>` 태그로 표 제목도 추가할 수 있습니다.\n\n---\n\n## 📌 `<tr>`, `<td>`, `<th>`의 차이점\n\n- `<tr>`: 표의 한 줄(행)을 만듭니다.\n- `<td>`: 일반 데이터 셀(내용)\n- `<th>`: 제목 셀(굵게, 가운데 정렬, 보통 첫 행이나 첫 열에 사용)\n\n```html\n<tr>\n  <th>과목</th>\n  <th>점수</th>\n</tr>\n<tr>\n  <td>수학</td>\n  <td>95</td>\n</tr>\n```\n\n> 💡 `<th>`는 접근성(스크린 리더 등)에도 도움이 됩니다. 표를 만들 때는 구조를 명확히 하는 것이 중요합니다!"
           },
           {
-            "sectionTitle": "HTML 폼 기본",
+            "title": "HTML 폼 기본",
+            "progress" : 0,
             "lessons": [
-              { "lessonTitle": "<form>의 역할" },
-              { "lessonTitle": "입력 필드 <input>과 다양한 타입" },
-              { "lessonTitle": "<label>, <textarea>, <select>" },
-              { "lessonTitle": "폼 전송과 submit 동작 이해" }
+              { "title": "<form>의 역할" },
+              { "title": "입력 필드 <input>과 다양한 타입" },
+              { "title": "<label>, <textarea>, <select>" },
+              { "title": "폼 전송과 submit 동작 이해" }
             ],
             "concept": "# HTML 폼 기본\n\nHTML 폼은 사용자로부터 데이터를 입력받아 서버로 전송하는 역할을 합니다. 회원가입, 로그인, 검색 등 다양한 웹 서비스에서 필수적으로 사용됩니다.\n\n---\n\n## 📌 <form>의 역할\n\n- `<form>` 태그는 입력 필드, 버튼 등 폼 요소들을 감싸는 컨테이너입니다.\n- `action` 속성: 데이터를 전송할 서버의 URL 지정\n- `method` 속성: 데이터 전송 방식(GET/POST) 지정\n\n```html\n<form action=\"/submit\" method=\"post\">\n  <!-- 입력 필드들 -->\n</form>\n```\n\n---\n\n## 📌 입력 필드 <input>과 다양한 타입\n\n- `<input>` 태그는 한 줄짜리 입력 필드를 만듭니다.\n- `type` 속성으로 다양한 입력 형태 지정 가능\n\n| 타입         | 설명                |\n|--------------|---------------------|\n| text         | 일반 텍스트 입력    |\n| password     | 비밀번호 입력       |\n| email        | 이메일 입력         |\n| number       | 숫자 입력           |\n| checkbox     | 체크박스            |\n| radio        | 라디오 버튼         |\n| file         | 파일 업로드         |\n| submit       | 폼 제출 버튼        |\n\n```html\n<input type=\"text\" placeholder=\"이름 입력\">\n<input type=\"password\" placeholder=\"비밀번호 입력\">\n<input type=\"email\" placeholder=\"이메일 입력\">\n<input type=\"checkbox\"> 동의합니다\n```\n\n---\n\n## 📌 <label>, <textarea>, <select>\n\n- `<label>`: 입력 필드에 대한 설명(접근성 향상)\n- `<textarea>`: 여러 줄 텍스트 입력\n- `<select>`: 드롭다운 목록\n\n```html\n<label for=\"username\">아이디</label>\n<input id=\"username\" type=\"text\">\n\n<label for=\"bio\">자기소개</label>\n<textarea id=\"bio\" rows=\"4\"></textarea>\n\n<label for=\"job\">직업</label>\n<select id=\"job\">\n  <option>학생</option>\n  <option>개발자</option>\n  <option>디자이너</option>\n</select>\n```\n\n---\n\n## 📌 폼 전송과 submit 동작 이해\n\n- `<button type=\"submit\">` 또는 `<input type=\"submit\">`으로 폼을 전송\n- 폼 제출 시 입력값이 서버로 전송됨\n- 기본 동작: 페이지 새로고침\n- JavaScript로 동작 제어 가능\n\n```html\n<form action=\"/login\" method=\"post\">\n  <input type=\"text\" name=\"user\">\n  <input type=\"password\" name=\"pw\">\n  <button type=\"submit\">로그인</button>\n</form>\n```\n\n> 💡 폼은 웹에서 사용자와 상호작용하는 가장 기본적인 방법입니다. 각 입력 요소의 역할과 속성을 잘 이해해두세요!"
           },
           {
-            "sectionTitle": "폼 입력 검증 속성",
+            "title": "폼 입력 검증 속성",
+            "progress" : 0,
             "lessons": [
-              { "lessonTitle": "필수 입력 처리: required" },
-              { "lessonTitle": "정규표현식 검증: pattern" },
-              { "lessonTitle": "입력 길이 제한: minlength, maxlength" },
-              { "lessonTitle": "숫자 범위 제한: min, max" }
+              { "title": "필수 입력 처리: required" },
+              { "title": "정규표현식 검증: pattern" },
+              { "title": "입력 길이 제한: minlength, maxlength" },
+              { "title": "숫자 범위 제한: min, max" }
             ],
             "concept": "# 폼 입력 검증 속성\n\nHTML 폼에서 입력값을 검증하는 다양한 속성들을 알아봅시다. 이 속성들을 활용하면 자바스크립트 없이도 기본적인 입력 검증이 가능합니다.\n\n---\n\n## 📌 필수 입력 처리: `required`\n\n- `required` 속성을 사용하면 해당 입력 필드는 반드시 값을 입력해야 합니다.\n- 값이 비어 있으면 폼이 제출되지 않고, 브라우저가 경고 메시지를 표시합니다.\n\n```html\n<input type=\"text\" required placeholder=\"이름을 입력하세요\">\n```\n\n---\n\n## 📌 정규표현식 검증: `pattern`\n\n- `pattern` 속성에 정규표현식을 지정하면 입력값이 해당 패턴과 일치해야만 폼이 제출됩니다.\n- 이메일, 전화번호, 특정 형식의 값 검증에 유용합니다.\n\n```html\n<input type=\"text\" pattern=\"[0-9]{3}-[0-9]{4}-[0-9]{4}\" placeholder=\"010-1234-5678\">\n```\n\n---\n\n## 📌 입력 길이 제한: `minlength`, `maxlength`\n\n- `minlength`: 입력값의 최소 길이 지정\n- `maxlength`: 입력값의 최대 길이 지정\n\n```html\n<input type=\"password\" minlength=\"8\" maxlength=\"16\" placeholder=\"8~16자 비밀번호\">\n```\n\n---\n\n## 📌 숫자 범위 제한: `min`, `max`\n\n- 숫자 입력 필드에서 입력 가능한 최소/최대값을 지정할 수 있습니다.\n\n```html\n<input type=\"number\" min=\"1\" max=\"100\" placeholder=\"1~100 사이 숫자 입력\">\n```\n\n> 💡 위 속성들은 브라우저에서 기본적으로 검증해주므로, 사용자 경험과 보안을 위해 적극적으로 활용하세요!"
           },
           {
-            "sectionTitle": "멀티미디어 태그 활용",
+            "title": "멀티미디어 태그 활용",
+            "progress" : 0,
             "lessons": [
-              { "lessonTitle": "<audio> 태그로 소리 넣기" },
-              { "lessonTitle": "<video> 태그로 영상 넣기" },
-              { "lessonTitle": "controls, autoplay, loop 속성 이해" }
+              { "title": "<audio> 태그로 소리 넣기" },
+              { "title": "<video> 태그로 영상 넣기" },
+              { "title": "controls, autoplay, loop 속성 이해" }
             ],
             "concept": "# 멀티미디어 태그 활용\n\nHTML5에서는 오디오와 비디오를 손쉽게 웹페이지에 삽입할 수 있습니다. 대표적인 멀티미디어 태그와 주요 속성을 알아봅시다.\n\n---\n\n## 📌 `<audio>` 태그로 소리 넣기\n\n- `<audio>` 태그는 음악, 효과음 등 오디오 파일을 재생할 수 있습니다.\n- `src` 속성에 오디오 파일 경로를 지정합니다.\n\n```html\n<audio src=\"music.mp3\" controls></audio>\n```\n\n---\n\n## 📌 `<video>` 태그로 영상 넣기\n\n- `<video>` 태그는 동영상 파일을 삽입할 때 사용합니다.\n- `src` 속성에 비디오 파일 경로를 지정합니다.\n\n```html\n<video src=\"movie.mp4\" controls width=\"400\"></video>\n```\n\n---\n\n## 📌 controls, autoplay, loop 속성 이해\n\n- `controls`: 재생/일시정지 등 기본 컨트롤러 표시\n- `autoplay`: 페이지 로드 시 자동 재생 (음소거 필요할 수 있음)\n- `loop`: 반복 재생\n\n```html\n<audio src=\"sound.mp3\" controls autoplay loop></audio>\n<video src=\"clip.mp4\" controls autoplay loop muted></video>\n```\n\n> 💡 멀티미디어 태그는 접근성을 위해 `controls` 속성을 기본으로 사용하는 것이 좋습니다!"
           },
           {
-            "sectionTitle": "HTML5 주요 태그 소개",
+            "title": "HTML5 주요 태그 소개",
+            "progress" : 0,
             "lessons": [
-              { "lessonTitle": "<details>, <summary>로 FAQ 만들기" },
-              { "lessonTitle": "<mark>, <time>, <meter> 등 특수 태그" }
+              { "title": "<details>, <summary>로 FAQ 만들기" },
+              { "title": "<mark>, <time>, <meter> 등 특수 태그" }
             ],
             "concept": "# HTML5 주요 태그 소개\n\nHTML5에서 새롭게 추가된 다양한 태그들을 알아봅시다. 이 태그들은 웹페이지의 기능성과 의미를 더욱 풍부하게 만들어줍니다.\n\n---\n\n## 📌 `<details>`, `<summary>`로 FAQ 만들기\n\n- `<details>` 태그는 접었다 펼 수 있는 영역을 만듭니다.\n- `<summary>` 태그는 제목 역할을 하며, 클릭 시 내용을 펼칩니다.\n\n```html\n<details>\n  <summary>자주 묻는 질문</summary>\n  <p>여기에 답변이 들어갑니다.</p>\n</details>\n```\n\n---\n\n## 📌 `<mark>`, `<time>`, `<meter>` 등 특수 태그\n\n- `<mark>`: 텍스트 하이라이트(검색 결과 등)\n- `<time>`: 날짜/시간 정보 표현\n- `<meter>`: 범위 내의 측정값(진행률, 점수 등)\n\n```html\n<p>검색 결과: <mark>HTML</mark> 태그</p>\n<time datetime=\"2024-06-01\">2024년 6월 1일</time>\n<meter value=\"0.7\">70%</meter>\n```\n\n> 💡 HTML5 태그를 활용하면 의미와 기능이 풍부한 웹페이지를 만들 수 있습니다!"
           },
           {
-            "sectionTitle": "HTML에서 시맨틱 태그",
+            "title": "HTML에서 시맨틱 태그",
+            "progress" : 0,
             "lessons": [
-              { "lessonTitle": "<header>, <footer>, <main>" },
-              { "lessonTitle": "<section>, <article>, <nav>" },
-              { "lessonTitle": "시맨틱 태그가 왜 중요한가?" }
+              { "title": "<header>, <footer>, <main>" },
+              { "title": "<section>, <article>, <nav>" },
+              { "title": "시맨틱 태그가 왜 중요한가?" }
             ],
             "concept": "# HTML에서 시맨틱 태그\n\n시맨틱 태그는 웹페이지의 구조와 의미를 명확하게 표현하는 태그입니다. 검색 엔진 최적화(SEO)와 접근성 향상에 매우 중요합니다.\n\n---\n\n## 📌 `<header>`, `<footer>`, `<main>`\n\n- `<header>`: 페이지나 섹션의 머리말(로고, 내비게이션 등)\n- `<footer>`: 페이지나 섹션의 꼬리말(저작권, 연락처 등)\n- `<main>`: 문서의 주요 콘텐츠 영역(한 번만 사용 권장)\n\n```html\n<header>사이트 로고와 메뉴</header>\n<main>주요 내용</main>\n<footer>© 2024 회사명</footer>\n```\n\n---\n\n## 📌 `<section>`, `<article>`, `<nav>`\n\n- `<section>`: 논리적으로 구분되는 영역(챕터, 주제별 구역)\n- `<article>`: 독립적으로 배포 가능한 콘텐츠(게시글, 뉴스 등)\n- `<nav>`: 내비게이션 링크 모음\n\n```html\n<nav>\n  <a href=\"#home\">홈</a>\n  <a href=\"#about\">소개</a>\n</nav>\n<section>\n  <h2>소개</h2>\n  <p>이곳은 소개 섹션입니다.</p>\n</section>\n<article>\n  <h2>블로그 글 제목</h2>\n  <p>글 내용...</p>\n</article>\n```\n\n---\n\n## 📌 시맨틱 태그가 왜 중요한가?\n\n- 구조와 의미를 명확히 하여 유지보수와 협업에 유리\n- 스크린리더 등 보조기기에서 정보 전달이 쉬움\n- 검색 엔진이 콘텐츠를 더 잘 이해함(SEO)\n\n> 💡 시맨틱 태그를 적극적으로 사용하면 웹페이지의 품질이 크게 향상됩니다!"
           },
           {
-            "sectionTitle": "문자 인코딩과 특수 문자",
+            "title": "문자 인코딩과 특수 문자",
+            "progress" : 0,
             "lessons": [
-              { "lessonTitle": "문자 인코딩이란? (UTF-8의 중요성)" },
-              { "lessonTitle": "HTML 엔티티로 특수문자 표현하기" }
+              { "title": "문자 인코딩이란? (UTF-8의 중요성)" },
+              { "title": "HTML 엔티티로 특수문자 표현하기" }
             ],
             "concept": "# 문자 인코딩과 특수 문자\n\n웹에서 다양한 언어와 기호를 올바르게 표시하려면 문자 인코딩이 중요합니다. 또한, HTML에서는 특수문자를 엔티티로 표현할 수 있습니다.\n\n---\n\n## 📌 문자 인코딩이란? (UTF-8의 중요성)\n\n- **문자 인코딩**은 컴퓨터가 문자를 숫자로 변환하는 방식입니다.\n- **UTF-8**은 전 세계 대부분의 문자를 표현할 수 있어 웹 표준으로 사용됩니다.\n- HTML 문서의 `<head>`에 아래와 같이 명시합니다:\n\n```html\n<meta charset=\"UTF-8\">\n```\n\n> 💡 UTF-8을 사용하면 한글, 영어, 이모지 등 다양한 문자가 깨지지 않고 잘 표시됩니다.\n\n---\n\n## 📌 HTML 엔티티로 특수문자 표현하기\n\n- HTML에서 `<`, `>`, `&` 등은 태그와 혼동될 수 있으므로 **엔티티**로 표현합니다.\n- 대표적인 엔티티 예시:\n\n| 기호 | 엔티티 코드 |\n|------|-------------|\n| <    | `&lt;`      |\n| >    | `&gt;`      |\n| &    | `&amp;`     |\n| \"    | `&quot;`     |\n| '    | `&apos;`    |\n\n```html\n<p>&lt;div&gt;는 블록 요소입니다.&lt;/div&gt;</p>\n```\n\n> 💡 엔티티를 사용하면 코드가 안전하게 표시되고, 의도한 대로 특수문자를 보여줄 수 있습니다."
           },
           {
-            "sectionTitle": "실무 최적화를 위한 속성들",
+            "title": "실무 최적화를 위한 속성들",
+            "progress" : 0,
             "lessons": [
-              { "lessonTitle": "이미지 지연 로딩: loading=\"lazy\"" },
-              { "lessonTitle": "media 속성을 활용한 반응형 리소스" }
+              { "title": "이미지 지연 로딩: loading=\"lazy\"" },
+              { "title": "media 속성을 활용한 반응형 리소스" }
             ],
             "concept": "# 실무 최적화를 위한 속성들\n\n웹페이지의 성능과 사용자 경험을 높이기 위해 활용할 수 있는 HTML 속성들을 알아봅니다.\n\n---\n\n## 📌 이미지 지연 로딩: `loading=\"lazy\"`\n\n- 이미지는 페이지에 바로 보이지 않을 때까지 로딩을 미룹니다.\n- 페이지 로딩 속도가 빨라지고, 트래픽도 절약됩니다.\n\n```html\n<img src=\"photo.jpg\" alt=\"사진\" loading=\"lazy\">\n```\n\n> 💡 스크롤로 이미지가 화면에 가까워질 때 로드됩니다.\n\n---\n\n## 📌 media 속성을 활용한 반응형 리소스\n\n- `<link>`나 `<source>` 태그의 `media` 속성으로 화면 크기별로 다른 리소스를 적용할 수 있습니다.\n- 예시: 화면이 600px 이하일 때만 스타일 적용\n\n```html\n<link rel=\"stylesheet\" href=\"mobile.css\" media=\"(max-width:600px)\">\n```\n\n- `<picture>` 태그와 함께 사용하면, 기기별로 다른 이미지를 보여줄 수 있습니다.\n\n```html\n<picture>\n  <source srcset=\"image-mobile.jpg\" media=\"(max-width:600px)\">\n  <img src=\"image.jpg\" alt=\"반응형 이미지\">\n</picture>\n```\n\n> 💡 반응형 웹 구현에 필수적인 속성입니다."
           },
           {
-            "sectionTitle": "웹 표준과 접근성 기초",
+            "title": "웹 표준과 접근성 기초",
+            "progress" : 0,
             "lessons": [
-              { "lessonTitle": "웹 표준이란?" },
-              { "lessonTitle": "접근성이 중요한 이유" },
-              { "lessonTitle": "스크린리더와 alt 속성의 관계" }
+              { "title": "웹 표준이란?" },
+              { "title": "접근성이 중요한 이유" },
+              { "title": "스크린리더와 alt 속성의 관계" }
             ],
             "concept": "# 웹 표준과 접근성 기초\n\n웹 표준과 접근성은 모두가 웹을 편리하게 이용할 수 있도록 하는 기본 원칙입니다.\n\n---\n\n## 📌 웹 표준이란?\n\n- W3C 등 국제 기구에서 정한 웹 기술의 규칙입니다.\n- 표준을 따르면 다양한 브라우저와 기기에서 일관되게 동작합니다.\n\n---\n\n## 📌 접근성이 중요한 이유\n\n- 장애가 있는 사람도 웹을 사용할 수 있도록 돕는 것이 접근성입니다.\n- 접근성을 고려하면 더 많은 사용자가 웹사이트를 이용할 수 있습니다.\n\n---\n\n## 📌 스크린리더와 alt 속성의 관계\n\n- 시각장애인은 스크린리더로 웹을 이용합니다.\n- 이미지에 `alt` 속성을 제공하면, 스크린리더가 이미지의 의미를 읽어줍니다.\n\n```html\n<img src=\"logo.png\" alt=\"회사 로고\">\n```\n\n> 💡 웹 표준과 접근성을 지키면 모두에게 열린 웹을 만들 수 있습니다."
           },
           {
-            "sectionTitle": "사용하면 안되는 구식 태그와 속성",
+            "title": "사용하면 안되는 구식 태그와 속성",
+            "progress" : 0,
             "lessons": [
-              { "lessonTitle": "<font>, <center>는 왜 사용하면 안될까?" },
-              { "lessonTitle": "구식 속성과 시맨틱 태그로의 대체" }
+              { "title": "<font>, <center>는 왜 사용하면 안될까?" },
+              { "title": "구식 속성과 시맨틱 태그로의 대체" }
             ],
             "concept": "# 사용하면 안되는 구식 태그와 속성\n\nHTML5에서는 더 이상 사용하지 않는 태그와 속성이 있습니다. 최신 웹에서는 시맨틱 태그와 CSS로 대체해야 합니다.\n\n---\n\n## 📌 `<font>`, `<center>`는 왜 사용하면 안될까?\n\n- `<font>`, `<center>` 등은 디자인을 HTML에 직접 넣는 방식입니다.\n- 유지보수와 확장성이 떨어지고, 표준에서 제외되었습니다.\n\n---\n\n## 📌 구식 속성과 시맨틱 태그로의 대체\n\n- 글자색, 정렬 등은 CSS로 처리해야 합니다.\n- 예시:\n\n```html\n<!-- 잘못된 예시 -->\n<center><font color=\"red\">경고!</font></center>\n\n<!-- 올바른 예시 -->\n<p style=\"color:red; text-align:center;\">경고!</p>\n```\n\n- 의미가 중요한 경우 시맨틱 태그 사용:\n\n```html\n<header>머리말</header>\n<nav>내비게이션</nav>\n<main>주요 내용</main>\n```\n\n> 💡 구식 태그 대신 CSS와 시맨틱 태그를 사용하세요."
           },
           {
-            "sectionTitle": "HTML 작성 실습",
+            "title": "HTML 작성 실습",
+            "progress" : 0,
             "lessons": [
-              { "lessonTitle": "간단한 자기소개 페이지 만들기" },
-              { "lessonTitle": "링크와 이미지 포함한 소개 페이지" },
-              { "lessonTitle": "폼을 포함한 피드백 페이지 만들기" }
+              { "title": "간단한 자기소개 페이지 만들기" },
+              { "title": "링크와 이미지 포함한 소개 페이지" },
+              { "title": "폼을 포함한 피드백 페이지 만들기" }
             ],
             "concept": "# HTML 작성 실습\n\n지금까지 배운 내용을 바탕으로 직접 HTML 페이지를 만들어봅시다.\n\n---\n\n## 📌 간단한 자기소개 페이지 만들기\n\n- 이름, 취미, 한 줄 소개 등 간단한 정보를 HTML로 작성해보세요.\n\n---\n\n## 📌 링크와 이미지 포함한 소개 페이지\n\n- `<a>` 태그로 외부 링크, `<img>` 태그로 본인 사진이나 이미지를 추가해보세요.\n\n---\n\n## 📌 폼을 포함한 피드백 페이지 만들기\n\n- `<form>` 태그로 간단한 피드백(이름, 의견 등)을 입력받는 폼을 만들어보세요.\n\n> 💡 실습을 통해 HTML 구조와 태그 사용법을 자연스럽게 익힐 수 있습니다."
           }

@@ -1,43 +1,13 @@
-// /**
-//  * Sample React Native App
-//  * https://github.com/facebook/react-native
-//  *
-//  * @format
-//  */
-
-// import { NewAppScreen } from '@react-native/new-app-screen';
-// import { StatusBar, StyleSheet, useColorScheme, View } from 'react-native';
-
-// function App() {
-//   const isDarkMode = useColorScheme() === 'dark';
-
-//   return (
-//     <View style={styles.container}>
-//       <StatusBar barStyle={isDarkMode ? 'light-content' : 'dark-content'} />
-//       <NewAppScreen templateFileName="App.tsx" />
-//     </View>
-//   );
-// }
-
-// const styles = StyleSheet.create({
-//   container: {
-//     flex: 1,
-//   },
-// });
-
-// export default App;
-
-
-
-
-
 import React, { useState } from 'react';
-import { SafeAreaView, ActivityIndicator, View } from 'react-native';
+import { SafeAreaView, SafeAreaProvider } from 'react-native-safe-area-context';
+import { ActivityIndicator, View, StatusBar } from 'react-native';
+import { GestureHandlerRootView } from 'react-native-gesture-handler';
 
 // Context
 import { AuthProvider, useAuth } from './src/contexts/AuthContext';
 import { LessonProvider } from './src/contexts/LessonContext';
 import { useUser, UserProvider } from './src/contexts/UserContext';
+import { NavigationProvider } from './src/contexts/NavigationContext';
 
 // Navigation
 import AuthNavigator from './src/navigation/AuthNavigator';
@@ -57,7 +27,8 @@ function Main() {
   }
 
   return (
-    <SafeAreaView className="flex-1 bg-gray-50">
+    <SafeAreaView className="flex-1 bg-white">
+      <StatusBar barStyle="dark-content" backgroundColor="#fff" />
       {isLoggedIn ? <AppNavigator /> : <AuthNavigator />}
     </SafeAreaView>
   );
@@ -65,12 +36,18 @@ function Main() {
 
 export default function App() {
   return (
-    <UserProvider>
-      <AuthProvider>
-        <LessonProvider>
-          <Main />
-        </LessonProvider>
-      </AuthProvider>
-    </UserProvider>
+    <SafeAreaProvider>
+      <UserProvider>
+        <AuthProvider>
+          <LessonProvider>
+            <GestureHandlerRootView style={{ flex: 1 }}>
+              <NavigationProvider>
+                <Main />
+              </NavigationProvider>
+            </GestureHandlerRootView>
+          </LessonProvider>
+        </AuthProvider>
+      </UserProvider>
+    </SafeAreaProvider>
   );
 }

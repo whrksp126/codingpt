@@ -1,6 +1,7 @@
 import React, { useEffect, useState } from 'react';
 import { View, Text, FlatList, TouchableOpacity, Image } from 'react-native';
 import StoreService, { StoreCategory, Product } from '../services/storeService';
+import { useNavigation } from '../contexts/NavigationContext';
 
 // 렌더링에 사용할 항목 타입 정의
 interface StoreItem { // product
@@ -30,7 +31,8 @@ const getCategoryIcon = (categoryName: string) => {
   }
 };
 
-const StoreScreen  = ({ navigation }: any) => {
+const StoreScreen = () => {
+  const { navigate } = useNavigation();
   const [storeItems, setStoreItems] = useState<StoreItem[]>([]);
   const [filter, setFilter] = useState<'전체' | '무료' | '유료'>('전체');
 
@@ -122,7 +124,7 @@ const StoreScreen  = ({ navigation }: any) => {
             {/* 상품 카드 목록 */}
             {items.map((item) => (
               <TouchableOpacity
-                onPress={() => navigation.navigate('lessonDetail', item)}
+                onPress={() => navigate('lessonDetail', item)}
                 key={item.id}
                 className="flex-row items-center bg-white p-[10px] border border-[#CCCCCC] rounded-[16px] mt-[10px]"
               >

@@ -6,6 +6,7 @@ import AsyncStorage from '@react-native-async-storage/async-storage';
 
 import { useUser } from '../../contexts/UserContext';
 import { useAuth } from '../../contexts/AuthContext';
+import { useNavigation } from '../../contexts/NavigationContext';
 
 import AuthStorage from '../../utils/storage';
 import { getTotalStudyDays } from '../../utils/heatmapUtils';
@@ -15,11 +16,8 @@ import userService from '../../services/userService';
 
 import BootSplash from 'react-native-bootsplash';
 
-interface LoginScreenProps {
-  navigation: any;
-}
-
-const LoginScreen: React.FC<LoginScreenProps> = ({ navigation }) => {
+const LoginScreen: React.FC = () => {
+  const { navigate } = useNavigation();
   const [loading, setLoading] = useState(false);
   const { setUser } = useUser();
   const { login } = useAuth(); // ✅ authContext 사용
@@ -91,7 +89,7 @@ const LoginScreen: React.FC<LoginScreenProps> = ({ navigation }) => {
         setUser(userWithStudyDays);
 
         // 4. 홈으로 이동
-        navigation.replace('home'); // ✅ currentScreen이 home인 경우 AppNavigator로 진입
+        navigate('home'); // ✅ currentScreen이 home인 경우 AppNavigator로 진입
       } else {
         Alert.alert('로그인 실패', '서버 인증에 실패했습니다.');
       }

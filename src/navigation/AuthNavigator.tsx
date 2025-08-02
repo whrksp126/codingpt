@@ -1,26 +1,17 @@
 import React, { useState, useEffect } from 'react';
 import { View, StyleSheet } from 'react-native';
 import LoginScreen from '../screens/Auth/LoginScreen';
+import { useNavigation } from '../contexts/NavigationContext';
 
 const AuthNavigator: React.FC = () => {
-  const [currentScreen, setCurrentScreen] = useState('login');
-
-  const navigate = (screen: string) => {
-    setCurrentScreen(screen);
-  };
+  const { currentScreen } = useNavigation();
 
   const renderScreen = () => {
-    const navigation = {
-      navigate,
-      goBack: () => setCurrentScreen('login'),
-      replace: (screen: string) => setCurrentScreen(screen),
-    };
-
     switch (currentScreen) {
       case 'login':
-        return <LoginScreen navigation={navigation} />;
+        return <LoginScreen />;
       default:
-        return <LoginScreen navigation={navigation} />;
+        return <LoginScreen />;
     }
   };
 

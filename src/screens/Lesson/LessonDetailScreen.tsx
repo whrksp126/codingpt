@@ -4,8 +4,10 @@ import { View, Text, TouchableOpacity, Image, ScrollView, Alert, ActivityIndicat
 import { Star } from 'phosphor-react-native';
 import { checkLoggedIn, api, apiRequest } from '../../utils/api';
 import lessonService from '../../services/lessonService';
+import { useNavigation } from '../../contexts/NavigationContext';
 
-const LessonDetailScreen = ({ route, navigation }: any) => {
+const LessonDetailScreen = ({ route }: any) => {
+  const { goBack, navigate } = useNavigation();
   const { id, name, icon, description, price, lessonCount, progress, date } = route.params;
   const item = { id, name, icon, description, price, lessonCount, progress, date };
 
@@ -27,7 +29,7 @@ const LessonDetailScreen = ({ route, navigation }: any) => {
       if (!result.loggedIn) {
         setBlocked(true); // hook-safe 방식으로 처리
         Alert.alert('로그인이 필요합니다.', '', [
-          { text: '확인', onPress: () => navigation.replace('login') },
+          { text: '확인', onPress: () => navigate('login') },
         ]);
         return;
       }
@@ -61,7 +63,7 @@ const LessonDetailScreen = ({ route, navigation }: any) => {
       <ScrollView contentContainerStyle={{ paddingBottom: 20 }}>
         {/* 상단 헤더: 뒤로가기 버튼 */}
         <View className="flex-row items-center justfy-between bg-white px-[20px] pt-[20px] pb-[20px] gap-x-[20px]">
-          <TouchableOpacity onPress={() => navigation.goBack()}>
+          <TouchableOpacity onPress={() => goBack()}>
             <Image source={require('../../assets/icons/arrow_l.png')} className="w-[13.13px] h-[24.06px] mt-1.5" />
           </TouchableOpacity>
           <Text className="text-[22px] font-bold text-[#111111]">{name}</Text>
@@ -93,12 +95,12 @@ const LessonDetailScreen = ({ route, navigation }: any) => {
                 const registered = await lessonService.postMyclass(userId!, id);
                 if (registered) {
                   Alert.alert('수강 등록 완료');
-                  navigation.navigate('section', item);
+                  navigate('classProgress', item);
                 } else {
                   Alert.alert('수강 등록 실패');
                 }
               } else {
-                navigation.navigate('section', item);
+                navigate('classProgress', item);
               }
             }}
           >

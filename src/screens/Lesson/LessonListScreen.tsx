@@ -3,6 +3,7 @@ import React, { useEffect, useState } from 'react';
 import { View, Text, FlatList, TouchableOpacity, Image, Alert } from 'react-native';
 import { checkLoggedIn } from '../../utils/api';
 import lessonService, { Product } from '../../services/lessonService';
+import { useNavigation } from '../../contexts/NavigationContext';
 
 // 강의 항목 타입
 interface Lesson {
@@ -13,7 +14,8 @@ interface Lesson {
   progress: number;
 }
 
-const LessonListScreen = ({ route, navigation }: any) => {
+const LessonListScreen = ({ route }: any) => {
+  const { navigate } = useNavigation();
   // 인증 관련 상태
   const [userId, setUserId] = useState<number | null>(null);
   const [blocked, setBlocked] = useState<boolean>(false);
@@ -27,7 +29,7 @@ const LessonListScreen = ({ route, navigation }: any) => {
       if (!result.loggedIn) {
         setBlocked(true);
         Alert.alert('로그인이 필요합니다.', '', [
-          { text: '확인', onPress: () => navigation.replace('login') },
+          { text: '확인', onPress: () => navigate('login') },
         ]);
         return;
       }
@@ -80,7 +82,7 @@ const LessonListScreen = ({ route, navigation }: any) => {
     return (
       <TouchableOpacity
         onPress={() =>
-          navigation.navigate('lessonDetail', {
+          navigate('lessonDetail', {
             ...product,
             icon: item.icon, // ✅ icon도 같이 넘김
             date: item.date,
