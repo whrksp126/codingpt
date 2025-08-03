@@ -1,16 +1,17 @@
-import React, { useEffect, useState, useRef } from 'react';
-import { Pressable, ScrollView, Text, View, Dimensions } from 'react-native';
-import Carousel from 'react-native-reanimated-carousel';
+import React, { useEffect, useState } from 'react';
+import { Pressable, ScrollView, Text, View, Image } from 'react-native';
 import { HeartStraight, X } from '../../assets/SvgIcon';
 import { useNavigation } from '../../contexts/NavigationContext';
-import { useUser } from '../../contexts/UserContext';
-import { useSafeAreaInsets } from 'react-native-safe-area-context';
-import type { ICarouselInstance } from 'react-native-reanimated-carousel';
-import { Gesture } from 'react-native-gesture-handler';
+import { WebViewComponent } from '../../components/WebView';
+
+interface SlideModule {
+  type: 'paragraph' | 'image' | 'code' | 'webview';
+  content: string;
+}
 
 interface Slide {
   title: string;
-  content: string;
+  modules: SlideModule[];
 }
 
 interface Lesson {
@@ -19,12 +20,8 @@ interface Lesson {
 
 const LessonLearningScreen: React.FC<{ route: any }> = ({ route }) => {
   const { goBack } = useNavigation();
-  const carouselRef = useRef<ICarouselInstance>(null);
-  const { width: screenWidth } = Dimensions.get('window');
-  const { bottom } = useSafeAreaInsets();
-
   const [curLesson, setCurLesson] = useState<Lesson | null>(null);
-  const [currentIndex, setCurrentIndex] = useState<number>(0);
+  const [curSlideIndex, setCurSlideIndex] = useState<number>(0);
 
   useEffect(() => {
     const { lessonData } = route.params;
@@ -33,8 +30,7 @@ const LessonLearningScreen: React.FC<{ route: any }> = ({ route }) => {
 
   if (!curLesson) return null;
 
-  const isLastSlide = currentIndex === curLesson.sliders.length - 1;
-  const isFirstSlide = currentIndex === 0;
+  const currentSlide = curLesson.sliders[curSlideIndex];
 
   return (
     <>
@@ -52,32 +48,54 @@ const LessonLearningScreen: React.FC<{ route: any }> = ({ route }) => {
         </View>
       </View>
 
-      {/* 캐러셀 */}
-      <Carousel
-        ref={carouselRef}
-        width={screenWidth}
-        loop={false}
-        autoPlay={false}
-        data={curLesson.sliders}
-        scrollAnimationDuration={500}
-        defaultIndex={0}
-        onSnapToItem={(index) => setCurrentIndex(index)}
-        enabled={false}
-        renderItem={({ item }) => (
-          <View className="flex-1 bg-white">
-            <ScrollView className="flex-1">
-              <View className="p-[16px]">
-                <Text className="text-[#111] text-[18px] font-[700]">{item.title}</Text>
-              </View>
-            </ScrollView>
-            <View className={`flex-row items-center gap-[16px] p-[16px]`}>
-              <Pressable className="flex items-center justify-center flex-1 h-[50px] rounded-[10px] bg-[#E5E5E5]">
-                <Text className="text-[#AFAFAF] text-[18px] font-[700] text-center">확인</Text>
-              </Pressable>
-            </View>
+      {/* 슬라이드 컨텐츠 */}
+      <View className="flex-1">
+        <ScrollView className="flex-1">
+          <View className="flex-col gap-[20px] px-[16px] pt-[20px]">
+            <Text className="text-[#111] text-[18px] font-[700]">
+              {currentSlide?.title || '제목 없음'}
+            </Text>
+
+            {currentSlide?.modules.map((module, moduleIndex) => {
+              switch (module.type) {
+                case 'paragraph':
+                  return (
+                    <View key={`slide-${curSlideIndex}-module-${moduleIndex}`}>
+                      <Text>{module.content}</Text>
+                    </View>
+                  );
+                case 'image':
+                  return (
+                    <View key={`slide-${curSlideIndex}-module-${moduleIndex}`}>
+                      <Image source={{ uri: module.content }} className="w-full h-[200px]" />
+                    </View>
+                  );
+                case 'code':
+                  return (
+                    <View key={`slide-${curSlideIndex}-module-${moduleIndex}`}>
+                      <Text style={{ fontFamily: 'monospace' }}>{module.content}</Text>
+                    </View>
+                  );
+                case 'webview':
+                  return (
+                    <View key={`slide-${curSlideIndex}-module-${moduleIndex}`}>
+                      <WebViewComponent module={module} />
+                    </View>
+                  );
+                default:
+                  return null;
+              }
+            })}
           </View>
-        )}
-      />
+        </ScrollView>
+
+        {/* 하단 버튼 */}
+        <View className="flex-row items-center gap-[16px] p-[16px]">
+          <Pressable className="flex items-center justify-center flex-1 h-[50px] rounded-[10px] bg-[#E5E5E5]">
+            <Text className="text-[#AFAFAF] text-[18px] font-[700] text-center">확인</Text>
+          </Pressable>
+        </View>
+      </View>
     </>
   );
 };

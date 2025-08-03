@@ -1,7 +1,6 @@
 import React, { useState } from 'react';
 import { SafeAreaView, SafeAreaProvider } from 'react-native-safe-area-context';
 import { ActivityIndicator, View, StatusBar } from 'react-native';
-import { GestureHandlerRootView } from 'react-native-gesture-handler';
 
 // Context
 import { AuthProvider, useAuth } from './src/contexts/AuthContext';
@@ -40,11 +39,9 @@ export default function App() {
       <UserProvider>
         <AuthProvider>
           <LessonProvider>
-            <GestureHandlerRootView style={{ flex: 1 }}>
-              <NavigationProvider>
-                <Main />
-              </NavigationProvider>
-            </GestureHandlerRootView>
+            <NavigationProvider>
+              <Main />
+            </NavigationProvider>
           </LessonProvider>
         </AuthProvider>
       </UserProvider>
