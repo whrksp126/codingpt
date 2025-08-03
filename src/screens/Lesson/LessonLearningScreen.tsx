@@ -2,8 +2,10 @@ import React, { useEffect, useState } from 'react';
 import { Pressable, ScrollView, Text, View, Image } from 'react-native';
 import { HeartStraight, X } from '../../assets/SvgIcon';
 import { useNavigation } from '../../contexts/NavigationContext';
-import { WebViewComponent } from '../../components/WebView';
-
+import { WebViewComponent } from '../../components/module/WebView';
+import { ParagraghComponent } from '../../components/module/Paragragh';
+import { CodeComponent } from '../../components/module/Code';
+import { MultipleChoiceComponent } from '../../components/module/MultipleChoice';
 interface SlideModule {
   type: 'paragraph' | 'image' | 'code' | 'webview';
   content: string;
@@ -60,8 +62,8 @@ const LessonLearningScreen: React.FC<{ route: any }> = ({ route }) => {
               switch (module.type) {
                 case 'paragraph':
                   return (
-                    <View key={`slide-${curSlideIndex}-module-${moduleIndex}`}>
-                      <Text>{module.content}</Text>
+                    <View key={`slide-${curSlideIndex}-module-${moduleIndex}`}>      
+                      <ParagraghComponent module={module} />
                     </View>
                   );
                 case 'image':
@@ -73,13 +75,19 @@ const LessonLearningScreen: React.FC<{ route: any }> = ({ route }) => {
                 case 'code':
                   return (
                     <View key={`slide-${curSlideIndex}-module-${moduleIndex}`}>
-                      <Text style={{ fontFamily: 'monospace' }}>{module.content}</Text>
+                      <CodeComponent module={module} />
                     </View>
                   );
                 case 'webview':
                   return (
                     <View key={`slide-${curSlideIndex}-module-${moduleIndex}`}>
                       <WebViewComponent module={module} />
+                    </View>
+                  );
+                case 'multipleChoice':
+                  return (
+                    <View key={`slide-${curSlideIndex}-module-${moduleIndex}`}>
+                      <MultipleChoiceComponent module={module} />
                     </View>
                   );
                 default:

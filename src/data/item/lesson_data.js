@@ -145,8 +145,17 @@ export const html = {
                         }
                       },
                       {
-                        "type": "webviewContent",
-                        "content": "<!DOCTYPE html>\n<html>\n  <head>\n    <meta charset=\"UTF-8\">\n    <title>문서 제목</title>\n  </head>\n  <body>\n    <h1>제목입니다</h1>\n    <p>단락입니다</p>\n  </body>\n</html>",
+                        "type": "webview",
+                        "tabs": [
+                          {
+                            "type" : "html",
+                            "content" : "<!DOCTYPE html>\n<html>\n  <head>\n    <meta charset=\"UTF-8\">\n    <title>문서 제목</title>\n  </head>\n  <body>\n    <h1>제목입니다</h1>\n    <p>단락입니다</p>\n  </body>\n</html>"
+                          },
+                          {
+                            "type" : "url",
+                            "content" : "https://www.google.com"
+                          }
+                        ],
                         "visibility": {
                           "type": "step",
                           "value": 2
@@ -289,12 +298,16 @@ export const html = {
                       },
                       {
                         "type": "webview",
-                        "content": "<div style='text-align:center; padding: 16px;'><h3>🔥 지금까지의 흐름 정리</h3><ul><li>주소 입력 ➝ 서버 요청</li><li>HTML 응답 수신</li><li>파싱 & 렌더링</li><li>화면 출력</li></ul></div>",
+                        "tabs": [
+                          {
+                            "type" : "html",
+                            "content": "<div style='text-align:center; padding: 16px;'><h3>🔥 지금까지의 흐름 정리</h3><ul><li>주소 입력 ➝ 서버 요청</li><li>HTML 응답 수신</li><li>파싱 & 렌더링</li><li>화면 출력</li></ul></div>",
+                          },
+                        ],
                         "visibility": {
                           "type": "step",
                           "value": 3
                         },
-                        "comment": "💡 [WebView 설명] 지금까지의 흐름을 요약한 간단한 HTML UI (네이티브 느낌)"
                       },
                       {
                         "type": "paragraph",
@@ -319,16 +332,23 @@ export const html = {
                     "modules": [
                       {
                         "type": "paragraph",
-                        "content": "**HTML(HyperText Markup Language)**은 웹페이지에서 콘텐츠의 **구조**를 정의하는 언어입니다.\n\n텍스트, 이미지, 버튼 등의 요소들이 어떤 순서로, 어떤 의미로 배치될지를 브라우저가 이해하도록 도와주는 것이 바로 HTML입니다."
+                        "content": "### 📄 HTML이란?\n\n**HTML** *(HyperText Markup Language)* 은 웹페이지에서 콘텐츠의 **구조**를 정의하는 언어입니다.\n\n> 브라우저가 텍스트, 이미지, 버튼 등의 요소들을 **어떤 순서로**  \n> **어떤 의미로 배치할지** 이해할 수 있도록 도와주는 것이 바로 HTML입니다."
                       },
                       {
-                        "type": "image",
-                        "content": "https://cdn.example.com/html-structure-example.png",
+                        "type": "multipleChoice",
+                        "question": "다음 중 `<head>` 태그 안에 들어가는 요소가 아닌 것은?",
+                        "options": [
+                          { "label": "```<h1>``` 제목 작성", "isCorrect": true },
+                          { "label": "```<title>``` 문서 제목 설정", "isCorrect": false },
+                          { "label": "```<meta>``` 메타 정보 설정", "isCorrect": false },
+                          { "label": "```<link>``` 외부 스타일시트 연결", "isCorrect": false }
+                        ],
+                        
+
                         "visibility": {
                           "type": "step",
                           "value": 2
-                        },
-                        "comment": "💡 [이미지 설명] 제목(h1), 본문(p), 이미지(img), 버튼(button) 등이 구조화된 HTML 코드와 그에 따른 브라우저 화면 예시를 나란히 보여주는 이미지"
+                        }
                       },
                       {
                         "type": "code",
@@ -337,22 +357,64 @@ export const html = {
                             "name": "index.html",
                             "language": "html",
                             "content": "<h1>나의 첫 번째 웹페이지</h1>\n<p>HTML은 구조를 만듭니다.</p>\n<img src=\"example.jpg\" alt=\"예시 이미지\">\n<button>클릭해보세요</button>"
+                          },
+                          {
+                            "name": "index.css",
+                            "language": "css",
+                            "content": "body { background-color: #f0f0f0; }"
                           }
                         ],
                         "visibility": {
                           "type": "step",
-                          "value": 3
+                          "value": 2
                         }
                       },
                       {
                         "type": "webview",
-                        "content": "<!-- 주석: 위 코드가 렌더링되면 어떻게 보일지를 보여주는 미니 웹뷰 -->\n<h1>나의 첫 번째 웹페이지</h1>\n<p>HTML은 구조를 만듭니다.</p>\n<img src='https://via.placeholder.com/150' alt='예시 이미지'>\n<button>클릭해보세요</button>",
+                        "tabs": [
+                          {
+                            "type" : "html",
+                            "content": "<html><head><title>html 기초</title></head><body><h1>나의 첫 번째 웹페이지</h1>\n<p>HTML은 구조를 만듭니다.</p>\n<img src='https://via.placeholder.com/150' alt='예시 이미지'>\n<button>클릭해보세요</button></body></html>",
+                          },
+                          {
+                            "type" : "url",
+                            "content": "https://www.google.com/",
+                          },
+                        ],
                         "visibility": {
                           "type": "step",
-                          "value": 4
+                          "value": 3
                         },
-                        "comment": "💡 [WebView 설명] 위 HTML 코드가 실제 브라우저에서 어떻게 보이는지를 보여주는 미리보기"
-                      }
+                      },
+
+                      {
+                        "type": "codeFillTheGap",
+                        "files" : [
+                          {
+                            "name": "index.html",
+                            "language": "html",
+                            "content": "<!DOCTYPE html>\n<html>\n  <head>\n    <meta charset=\"UTF-8\">\n    <title>나의 첫 번째 페이지</title>\n  </head>\n  <body>\n    <h1>[___]</h1>\n    <p>[___]</p>\n  </body>\n</html>",
+                            "isInteractive": true,
+                            "interactionOptions": [
+                              {
+                                "startLine": 7,
+                                "startPos": 10,
+                                "length": 5,
+                                "value": "환영합니다",
+                                "answerIndex": 0
+                              },
+                              {
+                                "startLine": 8,
+                                "startPos": 8,
+                                "length": 7,
+                                "value": "첫 페이지입니다.",
+                                "answerIndex": 1
+                              }
+                            ],
+                          }
+                        ],
+                      },
+
                     ]
                   },
                   {
@@ -379,12 +441,16 @@ export const html = {
                       },
                       {
                         "type": "webview",
-                        "content": "<h1>오늘의 뉴스</h1>\n<p>날씨가 맑고 따뜻한 하루가 예상됩니다.</p>\n<button>자세히 보기</button>",
+                        "tabs": [
+                          {
+                            "type" : "html",
+                            "content": "<h1>오늘의 뉴스</h1>\n<p>날씨가 맑고 따뜻한 하루가 예상됩니다.</p>\n<button>자세히 보기</button>",
+                          },
+                        ],
                         "visibility": {
                           "type": "step",
                           "value": 3
                         },
-                        "comment": "💡 [WebView 설명] 위의 코드가 실제 브라우저에서 렌더링된 결과를 보여주는 예시"
                       },
                       {
                         "type": "image",
@@ -421,12 +487,16 @@ export const html = {
                       },
                       {
                         "type": "webview",
-                        "content": "<div>오늘의 뉴스</div>\n<div>날씨가 맑고 따뜻한 하루가 예상됩니다.</div>\n<div>자세히 보기</div>",
+                        "tabs": [
+                          {
+                            "type" : "html",
+                            "content": "<div>오늘의 뉴스</div>\n<div>날씨가 맑고 따뜻한 하루가 예상됩니다.</div>\n<div>자세히 보기</div>"
+                          },
+                        ],
                         "visibility": {
                           "type": "step",
                           "value": 3
                         },
-                        "comment": "💡 [WebView 설명] 위 코드가 브라우저에 표시되면 `<h1>`, `<p>`처럼 보이지만 실제로는 의미 없는 div 덩어리입니다."
                       },
                       {
                         "type": "image",
@@ -459,8 +529,12 @@ export const html = {
                       },
                       {
                         "type": "webview",
-                        "content": "<header>오늘의 뉴스</header>\n<article>\n  <p>날씨가 맑고 따뜻한 하루가 예상됩니다.</p>\n  <a href='#'>자세히 보기</a>\n</article>",
-                        "comment": "💡 [WebView 설명] 시맨틱 태그를 사용했을 때 시각적으로는 div와 비슷하지만, 구조적으로 더 명확하게 구분됩니다."
+                        "tabs": [
+                          {
+                            "type" : "html",
+                            "content": "<header>오늘의 뉴스</header>\n<article>\n  <p>날씨가 맑고 따뜻한 하루가 예상됩니다.</p>\n  <a href='#'>자세히 보기</a>\n</article>",
+                          },
+                        ],
                       },
                       {
                         "type": "image",
@@ -506,12 +580,16 @@ export const html = {
                       },
                       {
                         "type": "webview",
-                        "content": "https://example.com/html-basics-demo",
+                        "tabs": [
+                          {
+                            "type" : "url",
+                            "content": "https://example.com/html-basics-demo"
+                          },
+                        ],
                         "visibility": {
                           "type": "step",
                           "value": 1
                         },
-                        "comment": "💡 [WebView 설명] 간단한 HTML만으로 구성된 웹 페이지 샘플 (ex. 제목, 이미지, 버튼으로 구성된 정적 페이지)"
                       },
                       {
                         "type": "paragraph",
@@ -1083,8 +1161,12 @@ export const html = {
                       },
                       {
                         "type": "webview",
-                        "content": "<p>안녕하세요! 여기는 코딩PT입니다.</p>",
-                        "comment": "💡 [WebView 설명] 줄바꿈 없이 한 줄로 출력되는 실제 화면을 보여줍니다."
+                        "tabs": [
+                          {
+                            "type" : "html",
+                            "content": "<p>안녕하세요! 여기는 코딩PT입니다.</p>"
+                          },
+                        ],
                       }
                     ]
                   },
@@ -1099,8 +1181,12 @@ export const html = {
                       },
                       {
                         "type": "webview",
-                        "content": "<p>안녕 하세요</p>",
-                        "comment": "💡 [WebView 설명] 여러 공백을 하나로 처리하여 출력되는 결과를 확인합니다."
+                        "tabs": [
+                          {
+                            "type" : "html",
+                            "content": "<p>안녕 하세요</p>"
+                          },
+                        ],
                       },
                       {
                         "type": "ox",
@@ -1121,8 +1207,12 @@ export const html = {
                       },
                       {
                         "type": "webview",
-                        "content": "<p>첫 번째 줄<br>두 번째 줄</p>",
-                        "comment": "💡 [WebView 설명] 줄바꿈 태그 `<br>`을 사용해 실제로 줄이 바뀌는 출력 화면을 보여줍니다."
+                        "tabs": [
+                          {
+                            "type" : "html",
+                            "content": "<p>첫 번째 줄<br>두 번째 줄</p>"
+                          },
+                        ],
                       }
                     ]
                   },
@@ -1137,8 +1227,12 @@ export const html = {
                       },
                       {
                         "type": "webview",
-                        "content": "",
-                        "comment": "💡 [WebView 설명] 사용자가 작성한 코드를 실행한 결과를 실시간으로 보여줍니다."
+                        "tabs": [
+                          {
+                            "type" : "html",
+                            "content": "",
+                          },
+                        ],
                       }
                     ]
                   },
@@ -1210,12 +1304,16 @@ export const html = {
                       },
                       {
                         "type": "webview",
-                        "content": "<!DOCTYPE html>\n<html>\n  <head>\n    <title>예시</title>\n  </head>\n  <body>\n    <p>안녕하세요!</p>\n  </body>\n</html>",
+                        "tabs": [
+                          {
+                            "type" : "html",
+                            "content": "<!DOCTYPE html>\n<html>\n  <head>\n    <title>예시</title>\n  </head>\n  <body>\n    <p>안녕하세요!</p>\n  </body>\n</html>"
+                          },
+                        ],
                         "visibility": {
                           "type": "step",
                           "value": 2
                         },
-                        "comment": "💡 [웹뷰 설명] 가장 기본적인 HTML 문서 구조 전체를 보여주는 실제 웹페이지"
                       }
                     ]
                   },
@@ -1317,9 +1415,13 @@ export const html = {
                       },
                       {
                         "type": "webview",
-                        "content": "<body>\n  <h1>환영합니다!</h1>\n  <p>이곳은 코딩PT입니다.</p>\n</body>",
+                        "tabs": [
+                          {
+                            "type" : "html",
+                            "content": "<body>\n  <h1>환영합니다!</h1>\n  <p>이곳은 코딩PT입니다.</p>\n</body>"
+                          },
+                        ],
                         "visibility": { "type": "step", "value": 2 },
-                        "comment": "💡 [WebView 설명] `<body>` 내부만 렌더링된 간단한 HTML 페이지를 보여주세요 — 큰 제목과 짧은 문단 포함"
                       }
                     ]
                   },
@@ -1399,8 +1501,12 @@ export const html = {
                       },
                       {
                         "type": "webview",
-                        "content": "<head>\n  <title>코딩PT - HTML 기초</title>\n</head>\n<body>\n  <h1>코딩PT에 오신 것을 환영합니다!</h1>\n</body>",
-                        "comment": "💡 [WebView 설명] 브라우저 탭에 '코딩PT - HTML 기초'라는 제목이 보이고, 본문에는 큰 제목이 보이는 구조로 표시"
+                        "tabs": [
+                          {
+                            "type" : "html",
+                            "content": "<head>\n  <title>코딩PT - HTML 기초</title>\n</head>\n<body>\n  <h1>코딩PT에 오신 것을 환영합니다!</h1>\n</body>"
+                          },
+                        ],
                       }
                     ]
                   },
@@ -1492,8 +1598,12 @@ export const html = {
                     "modules": [
                       {
                         "type": "webview",
-                        "content": "<input type='text' placeholder='1번' tabindex='1'>\n<input type='text' placeholder='2번' tabindex='2'>\n<input type='text' placeholder='3번' tabindex='3'>",
-                        "comment": "💡 [WebView 설명] input 요소 3개가 위아래로 나열되고 Tab 키로 이동하면 1 → 2 → 3 순서로 포커스가 이동"
+                        "tabs": [
+                          {
+                            "type" : "html",
+                            "content": "<input type='text' placeholder='1번' tabindex='1'>\n<input type='text' placeholder='2번' tabindex='2'>\n<input type='text' placeholder='3번' tabindex='3'>"
+                          },
+                        ],
                       }
                     ]
                   },
