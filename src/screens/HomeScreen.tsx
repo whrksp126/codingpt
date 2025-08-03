@@ -7,6 +7,8 @@ import { useNavigation } from '../contexts/NavigationContext';
 import userService from '../services/userService';
 import { getColorByCount, getRecentDays } from '../utils/heatmapUtils';
 import { AnimatedCircularProgress } from 'react-native-circular-progress';
+import { CodesandboxLogo } from '../assets/SvgIcon';
+
 
 console.log(Config);
 
@@ -140,11 +142,7 @@ const HomeScreen: React.FC = () => {
               className="bg-[#93D333] w-[236px] h-[46px] rounded-[50px] py-3 px-6 flex-row items-center justify-center"
               onPress={() => navigate('classProgress')}
             >
-              <Image
-                source={require('../assets/icons/curriculum_logo.png')}
-                className="w-[20px] h-[20px] mr-2"
-                resizeMode="contain"
-              />
+              <CodesandboxLogo width={40} height={40} fill="#ccc" />
               <Text className="text-white text-[18px] font-bold" style={{ marginTop: -3 }}>학습하러 가기</Text>
             </TouchableOpacity>
           </View>
