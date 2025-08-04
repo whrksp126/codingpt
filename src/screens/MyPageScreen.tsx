@@ -1,9 +1,8 @@
-import React, { useEffect, useState } from 'react';
+import React from 'react';
 import { View, Text, ScrollView, TouchableOpacity, Alert, Image } from 'react-native';
 import { GoogleSignin } from '@react-native-google-signin/google-signin';
 import AsyncStorage from '@react-native-async-storage/async-storage';
 import AuthStorage from '../utils/storage';
-import { getTotalStudyDays } from '../utils/heatmapUtils';
 import { Gear } from 'phosphor-react-native';
 import dayjs from 'dayjs';
 import Button from '../components/Button';
@@ -11,25 +10,11 @@ import Heatmap from '../components/Heatmap';
 import { useUser } from '../contexts/UserContext';
 import { useAuth } from '../contexts/AuthContext';
 import { authService } from '../services/authService';
-import userService from '../services/userService';
 import { CodesandboxLogo, Clover, HeartStraight, Check, XP } from '../assets/SvgIcon';
 
 const MyPageScreen = () => {
   const { user } = useUser(); // user 데이터
-  const [heatmap, setHeatmap] = useState<Record<string, number>>({});
   const { logout } = useAuth();
-  useEffect(() => {
-    const fetchHeatmap = async () => {
-      try {
-        const data  = await userService.getStudyHeatmap();
-        setHeatmap(data);
-      } catch (error) {
-        console.error('잔디 데이터 불러오기 실패:', error);
-      }
-    };
-
-    fetchHeatmap();
-  }, []);
 
   const handleLogout = async () => {
     Alert.alert(
@@ -153,10 +138,10 @@ const MyPageScreen = () => {
       <View className="flex-col gap-y-[10px] py-[10px]">
         <Text className="font-bold text-[22px]">잔디</Text>
         <View className="flex-row gap-x-[4px]">
-          {Object.keys(heatmap).length > 0 ? (
-            <Heatmap data={heatmap} />
+          {user?.heatmap && Object.keys(user.heatmap).length > 0 ? (
+            <Heatmap data={user.heatmap} />
           ) : (
-            <Text className="text-[14px] text-gray-400">불러오는 중...</Text>
+            <Text className="text-[14px] text-gray-400">로딩 중...</Text>
           )}
         </View>
       </View>

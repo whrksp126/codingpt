@@ -19,7 +19,7 @@ import BootSplash from 'react-native-bootsplash';
 const LoginScreen: React.FC = () => {
   const { navigate } = useNavigation();
   const [loading, setLoading] = useState(false);
-  const { setUser } = useUser();
+  const { setUser, refreshUser } = useUser();
   const { login } = useAuth(); // ✅ authContext 사용
 
   useEffect(() => {
@@ -63,30 +63,28 @@ const LoginScreen: React.FC = () => {
     try {
       const response = await authService.login(idToken);
       if (response.success && response.data) {
-        const { accessToken, refreshToken, user } = response.data;
-
-        if (!user) {
-          Alert.alert('로그인 실패', '사용자 정보를 가져올 수 없습니다.');
-          return;
-        }
+        const { accessToken, refreshToken } = response.data;
 
         // 1. 로그인 상태 반영 (context 내부에서 토큰 저장)
-        await login(accessToken, refreshToken); // ✅ 핵심 변경
+        await login(accessToken, refreshToken);
 
+        // 2. UserContext 저장
+        await refreshUser(); // 서버에서 유저 정보 불러와 Context에 저장
+        
         // 2. 학습일수 저장
-        let studyDays = 0;
-        try {
-          const heatmap = await userService.getStudyHeatmap();
-          studyDays = getTotalStudyDays(heatmap);
-          await AuthStorage.setStudyDays(studyDays);
-        } catch (e) {
-          console.warn('총 학습일수 저장 실패 (무시됨):', e);
-        }
+        // let studyDays = 0;
+        // try {
+        //   const heatmap = await userService.getStudyHeatmap();
+        //   studyDays = getTotalStudyDays(heatmap);
+        //   await AuthStorage.setStudyDays(studyDays);
+        // } catch (e) {
+        //   console.warn('총 학습일수 저장 실패 (무시됨):', e);
+        // }
 
-        // 3. 사용자 정보 저장
-        const userWithStudyDays = { ...user, studyDays };
-        await AuthStorage.setUserData(userWithStudyDays);
-        setUser(userWithStudyDays);
+        // // 3. 사용자 정보 저장
+        // const userWithStudyDays = { ...user, studyDays };
+        // await AuthStorage.setUserData(userWithStudyDays);
+        // setUser(userWithStudyDays);
 
         // 4. 홈으로 이동
         navigate('home'); // ✅ currentScreen이 home인 경우 AppNavigator로 진입

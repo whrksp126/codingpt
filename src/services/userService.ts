@@ -2,16 +2,27 @@ import api from '../utils/api';
 import { authStorage } from '../utils/storage';
 
 // 사용자 타입 정의
+// export interface User {
+//   id: string;
+//   name: string;
+//   email: string;
+//   avatar?: string;
+//   joinDate: string;
+//   totalLessons: number;
+//   completedLessons: number;
+//   totalTime: string;
+//   streak: number;
+// }
 export interface User {
-  id: string;
-  name: string;
+  id: number;
   email: string;
-  avatar?: string;
-  joinDate: string;
-  totalLessons: number;
-  completedLessons: number;
-  totalTime: string;
-  streak: number;
+  created_at: string;
+  profile_img: string | null;
+  nickname: string;
+  xp: number;
+  heart: number;
+  heatmap?: Record<string, number>; // ✅ 히트맵 데이터 추가
+  studyDays?: number; // ✅ 총 학습일수 추가
 }
 
 export interface UserProfile {
@@ -30,6 +41,18 @@ export interface UserStats {
 
 // 사용자 서비스 클래스
 class UserService {
+  // 사용자 정보 가져오기
+  async getMe(): Promise<User | null> {
+    try {
+      const response = await api.user.getMe();
+      const userData = response.data as User;
+      return userData;
+    } catch (error) {
+      console.error('❌ [userService] 사용자 정보 가져오기 실패:', error);
+      return null;
+    }
+  }
+
   // 사용자 프로필 가져오기
   async getProfile(): Promise<User | null> {
     try {
@@ -56,24 +79,24 @@ class UserService {
   }
 
   // 사용자 통계 가져오기
-  async getStats(): Promise<UserStats | null> {
-    try {
-      const profile = await this.getProfile();
-      if (profile) {
-        return {
-          totalLessons: profile.totalLessons,
-          completedLessons: profile.completedLessons,
-          totalTime: profile.totalTime,
-          streak: profile.streak,
-          averageScore: 85, // TODO: 실제 평균 점수 계산
-        };
-      }
-      return null;
-    } catch (error) {
-      console.error('통계 가져오기 실패:', error);
-      return null;
-    }
-  }
+  // async getStats(): Promise<UserStats | null> {
+  //   try {
+  //     const profile = await this.getProfile();
+  //     if (profile) {
+  //       return {
+  //         totalLessons: profile.totalLessons,
+  //         completedLessons: profile.completedLessons,
+  //         totalTime: profile.totalTime,
+  //         streak: profile.streak,
+  //         averageScore: 85, // TODO: 실제 평균 점수 계산
+  //       };
+  //     }
+  //     return null;
+  //   } catch (error) {
+  //     console.error('통계 가져오기 실패:', error);
+  //     return null;
+  //   }
+  // }
 
   // 토큰 확인
   async checkAuth(): Promise<boolean> {
@@ -131,21 +154,21 @@ class UserService {
     try {
       const response = await api.user.getStudyHeatmap();
       const heatmapArray = response.data?.data;
-  
+
       if (response.success && Array.isArray(heatmapArray)) {
         // 배열을 Record<string, number>로 변환
         const result: Record<string, number> = {};
         heatmapArray.forEach(({ date, count }) => {
           result[date] = count;
         });
-  
-        console.log('변환된 heatmap 데이터:', result);
+        console.log('✅ [userService] 변환된 heatmap 데이터:', result);
         return result;
       }
   
+      console.log('⚠️ [userService] heatmap 데이터가 없거나 형식이 잘못됨');
       return {};
     } catch (error) {
-      console.error('Heatmap 데이터 가져오기 실패:', error);
+      console.error('❌ [userService] Heatmap 데이터 가져오기 실패:', error);
       return {};
     }
   }

@@ -212,6 +212,11 @@ export const api = {
 
   // 사용자 관련
   user: {
+    getMe: () =>
+      apiRequest('/api/users/me', {
+        method: 'GET',
+      }),
+
     getProfile: () =>
       apiRequest('/user/profile', {
         method: 'GET',
@@ -222,10 +227,11 @@ export const api = {
         method: 'PUT',
         body: data,
       }),
-      getStudyHeatmap: () =>
-      apiRequest<Record<string, number>>(`/api/users/heatmap`, {
-        method: 'GET',
-      }),
+      
+    getStudyHeatmap: () =>
+    apiRequest<Record<string, number>>(`/api/users/heatmap`, {
+      method: 'GET',
+    }),
   },
 };
 

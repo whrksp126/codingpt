@@ -2,46 +2,46 @@
 import AsyncStorage from '@react-native-async-storage/async-storage';
 
 const USER_DATA_KEY = 'userData';
-const STUDY_DAYS_KEY = 'studyDays';
+// const STUDY_DAYS_KEY = 'studyDays';
 
 // 사용자 데이터 인터페이스 정의
-export interface User {
-  id: number;
-  email: string;
-  created_at: string;
-  profile_img: string | null;
-  nickname: string;
-  xp: number;
-  heart: number;
-  studyDays?: number; // ✅ 총 학습일수 추가
-}
+// export interface User {
+//   id: number;
+//   email: string;
+//   created_at: string;
+//   profile_img: string | null;
+//   nickname: string;
+//   xp: number;
+//   heart: number;
+//   studyDays?: number; // ✅ 총 학습일수 추가
+// }
 
 export const AuthStorage = {
-  /**
-   * 사용자 데이터 저장 (객체는 JSON 문자열로 변환하여 저장)
-   * @param {User} userData - 저장할 사용자 데이터 객체
-   */
-  setUserData: async (userData: User) => {
-    try {
-      await AsyncStorage.setItem(USER_DATA_KEY, JSON.stringify(userData));
-    } catch (error) {
-      console.error('Error saving user data:', error);
-    }
-  },
+  // /**
+  //  * 사용자 데이터 저장 (객체는 JSON 문자열로 변환하여 저장)
+  //  * @param {User} userData - 저장할 사용자 데이터 객체
+  //  */
+  // setUserData: async (userData: User) => {
+  //   try {
+  //     await AsyncStorage.setItem(USER_DATA_KEY, JSON.stringify(userData));
+  //   } catch (error) {
+  //     console.error('Error saving user data:', error);
+  //   }
+  // },
 
-  /**
-   * 사용자 데이터 가져오기 (JSON 문자열을 객체로 변환)
-   * @returns {Promise<User | null>} - 저장된 사용자 데이터 객체 또는 null
-   */
-  getUserData: async (): Promise<User | null> => {
-    try {
-      const jsonValue = await AsyncStorage.getItem(USER_DATA_KEY);
-      return jsonValue != null ? JSON.parse(jsonValue) : null;
-    } catch (error) {
-      console.error('Error getting user data:', error);
-      return null;
-    }
-  },
+  // /**
+  //  * 사용자 데이터 가져오기 (JSON 문자열을 객체로 변환)
+  //  * @returns {Promise<User | null>} - 저장된 사용자 데이터 객체 또는 null
+  //  */
+  // getUserData: async (): Promise<User | null> => {
+  //   try {
+  //     const jsonValue = await AsyncStorage.getItem(USER_DATA_KEY);
+  //     return jsonValue != null ? JSON.parse(jsonValue) : null;
+  //   } catch (error) {
+  //     console.error('Error getting user data:', error);
+  //     return null;
+  //   }
+  // },
 
   /**
    * 사용자 데이터 삭제 (로그아웃 시)
@@ -57,37 +57,37 @@ export const AuthStorage = {
   /**
    * 총 학습일수 저장
    */
-  setStudyDays: async (count: number) => {
-    try {
-      await AsyncStorage.setItem(STUDY_DAYS_KEY, count.toString());
-    } catch (error) {
-      console.error('Error saving studyDays:', error);
-    }
-  },
+  // setStudyDays: async (count: number) => {
+  //   try {
+  //     await AsyncStorage.setItem(STUDY_DAYS_KEY, count.toString());
+  //   } catch (error) {
+  //     console.error('Error saving studyDays:', error);
+  //   }
+  // },
 
   /**
    * 총 학습일수 불러오기
    */
-  getStudyDays: async (): Promise<number> => {
-    try {
-      const value = await AsyncStorage.getItem(STUDY_DAYS_KEY);
-      return value ? parseInt(value, 10) : 0;
-    } catch (error) {
-      console.error('Error getting studyDays:', error);
-      return 0;
-    }
-  },
+  // getStudyDays: async (): Promise<number> => {
+  //   try {
+  //     const value = await AsyncStorage.getItem(STUDY_DAYS_KEY);
+  //     return value ? parseInt(value, 10) : 0;
+  //   } catch (error) {
+  //     console.error('Error getting studyDays:', error);
+  //     return 0;
+  //   }
+  // },
 
-  /**
-   * 총 학습일수 삭제
-   */
-  clearStudyDays: async () => {
-    try {
-      await AsyncStorage.removeItem(STUDY_DAYS_KEY);
-    } catch (error) {
-      console.error('Error clearing studyDays:', error);
-    }
-  }
+  // /**
+  //  * 총 학습일수 삭제
+  //  */
+  // clearStudyDays: async () => {
+  //   try {
+  //     await AsyncStorage.removeItem(STUDY_DAYS_KEY);
+  //   } catch (error) {
+  //     console.error('Error clearing studyDays:', error);
+  //   }
+  // }
 };
 
 // 스토리지 키 상수

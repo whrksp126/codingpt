@@ -1,10 +1,9 @@
-import React, { useEffect, useState } from 'react';
+import React from 'react';
 import Config from 'react-native-config';
 import { ScrollView, TouchableOpacity, Text, View, FlatList, Image } from 'react-native';
 import LessonCard from '../components/LessonCard';
 import { useUser } from '../contexts/UserContext';
 import { useNavigation } from '../contexts/NavigationContext';
-import userService from '../services/userService';
 import { getColorByCount, getRecentDays } from '../utils/heatmapUtils';
 import { AnimatedCircularProgress } from 'react-native-circular-progress';
 import { CodesandboxLogo, Clover, HeartStraight, Check, CaretRight } from '../assets/SvgIcon';
@@ -23,24 +22,9 @@ interface Lesson {
 const HomeScreen: React.FC = () => {
   const { navigate } = useNavigation();
   const { user } = useUser();
-  const [heatmap, setHeatmap] = useState<Record<string, number>>({});
-  const [recentCounts, setRecentCounts] = useState<number[]>([]);
-
-  useEffect(() => {
-    const fetchHeatmap = async () => {
-      try {
-        const data = await userService.getStudyHeatmap();
-        setHeatmap(data);
   
-        const recent = getRecentDays(data, 6); // 최근 6일
-        setRecentCounts(recent);
-      } catch (e) {
-        console.error('홈 heatmap 데이터 가져오기 실패:', e);
-      }
-    };
-  
-    fetchHeatmap();
-  }, []);
+  // UserContext의 heatmap 데이터에서 직접 최근 6일 데이터 계산
+  const recentCounts = user?.heatmap ? getRecentDays(user.heatmap, 6) : Array(6).fill(0);
 
   const lessons: Lesson[] = [
     {
@@ -96,7 +80,7 @@ const HomeScreen: React.FC = () => {
           </View>
           <View className="flex-row items-center gap-x-[5px]">
             <HeartStraight width={34} height={34} fill="#EE5555" />
-            <Text className="text-[#EE5555] text-[18px] font-bold">5</Text>
+            <Text className="text-[#EE5555] text-[18px] font-bold">{user?.heart ?? 0}</Text>
           </View>
         </View>
       </View>

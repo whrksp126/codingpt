@@ -1,5 +1,5 @@
 import { apiRequest } from '../utils/api';
-import type { User } from '../utils/storage';
+import type { User } from '../contexts/UserContext';
 
 export interface LoginResponse {
   accessToken: string;
