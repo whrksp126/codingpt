@@ -1,6 +1,7 @@
 import React from 'react';
 import { View, Text, TouchableOpacity, StatusBar } from 'react-native';
 import { House, BookBookmark, Storefront, User } from 'phosphor-react-native';
+import { Home, MyLessons, Store, My } from '../assets/SvgIcon';
 
 // Context
 import { useNavigation } from '../contexts/NavigationContext';
@@ -53,26 +54,26 @@ const AppNavigator = () => {
     }
 
     const tabs = [
-      { name: 'home', label: '홈', Icon: House },
-      { name: 'myLessons', label: '내 레슨', Icon: BookBookmark },
-      { name: 'store', label: '상점', Icon: Storefront },
-      { name: 'my', label: '마이', Icon: User },
+      { name: 'home', label: '홈', Icon: Home },
+      { name: 'myLessons', label: '내 레슨', Icon: MyLessons },
+      { name: 'store', label: '상점', Icon: Store },
+      { name: 'my', label: '마이', Icon: My },
     ];
 
     return (
       <View className="flex-row bg-white border-t border-gray-200 h-[60px] px-[10px]">
         {tabs.map(({ name, label, Icon }) => {
           const isActive = currentScreen === name;
-          const iconColor = isActive ? '#FFC107' : '#6C757D';
-          
+          const iconColor = isActive ? '#FFC700' : '#606060';
+
           return (
             <TouchableOpacity
               key={name}
               className="flex-1 items-center justify-center"
               onPress={() => navigate(name)}
             >
-              <Icon color={iconColor} weight={isActive ? 'fill' : 'regular'} size={24} />
-              <Text className={`text-[10px] mt-1 ${isActive ? 'text-[#FFC107] font-semibold' : 'text-[#6C757D]'}`}>
+              <Icon fill={iconColor} />
+              <Text className={`text-[10px] mt-1 ${isActive ? 'text-[#FFC700] font-semibold' : 'text-[#606060]'}`}>
                 {label}
               </Text>
             </TouchableOpacity>

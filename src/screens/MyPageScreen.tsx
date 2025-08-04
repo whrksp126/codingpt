@@ -14,11 +14,7 @@ import { authService } from '../services/authService';
 import userService from '../services/userService';
 import { CodesandboxLogo, Clover, HeartStraight, Check, XP } from '../assets/SvgIcon';
 
-interface MyPageScreenProps {
-  navigation: any;
-}
-
-const MyPageScreen: React.FC<MyPageScreenProps> = () => {
+const MyPageScreen = () => {
   const { user } = useUser(); // user 데이터
   const [heatmap, setHeatmap] = useState<Record<string, number>>({});
   const { logout } = useAuth();

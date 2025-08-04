@@ -7,7 +7,7 @@ import { useNavigation } from '../contexts/NavigationContext';
 import userService from '../services/userService';
 import { getColorByCount, getRecentDays } from '../utils/heatmapUtils';
 import { AnimatedCircularProgress } from 'react-native-circular-progress';
-import { CodesandboxLogo, Clover, HeartStraight, Check } from '../assets/SvgIcon';
+import { CodesandboxLogo, Clover, HeartStraight, Check, CaretRight } from '../assets/SvgIcon';
 
 
 console.log(Config);
@@ -120,6 +120,7 @@ const HomeScreen: React.FC = () => {
                   backgroundColor="#CCCCCC" // 미진행된 부분의 색상
                   rotation={0} // 원형의 시작 위치 (0 = 12시 방향)
                   lineCap="round" // 바의 끝 모양을 둥글게
+                  duration={1500} // 애니메이션 지속 시간 (1.5 sec)
                 >
                   {
                     (fill: number) => (
@@ -170,7 +171,7 @@ const HomeScreen: React.FC = () => {
               className="ml-auto"
               onPress={() => navigate('my')}
             >
-              <Image source={require('../assets/icons/arrow_r.png')} className="w-[9px] h-[16.5px]" />
+              <CaretRight width={10} height={18} fill="#CCCCCC" />
             </TouchableOpacity>
         </View>
 
@@ -179,7 +180,7 @@ const HomeScreen: React.FC = () => {
           <View className="flex-row justify-between items-center">
             <Text className="text-[16px] font-semibold text-[#111111]">학습 중인 클래스</Text>
             <TouchableOpacity onPress={() => navigate('LessonList')}>
-              <Image source={require('../assets/icons/arrow_r.png')} className="w-[9px] h-[16.5px]" />
+              <CaretRight width={10} height={18} fill="#CCCCCC" />
             </TouchableOpacity>
           </View>
 
@@ -199,7 +200,7 @@ const HomeScreen: React.FC = () => {
           <View className="flex-row justify-between items-center">
             <Text className="text-[16px] font-semibold text-[#111111]">추천 커리큘럼</Text>
             <TouchableOpacity onPress={() => navigate('LessonList')}>
-              <Image source={require('../assets/icons/arrow_r.png')} className="w-[9px] h-[16.5px]" />
+              <CaretRight width={10} height={18} fill="#CCCCCC" />
             </TouchableOpacity>
           </View>
         
