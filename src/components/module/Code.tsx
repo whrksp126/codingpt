@@ -4,14 +4,8 @@ import { WebView } from 'react-native-webview';
 import { X, Plus } from '../../assets/SvgIcon';
 
 interface CodeComponentProps {
-  module: {
-    files: {
-      name: string;
-      language: string;
-      content: string;
-      favicon?: string;
-    }[];
-  };
+  module: any;
+  onLoadComplete?: () => void;
 }
 
 const langLogoMap: Record<string, any> = {
@@ -21,7 +15,7 @@ const langLogoMap: Record<string, any> = {
 };
 
 
-export const CodeComponent: React.FC<CodeComponentProps> = ({ module }) => {
+export const CodeComponent: React.FC<CodeComponentProps> = ({ module, onLoadComplete }) => {
   const [activeTab, setActiveTab] = useState(0);
   const [isReadMode, setIsReadMode] = useState(true);
   const { width } = useWindowDimensions();
@@ -118,12 +112,18 @@ export const CodeComponent: React.FC<CodeComponentProps> = ({ module }) => {
       </View>
 
       {/* 코드 미리보기 (WebView) */}
-      <View style={{ height: 220 }}>
+      <View style={{ height: 220 }} className="bg-[#272822]">
         <WebView
           originWhitelist={['*']}
           source={{ html: renderHTML(activeFile.language, activeFile.content) }}
           style={{ flex: 1, backgroundColor: 'transparent' }}
           scrollEnabled={true}
+          onLoad={() => {
+            // WebView 로드 완료 시 콜백 호출
+            setTimeout(() => {
+              onLoadComplete?.();
+            }, 200);
+          }}
         />
       </View>
     </View>

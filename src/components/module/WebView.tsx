@@ -24,9 +24,8 @@ interface TabData {
 }
 
 interface WebViewComponentProps {
-  module: {
-    tabs: TabData[];
-  };
+  module: any;
+  onLoadComplete?: () => void;
 }
 
 // 메타데이터 파싱 함수
@@ -89,7 +88,7 @@ const getTitleAndFavicon = async (url: string): Promise<{ title: string; favicon
 };
 
 // 컴포넌트 본문
-export const WebViewComponent: React.FC<WebViewComponentProps> = ({ module }) => {
+export const WebViewComponent: React.FC<WebViewComponentProps> = ({ module, onLoadComplete }) => {
   const [tabList, setTabList] = useState<TabData[]>([]);
   const [tabStacks, setTabStacks] = useState<string[][]>([]);
   const [tabIndexes, setTabIndexes] = useState<number[]>([]);
@@ -229,6 +228,12 @@ export const WebViewComponent: React.FC<WebViewComponentProps> = ({ module }) =>
           javaScriptEnabled
           domStorageEnabled
           style={{ flex: 1 }}
+          onLoad={() => {
+            // WebView 로드 완료 시 콜백 호출
+            setTimeout(() => {
+              onLoadComplete?.();
+            }, 200);
+          }}
           onNavigationStateChange={(navState) => {
             if (tabList[activeTab].type === 'url') {
               const newStacks = [...tabStacks];

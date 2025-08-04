@@ -331,10 +331,16 @@ export const html = {
                     "title": "HTML은 무엇을 담당하나요?",
                     "modules": [
                       {
+                        "id": "slide_0007_module_0000",
                         "type": "paragraph",
-                        "content": "### 📄 HTML이란?\n\n**HTML** *(HyperText Markup Language)* 은 웹페이지에서 콘텐츠의 **구조**를 정의하는 언어입니다.\n\n> 브라우저가 텍스트, 이미지, 버튼 등의 요소들을 **어떤 순서로**  \n> **어떤 의미로 배치할지** 이해할 수 있도록 도와주는 것이 바로 HTML입니다."
+                        "content": "### 📄 HTML이란?\n\n**HTML** *(HyperText Markup Language)* 은 웹페이지에서 콘텐츠의 **구조**를 정의하는 언어입니다.\n\n> 브라우저가 텍스트, 이미지, 버튼 등의 요소들을 **어떤 순서로**  \n> **어떤 의미로 배치할지** 이해할 수 있도록 도와주는 것이 바로 HTML입니다.",
+                        "visibility": {
+                          "type": "step",
+                          "value": 1
+                        }
                       },
                       {
+                        "id": "slide_0007_module_0001",
                         "type": "multipleChoice",
                         "question": "다음 중 `<head>` 태그 안에 들어가는 요소가 아닌 것은?",
                         "options": [
@@ -343,14 +349,13 @@ export const html = {
                           { "label": "```<meta>``` 메타 정보 설정", "isCorrect": false },
                           { "label": "```<link>``` 외부 스타일시트 연결", "isCorrect": false }
                         ],
-                        
-
                         "visibility": {
                           "type": "step",
                           "value": 2
                         }
                       },
                       {
+                        "id": "slide_0007_module_0002",
                         "type": "code",
                         "files": [
                           {
@@ -366,10 +371,11 @@ export const html = {
                         ],
                         "visibility": {
                           "type": "step",
-                          "value": 2
+                          "value": 3
                         }
                       },
                       {
+                        "id": "slide_0007_module_0003",
                         "type": "webview",
                         "tabs": [
                           {
@@ -383,11 +389,19 @@ export const html = {
                         ],
                         "visibility": {
                           "type": "step",
-                          "value": 3
+                            "value": 4
                         },
                       },
-
                       {
+                        "type": "paragraph",
+                        "content": "## 코드 채점 결과",
+                        "visibility": {
+                          "type": "step",
+                          "value": 5
+                        }
+                      },
+                      {
+                        "id": "slide_0007_module_0004",
                         "type": "codeFillTheGap",
                         "files" : [
                           {
@@ -413,6 +427,10 @@ export const html = {
                             ],
                           }
                         ],
+                        "visibility": {
+                          "type": "step",
+                          "value": 6
+                        }
                       },
 
                     ]

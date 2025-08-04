@@ -3,10 +3,9 @@ import { View, Text, Pressable } from 'react-native';
 import Markdown from 'react-native-markdown-display';
 
 interface MultipleChoiceComponentProps {
-  module: {
-    question: string;
-    options: { label: string; isCorrect: boolean }[];
-  };
+  module: any;
+  onAnswerSelect?: (selectedIndex: number) => void;
+  selectedAnswer?: number;
 }
 
 // 마크다운 스타일 설정
@@ -52,13 +51,25 @@ const markdownStyles: any = {
 };
 
 // 컴포넌트 본문
-export const MultipleChoiceComponent: React.FC<MultipleChoiceComponentProps> = ({ module }) => {  
+export const MultipleChoiceComponent: React.FC<MultipleChoiceComponentProps> = ({ 
+  module, 
+  onAnswerSelect, 
+  selectedAnswer 
+}) => {  
   return (
     <View className="flex-col gap-[20px]">
       <Text className="text-[#111] text-[16px] font-[700]">{module.question}</Text>
         <View className="flex-col gap-[10px]">
-          {module.options.map((option, index) => (
-            <Pressable key={index} className="border border-[#111] rounded-[10px] px-[10px]">
+          {module.options.map((option: any, index: number) => (
+            <Pressable 
+              key={index} 
+              onPress={() => onAnswerSelect?.(index)}
+              className={`border rounded-[10px] px-[10px] ${
+                selectedAnswer === index 
+                  ? 'border-[#84D8FF] bg-[#DDF4FF]' 
+                  : 'border-[#E5E5E5]'
+              }`}
+            >
               <View className="flex-row flex-wrap">
                 <Markdown style={markdownStyles}>
                   {option.label}
