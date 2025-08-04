@@ -1,7 +1,8 @@
-import React, { useEffect, useState } from 'react';
-import { View, Text, FlatList, TouchableOpacity, Image } from 'react-native';
-import StoreService, { StoreCategory, Product } from '../services/storeService';
+import React, { useMemo, useState } from 'react';
+import { View, Text, FlatList, TouchableOpacity, Image, ActivityIndicator } from 'react-native';
 import { useNavigation } from '../contexts/NavigationContext';
+import { useStore } from '../contexts/StoreContext';
+import { Product, StoreCategory } from '../services/storeService';
 
 // 렌더링에 사용할 항목 타입 정의
 interface StoreItem { // product
@@ -33,33 +34,51 @@ const getCategoryIcon = (categoryName: string) => {
 
 const StoreScreen = () => {
   const { navigate } = useNavigation();
-  const [storeItems, setStoreItems] = useState<StoreItem[]>([]);
+  const { storeData, loading } = useStore();
+  // const [storeItems, setStoreItems] = useState<StoreItem[]>([]);
   const [filter, setFilter] = useState<'전체' | '무료' | '유료'>('전체');
 
-  useEffect(() => {
-    const fetchStores = async () => {
-      const categories = await StoreService.getAllStores();
+  // useEffect(() => {
+  //   const fetchStores = async () => {
+  //     const categories = await StoreService.getAllStores();
 
-      // 백엔드에서 받은 카테고리/상품 데이터를 가공하여 렌더링용 StoreItem으로 변환
-      const parsed: StoreItem[] = categories.flatMap((category: StoreCategory) =>
-        category.Products.map((product: Product) => ({
-          id: product.id.toString(),
-          name: product.name,
-          icon: getCategoryIcon(category.name),
-          description: product.description,
-          price: product.price,
-          priceType: product.price === 0 ? '무료' : '유료',
-          lessonCount: 0, // 향후 백엔드에서 강의 수 내려오면 반영
-          category: category.name,
-          categoryDescription: category.description,
-        }))
-      );
+  //     // 백엔드에서 받은 카테고리/상품 데이터를 가공하여 렌더링용 StoreItem으로 변환
+  //     const parsed: StoreItem[] = categories.flatMap((category: StoreCategory) =>
+  //       category.Products.map((product: Product) => ({
+  //         id: product.id.toString(),
+  //         name: product.name,
+  //         icon: getCategoryIcon(category.name),
+  //         description: product.description,
+  //         price: product.price,
+  //         priceType: product.price === 0 ? '무료' : '유료',
+  //         lessonCount: 0, // 향후 백엔드에서 강의 수 내려오면 반영
+  //         category: category.name,
+  //         categoryDescription: category.description,
+  //       }))
+  //     );
 
-      setStoreItems(parsed);
-    };
+  //     setStoreItems(parsed);
+  //   };
 
-    fetchStores();
-  }, []);
+  //   fetchStores();
+  // }, []);
+
+  // StoreCategory[] → StoreItem[] 변환 (useMemo로 캐싱)
+  const storeItems: StoreItem[] = useMemo(() => {
+    return storeData.flatMap((category: StoreCategory) =>
+      category.Products.map((product: Product) => ({
+        id: product.id.toString(),
+        name: product.name,
+        icon: getCategoryIcon(category.name),
+        description: product.description,
+        price: product.price,
+        priceType: product.price === 0 ? '무료' : '유료',
+        lessonCount: 0,
+        category: category.name,
+        categoryDescription: category.description,
+      }))
+    );
+  }, [storeData]);
 
   // 필터링 처리
   const filteredLectures = storeItems.filter(
@@ -79,6 +98,14 @@ const StoreScreen = () => {
     acc[cur.category].items.push(cur);
     return acc;
   }, {});
+
+  if (loading) {
+    return (
+      <View className="flex-1 justify-center items-center bg-white">
+        <ActivityIndicator size="large" />
+      </View>
+    );
+  }
 
   return (
     <View className="flex-1 bg-white pt-5">

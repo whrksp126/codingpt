@@ -3,10 +3,11 @@ import { SafeAreaView, SafeAreaProvider } from 'react-native-safe-area-context';
 import { ActivityIndicator, View, StatusBar } from 'react-native';
 
 // Context
+import { NavigationProvider } from './src/contexts/NavigationContext';
+import { StoreProvider } from './src/contexts/StoreContext';
 import { AuthProvider, useAuth } from './src/contexts/AuthContext';
 import { LessonProvider } from './src/contexts/LessonContext';
 import { useUser, UserProvider } from './src/contexts/UserContext';
-import { NavigationProvider } from './src/contexts/NavigationContext';
 
 // Navigation
 import AuthNavigator from './src/navigation/AuthNavigator';
@@ -37,13 +38,15 @@ export default function App() {
   return (
     <SafeAreaProvider>
       <UserProvider>
-        <AuthProvider>
-          <LessonProvider>
-            <NavigationProvider>
-              <Main />
-            </NavigationProvider>
-          </LessonProvider>
-        </AuthProvider>
+        <StoreProvider>
+          <AuthProvider>
+            <LessonProvider>
+              <NavigationProvider>
+                <Main />
+              </NavigationProvider>
+            </LessonProvider>
+          </AuthProvider>
+        </StoreProvider>
       </UserProvider>
     </SafeAreaProvider>
   );
