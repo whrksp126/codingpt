@@ -4,14 +4,15 @@ import { GoogleSignin } from '@react-native-google-signin/google-signin';
 import AsyncStorage from '@react-native-async-storage/async-storage';
 import AuthStorage from '../utils/storage';
 import { getTotalStudyDays } from '../utils/heatmapUtils';
+import { Gear } from 'phosphor-react-native';
+import dayjs from 'dayjs';
 import Button from '../components/Button';
 import Heatmap from '../components/Heatmap';
 import { useUser } from '../contexts/UserContext';
+import { useAuth } from '../contexts/AuthContext';
 import { authService } from '../services/authService';
 import userService from '../services/userService';
-import { Gear } from 'phosphor-react-native';
-import dayjs from 'dayjs';
-import { useAuth } from '../contexts/AuthContext';
+import { CodesandboxLogo, Clover, HeartStraight, Check, XP } from '../assets/SvgIcon';
 
 interface MyPageScreenProps {
   navigation: any;
@@ -123,39 +124,27 @@ const MyPageScreen: React.FC<MyPageScreenProps> = () => {
       <View className="flex-col gap-y-[10px] py-[10px]">
         <Text className="font-bold text-[22px]">개요</Text>
         <View className="flex-row justify-between gap-x-[10px]">
-          {/* 학습 일수 (🍀 → clover.png) */}
+          {/* 학습 일수 🍀 */}
           <View className="flex-1 flex-row items-start border rounded-[10px] border-[#CCCCCC] p-[10px] gap-x-[6px]">
-            <Image
-              source={require('../assets/icons/clover.png')}
-              className="w-[24px] h-[24px] mt-[5px]"
-              resizeMode="contain"
-            />
+            <Clover width={24} height={26} fill="#F0FFE5" stroke="#58CC02" strokeWidth={2} />
             <View className="flex-col gap-y-[4px]">
               <Text className="text-[#3C3C3C] font-bold text-[18px]">{user?.studyDays ?? 0}</Text>
               <Text className="text-[10px] text-[#777777]">학습 일수</Text>
             </View>
           </View>
 
-          {/* 총 XP (⚡ → xp.png) */}
+          {/* 총 XP ⚡ */}
           <View className="flex-1 flex-row border rounded-[10px] border-[#CCCCCC] p-[10px] gap-x-[6px]">
-            <Image
-              source={require('../assets/icons/xp.png')}
-              className="w-[24px] h-[24px] mt-[4px]"
-              resizeMode="contain"
-            />
+            <XP width={24} height={24} fill="#FFC800" />
             <View className="flex-col gap-y-[4px]">
               <Text className="text-[#3C3C3C] font-bold text-[18px]">{user.xp}</Text>
               <Text className="text-[10px] text-[#777777]">총 XP</Text>
             </View>
           </View>
 
-          {/* 하트 (❤️ → heart.png) */}
+          {/* 하트 ❤️ */}
           <View className="flex-1 flex-row border rounded-[10px] border-[#CCCCCC] p-[10px] gap-x-[6px]">
-            <Image
-              source={require('../assets/icons/heart.png')}
-              className="w-[24px] h-[24px] mb-[5px]"
-              resizeMode="contain"
-            />
+            <HeartStraight width={24} height={24} fill="#EE5555" />
             <View className="flex-col gap-y-[4px]">
               <Text className="text-[#3C3C3C] font-bold text-[18px]">{user.heart}</Text>
               <Text className="text-[10px] text-[#777777]">하트</Text>

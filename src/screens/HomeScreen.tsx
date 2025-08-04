@@ -7,7 +7,7 @@ import { useNavigation } from '../contexts/NavigationContext';
 import userService from '../services/userService';
 import { getColorByCount, getRecentDays } from '../utils/heatmapUtils';
 import { AnimatedCircularProgress } from 'react-native-circular-progress';
-import { CodesandboxLogo } from '../assets/SvgIcon';
+import { CodesandboxLogo, Clover, HeartStraight, Check } from '../assets/SvgIcon';
 
 
 console.log(Config);
@@ -87,15 +87,15 @@ const HomeScreen: React.FC = () => {
         <Image 
           source={require('../assets/icons/codingpt_logo_text.png')} 
           className="w-[133px]" 
-          resizeMode="contain" 
+          resizeMode="contain"
         />
         <View className="flex-row items-center gap-x-[10px]">
           <View className="flex-row items-center gap-x-[5px]">
-            <Image source={require('../assets/icons/clover.png')} className="w-[26.56px] h-[30.28px]" />
+            <Clover width={34} height={34} fill="#58CC02" />
             <Text className="text-[#58CC02] text-[18px] font-bold">{user?.studyDays ?? 0}</Text>
           </View>
           <View className="flex-row items-center gap-x-[5px]">
-            <Image source={require('../assets/icons/heart.png')} className="w-[29.75px] h-[25.51px]" />
+            <HeartStraight width={34} height={34} fill="#EE5555" />
             <Text className="text-[#EE5555] text-[18px] font-bold">5</Text>
           </View>
         </View>
@@ -142,8 +142,8 @@ const HomeScreen: React.FC = () => {
               className="bg-[#93D333] w-[236px] h-[46px] rounded-[50px] py-3 px-6 flex-row items-center justify-center"
               onPress={() => navigate('classProgress')}
             >
-              <CodesandboxLogo width={40} height={40} fill="#ccc" />
-              <Text className="text-white text-[18px] font-bold" style={{ marginTop: -3 }}>학습하러 가기</Text>
+              <CodesandboxLogo width={40} height={40} fill="#ffffff" />
+              <Text className="text-white text-[18px] font-bold ml-[10px]" style={{ marginTop: -3 }}>학습하러 가기</Text>
             </TouchableOpacity>
           </View>
         </View>
@@ -159,7 +159,9 @@ const HomeScreen: React.FC = () => {
                 style={{ backgroundColor: getColorByCount(count) }}
               >
                 {count > 0 && (
-                  <Image source={checkIcon} className="w-[20px] h-[20px]" resizeMode="contain" />
+                  <View className="flex-1 justify-center items-center">
+                    <Check width={21} height={17} fill="#58CC02" />
+                  </View>
                 )}
               </View>
             ))}
