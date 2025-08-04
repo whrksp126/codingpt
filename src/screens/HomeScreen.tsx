@@ -41,9 +41,6 @@ const HomeScreen: React.FC = () => {
     },
   ];
 
-  // 잔디: 체크 아이콘 조건부
-  const checkIcon = require('../assets/icons/check.png');
-
   // 학습 중인 클래스 구조
   const renderLesson = ({ item }: { item: Lesson }) => (
     <View className="flex-row items-center bg-white border border-[#CCCCCC] rounded-[16px] p-[10px] mt-[10px]">

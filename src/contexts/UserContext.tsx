@@ -19,14 +19,14 @@ export const UserProvider = ({ children }: { children: ReactNode }) => {
 
   const refreshUser = async () => {
     try {
-      const userInfo = await userService.getMe(); // 👈 로그인된 유저 정보 가져오는 API
-      console.log('👤 [UserContext] userInfo:', userInfo);
+      const userInfo = await userService.getMe(); // 사용자 정보
+      // console.log('👤 [UserContext] userInfo:', userInfo);
       
       if (userInfo) {
         const heatmap = await userService.getStudyHeatmap(); // 잔디
         const studyDays = getTotalStudyDays(heatmap); // 학습일수
         const finalUserData = { ...userInfo, heatmap, studyDays };
-        console.log('✅ [UserContext] 최종 유저 데이터:', finalUserData);
+        // console.log('✅ [UserContext] 최종 유저 데이터:', finalUserData);
         
         setUser(finalUserData);
       } else {

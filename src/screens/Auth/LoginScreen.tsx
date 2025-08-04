@@ -2,17 +2,12 @@ import React, { useEffect, useState } from 'react';
 import { View, Text, Alert, TouchableOpacity, Image, SafeAreaView } from 'react-native';
 import { GoogleSignin } from '@react-native-google-signin/google-signin';
 import Config from 'react-native-config';
-import AsyncStorage from '@react-native-async-storage/async-storage';
 
 import { useUser } from '../../contexts/UserContext';
 import { useAuth } from '../../contexts/AuthContext';
 import { useNavigation } from '../../contexts/NavigationContext';
 
-import AuthStorage from '../../utils/storage';
-import { getTotalStudyDays } from '../../utils/heatmapUtils';
-
 import { authService } from '../../services/authService';
-import userService from '../../services/userService';
 
 import BootSplash from 'react-native-bootsplash';
 
@@ -69,24 +64,9 @@ const LoginScreen: React.FC = () => {
         await login(accessToken, refreshToken);
 
         // 2. UserContext 저장
-        await refreshUser(); // 서버에서 유저 정보 불러와 Context에 저장
-        
-        // 2. 학습일수 저장
-        // let studyDays = 0;
-        // try {
-        //   const heatmap = await userService.getStudyHeatmap();
-        //   studyDays = getTotalStudyDays(heatmap);
-        //   await AuthStorage.setStudyDays(studyDays);
-        // } catch (e) {
-        //   console.warn('총 학습일수 저장 실패 (무시됨):', e);
-        // }
+        await refreshUser();
 
-        // // 3. 사용자 정보 저장
-        // const userWithStudyDays = { ...user, studyDays };
-        // await AuthStorage.setUserData(userWithStudyDays);
-        // setUser(userWithStudyDays);
-
-        // 4. 홈으로 이동
+        // 3. 홈으로 이동
         navigate('home'); // ✅ currentScreen이 home인 경우 AppNavigator로 진입
       } else {
         Alert.alert('로그인 실패', '서버 인증에 실패했습니다.');
