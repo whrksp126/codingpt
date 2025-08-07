@@ -1,58 +1,37 @@
 // 내 강의 페이지
-import React, { useState } from 'react';
-import { View, Text, FlatList, TouchableOpacity, Image, Alert, ActivityIndicator } from 'react-native';
+import React, { useState, useMemo } from 'react';
+import { View, Text, FlatList, TouchableOpacity, Image, ActivityIndicator } from 'react-native';
 import { useNavigation } from '../../contexts/NavigationContext';
 import { useUser } from '../../contexts/UserContext';
 import { useLesson } from '../../contexts/LessonContext';
+import { parseLessonList, getIconByTitle, ParsedLesson } from '../../utils/lessonUtils';
 
-// 강의 항목 타입
-interface Lesson {
-  id: string;
-  title: string;
-  icon: any;
-  date: string;
-  progress: number;
-}
-
-const LessonListScreen = ({ route }: any) => {
+const LessonListScreen = () => {
   const { navigate } = useNavigation();
-
   const { user } = useUser();
-  const { lessons, loading: lessonLoading, reloadLessons } = useLesson();
+  const { lessons, loading: lessonLoading } = useLesson();
 
   const [filter, setFilter] = useState<'전체' | '수강중' | '수강완료'>('전체');
 
-  // 강의 제목 키워드로 아이콘 매핑
-  const getIconByTitle = (title: string): any => {
-    if (title.includes('HTML')) return require('../../assets/icons/html-5-icon.png');
-    if (title.includes('CSS')) return require('../../assets/icons/css-3-icon.png');
-    if (title.includes('자바스크립트')) return require('../../assets/icons/js-icon.png');
-    if (title.includes('파이썬')) return require('../../assets/icons/python-icon.png');
-    return require('../../assets/icons/js-icon.png'); // 임시로 js이미지 사용
-  };
+  // 전체 강의 리스트 가공
+  const parsedLessons = useMemo(() => parseLessonList(lessons), [lessons]);
 
-  // 실제 데이터 → UI 렌더용 Lesson[] 변환
-  const lessonData: Lesson[] = lessons.map((item) => ({
-    id: item.id.toString(),
-    title: item.name,
-    icon: getIconByTitle(item.name),
-    date: '1일 전', // 임시로 1일 전 사용
-    progress: item.price === 0 ? 75 : 100, // 임의 기준: 무료는 수강중, 유료는 완료 등으로 처리
-  }));
+  // 필터 적용 + 아이콘 추가
+  const filteredLessons: (ParsedLesson & { icon: any })[] = useMemo(() => {
+    return parsedLessons
+      .filter((lesson) => {
+        if (filter === '전체') return true;
+        return lesson.status === filter;
+      })
+      .map((lesson) => ({
+        ...lesson,
+        icon: getIconByTitle(lesson.title),
+      }));
+  }, [parsedLessons, filter]);
 
-  const filteredLessons = lessonData.filter((lesson) => {
-    if (filter === '전체') return true;
-    if (filter === '수강중') return lesson.progress < 100;
-    if (filter === '수강완료') return lesson.progress === 100;
-    return true;
-  });
-
-
-
-  {/* 강의 구조 */}
-  const renderLesson = ({ item }: { item: Lesson }) => {
-    const product = lessons.find(c => c.id === Number(item.id));
-
+  // 강의 카드 렌더링
+  const renderLesson = ({ item }: { item: ParsedLesson & { icon: any } }) => {
+    const product = lessons.find((c) => c.id === Number(item.id));
     if (!product) return null;
 
     return (
@@ -60,7 +39,7 @@ const LessonListScreen = ({ route }: any) => {
         onPress={() =>
           navigate('lessonDetail', {
             ...product,
-            icon: item.icon, // ✅ icon도 같이 넘김
+            icon: item.icon,
             date: item.date,
             progress: item.progress,
           })
@@ -87,9 +66,9 @@ const LessonListScreen = ({ route }: any) => {
         </View>
       </TouchableOpacity>
     );
-};
+  };
 
-  // 로딩 중일 때
+  // 로딩 상태 처리
   if (lessonLoading) {
     return (
       <View className="flex-1 justify-center items-center bg-white">
@@ -103,7 +82,7 @@ const LessonListScreen = ({ route }: any) => {
     <View className="flex-1 bg-white pt-5">
       <Text className="text-[22px] font-bold mb-5 pl-4">내 강의</Text>
 
-      {/* 레슨 상태 필터 */}
+      {/* 탭 필터 */}
       <View className="flex-row justify-start pl-4">
         {['전체', '수강중', '수강완료'].map((label) => (
           <TouchableOpacity
@@ -113,11 +92,7 @@ const LessonListScreen = ({ route }: any) => {
             }`}
             onPress={() => setFilter(label as typeof filter)}
           >
-            <Text
-              className={`text-base ${
-                filter === label ? 'text-white' : 'text-[#606060]'
-              }`}
-            >
+            <Text className={`text-base ${filter === label ? 'text-white' : 'text-[#606060]'}`}>
               {label}
             </Text>
           </TouchableOpacity>
@@ -135,7 +110,6 @@ const LessonListScreen = ({ route }: any) => {
         contentContainerStyle={{ paddingHorizontal: 16 }}
         showsVerticalScrollIndicator={false}
       />
-
     </View>
   );
 };
