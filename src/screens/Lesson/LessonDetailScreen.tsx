@@ -1,21 +1,20 @@
-import AsyncStorage from '@react-native-async-storage/async-storage';
 import React, { useEffect, useState } from 'react';
 import { View, Text, TouchableOpacity, Image, ScrollView, Alert, ActivityIndicator } from 'react-native';
 import { Star } from 'phosphor-react-native';
-import { checkLoggedIn, api, apiRequest } from '../../utils/api';
-import lessonService from '../../services/lessonService';
 import { useNavigation } from '../../contexts/NavigationContext';
+import { useUser } from '../../contexts/UserContext';
+import lessonService from '../../services/lessonService';
 
 const LessonDetailScreen = ({ route }: any) => {
   const { goBack, navigate } = useNavigation();
   const { id, name, icon, description, price, lessonCount, progress, date } = route.params;
   const item = { id, name, icon, description, price, lessonCount, progress, date };
 
+  const { user } = useUser();
+
   // 인증 및 수강 여부 관련 상태
-  const [userId, setUserId] = useState<number | null>(null);
   const [isEnrolled, setIsEnrolled] = useState<boolean>(false);
   const [loading, setLoading] = useState(true);
-  const [blocked, setBlocked] = useState<boolean>(false);
 
   // 탭 구성
   const [activeTab, setActiveTab] = useState('강의소개');
@@ -23,31 +22,26 @@ const LessonDetailScreen = ({ route }: any) => {
 
   useEffect(() => {
     const init = async () => {
-      // 로그인 여부 확인
-      const result = await checkLoggedIn();
-
-      if (!result.loggedIn) {
-        setBlocked(true); // hook-safe 방식으로 처리
-        Alert.alert('로그인이 필요합니다.', '', [
-          { text: '확인', onPress: () => navigate('login') },
-        ]);
+      if (!user?.id) {
+        console.log('⚠️ [LessonDetailScreen] user 정보가 없습니다.');
+        setLoading(false);
         return;
       }
 
-      const uid = result.userId!;
-      setUserId(uid); // userId 저장
-
-      // 내강의 여부 확인
-      const enrolled = await lessonService.getMyclass(uid, id); // t/f 반환
-      setIsEnrolled(enrolled);
-      setLoading(false);
+      try {
+        // 내강의 여부 확인
+        const enrolled = await lessonService.getMyclass(user.id, id); // t/f 반환
+        setIsEnrolled(enrolled);
+      } catch (error) {
+        console.error('❌ [LessonDetailScreen] 수강 여부 확인 실패:', error);
+        setIsEnrolled(false);
+      } finally {
+        setLoading(false);
+      }
     };
 
     init();
-  }, []);
-
-  // 🔒 로그인 차단 상태일 경우 렌더 중단
-  if (blocked) return <View className="flex-1 bg-white" />;
+  }, [user, id]);
 
   // 로딩 중
   if (loading) {
@@ -92,7 +86,7 @@ const LessonDetailScreen = ({ route }: any) => {
             }}
             onPress={async () => {
               if (!isEnrolled) {
-                const registered = await lessonService.postMyclass(userId!, id);
+                const registered = await lessonService.postMyclass(user!.id, id);
                 if (registered) {
                   Alert.alert('수강 등록 완료');
                   navigate('classProgress', item);

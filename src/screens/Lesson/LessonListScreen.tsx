@@ -1,9 +1,9 @@
 // 내 강의 페이지
-import React, { useEffect, useState } from 'react';
-import { View, Text, FlatList, TouchableOpacity, Image, Alert } from 'react-native';
-import { checkLoggedIn } from '../../utils/api';
-import lessonService, { Product } from '../../services/lessonService';
+import React, { useState } from 'react';
+import { View, Text, FlatList, TouchableOpacity, Image, Alert, ActivityIndicator } from 'react-native';
 import { useNavigation } from '../../contexts/NavigationContext';
+import { useUser } from '../../contexts/UserContext';
+import { useLesson } from '../../contexts/LessonContext';
 
 // 강의 항목 타입
 interface Lesson {
@@ -16,33 +16,9 @@ interface Lesson {
 
 const LessonListScreen = ({ route }: any) => {
   const { navigate } = useNavigation();
-  // 인증 관련 상태
-  const [userId, setUserId] = useState<number | null>(null);
-  const [blocked, setBlocked] = useState<boolean>(false);
-  // 내 강의 데이터
-  const [myclass, setMyclass] = useState<Product[]>([]);
 
-  useEffect(() => {
-    const init = async () => {
-      // 로그인 여부 확인
-      const result = await checkLoggedIn();
-      if (!result.loggedIn) {
-        setBlocked(true);
-        Alert.alert('로그인이 필요합니다.', '', [
-          { text: '확인', onPress: () => navigate('login') },
-        ]);
-        return;
-      }
-
-      const uid = result.userId!;
-      setUserId(uid); // userId 저장
-
-      const data = await lessonService.getMyclassById(uid);
-      setMyclass(data);
-    };
-
-    init();
-  }, []);
+  const { user } = useUser();
+  const { lessons, loading: lessonLoading, reloadLessons } = useLesson();
 
   const [filter, setFilter] = useState<'전체' | '수강중' | '수강완료'>('전체');
 
@@ -56,7 +32,7 @@ const LessonListScreen = ({ route }: any) => {
   };
 
   // 실제 데이터 → UI 렌더용 Lesson[] 변환
-  const lessonData: Lesson[] = myclass.map((item) => ({
+  const lessonData: Lesson[] = lessons.map((item) => ({
     id: item.id.toString(),
     title: item.name,
     icon: getIconByTitle(item.name),
@@ -75,7 +51,7 @@ const LessonListScreen = ({ route }: any) => {
 
   {/* 강의 구조 */}
   const renderLesson = ({ item }: { item: Lesson }) => {
-    const product = myclass.find(c => c.id === Number(item.id));
+    const product = lessons.find(c => c.id === Number(item.id));
 
     if (!product) return null;
 
@@ -113,6 +89,16 @@ const LessonListScreen = ({ route }: any) => {
     );
 };
 
+  // 로딩 중일 때
+  if (lessonLoading) {
+    return (
+      <View className="flex-1 justify-center items-center bg-white">
+        <ActivityIndicator size="large" color="#58CC02" />
+        <Text className="mt-2 text-gray-600">강의 목록을 불러오는 중...</Text>
+      </View>
+    );
+  }
+
   return (
     <View className="flex-1 bg-white pt-5">
       <Text className="text-[22px] font-bold mb-5 pl-4">내 강의</Text>
@@ -149,6 +135,7 @@ const LessonListScreen = ({ route }: any) => {
         contentContainerStyle={{ paddingHorizontal: 16 }}
         showsVerticalScrollIndicator={false}
       />
+
     </View>
   );
 };

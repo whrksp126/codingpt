@@ -38,31 +38,6 @@ const StoreScreen = () => {
   // const [storeItems, setStoreItems] = useState<StoreItem[]>([]);
   const [filter, setFilter] = useState<'전체' | '무료' | '유료'>('전체');
 
-  // useEffect(() => {
-  //   const fetchStores = async () => {
-  //     const categories = await StoreService.getAllStores();
-
-  //     // 백엔드에서 받은 카테고리/상품 데이터를 가공하여 렌더링용 StoreItem으로 변환
-  //     const parsed: StoreItem[] = categories.flatMap((category: StoreCategory) =>
-  //       category.Products.map((product: Product) => ({
-  //         id: product.id.toString(),
-  //         name: product.name,
-  //         icon: getCategoryIcon(category.name),
-  //         description: product.description,
-  //         price: product.price,
-  //         priceType: product.price === 0 ? '무료' : '유료',
-  //         lessonCount: 0, // 향후 백엔드에서 강의 수 내려오면 반영
-  //         category: category.name,
-  //         categoryDescription: category.description,
-  //       }))
-  //     );
-
-  //     setStoreItems(parsed);
-  //   };
-
-  //   fetchStores();
-  // }, []);
-
   // StoreCategory[] → StoreItem[] 변환 (useMemo로 캐싱)
   const storeItems: StoreItem[] = useMemo(() => {
     return storeData.flatMap((category: StoreCategory) =>
