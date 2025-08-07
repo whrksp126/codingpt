@@ -6,7 +6,7 @@ import { Product, StoreCategory } from '../services/storeService';
 
 // 렌더링에 사용할 항목 타입 정의
 interface StoreItem { // product
-  id: string;
+  id: number;
   name: string;
   icon: any;
   description: string;
@@ -42,7 +42,7 @@ const StoreScreen = () => {
   const storeItems: StoreItem[] = useMemo(() => {
     return storeData.flatMap((category: StoreCategory) =>
       category.Products.map((product: Product) => ({
-        id: product.id.toString(),
+        id: product.id,
         name: product.name,
         icon: getCategoryIcon(category.name),
         description: product.description,

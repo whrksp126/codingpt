@@ -101,3 +101,21 @@ export const parseLessonList = (lessons: Product[]): ParsedLesson[] => {
     };
   });
 };
+
+/**
+ * LessonDetailScreen에서 사용할 함수
+ * 목차(section) 개수, 레슨(lesson) 개수 계산
+ */
+export const countSectionsAndLessons = (product: Product): { sectionCount: number; lessonCount: number } => {
+  let sectionCount = 0;
+  let lessonCount = 0;
+
+  product.Classes.forEach((cls) => {
+    cls.Sections.forEach((sec) => {
+      sectionCount++;
+      lessonCount += sec.Lessons.length;
+    });
+  });
+
+  return { sectionCount, lessonCount };
+};
