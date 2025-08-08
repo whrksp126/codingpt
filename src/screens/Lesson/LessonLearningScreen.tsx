@@ -6,6 +6,7 @@ import { WebViewComponent } from '../../components/module/WebView';
 import { ParagraghComponent } from '../../components/module/Paragragh';
 import { CodeComponent } from '../../components/module/Code';
 import { MultipleChoiceComponent } from '../../components/module/MultipleChoice';
+import { CodeFillTheGapComponent } from '../../components/module/CodeFillTheGap';
 
 
 interface SlideModule{
@@ -235,6 +236,17 @@ const LessonLearningScreen: React.FC<{ route: any }> = ({ route }) => {
                   return (
                     <View key={`slide-${curSlideIndex}-module-${moduleIndex}`}>
                       <CodeComponent 
+                        module={module}
+                        onLoadComplete={() => {
+                          setWebViewLoadCount(prev => prev + 1);
+                        }}
+                      />
+                    </View>
+                  );
+                case 'codeFillTheGap':
+                  return (
+                    <View key={`slide-${curSlideIndex}-module-${moduleIndex}`}>
+                      <CodeFillTheGapComponent 
                         module={module}
                         onLoadComplete={() => {
                           setWebViewLoadCount(prev => prev + 1);

@@ -331,12 +331,70 @@ export const html = {
                     "title": "HTML은 무엇을 담당하나요?",
                     "modules": [
                       {
+                        "id": "slide_0007_module_0002",
+                        "type": "code",
+                        "files": [
+                          {
+                            "name": "index.html",
+                            "language": "html",
+                            "content": "<h1>환영합니다</h1>\n<p>HTML은 구조를 만듭니다.</p>\n<img src=\"example.jpg\" alt=\"예시 이미지\">\n<button>클릭해보세요</button>"
+                          },
+                          {
+                            "name": "index.css",
+                            "language": "css",
+                            "content": "body { background-color: #f0f0f0; }"
+                          }
+                        ],
+                        "visibility": {
+                          "type": "step",
+                          "value": 1
+                        }
+                      },  
+                      {
+                        "id": "slide_0007_module_0004",
+                        "type": "codeFillTheGap",
+                        "files" : [
+                          {
+                            "name": "index.html",
+                            "language": "html",
+                            "content": "<h1>환영합니다</h1>\n<p>HTML은 구조를 만듭니다.</p>\n<img src=\"example.jpg\" alt=\"예시 이미지\">\n<button>클릭해보세요</button>",
+                            "isInteractive": true,
+                            "interactionOptions": [
+                              {
+                                "id": "001",
+                                "value": "환영합니다",
+                                "blankSyntax" : "[[[blank id=\"001\" init=\"5\" state=\"empty\" value=\"\"]]]",
+                                "startLine": 0,
+                                "startPos": 4,
+                              },
+                            ],
+                          },
+                          {
+                            "name": "index.css",
+                            "language": "css",
+                            // "content": "[[[blank id=\"002\" init=\"4\" state=\"empty\" value=\"\"]]] { background-color: #f0f0f0; }",
+                            "content": "body { background-color: #f0f0f0; }",
+                            "isInteractive": true,
+                            "interactionOptions": [
+                              {
+                                "id": "002",
+                                "value": "body",
+                              },
+                            ],
+                          }
+                        ],
+                        "visibility": {
+                          "type": "step",
+                          "value": 1
+                        }
+                      },
+                      {
                         "id": "slide_0007_module_0000",
                         "type": "paragraph",
                         "content": "### 📄 HTML이란?\n\n**HTML** *(HyperText Markup Language)* 은 웹페이지에서 콘텐츠의 **구조**를 정의하는 언어입니다.\n\n> 브라우저가 텍스트, 이미지, 버튼 등의 요소들을 **어떤 순서로**  \n> **어떤 의미로 배치할지** 이해할 수 있도록 도와주는 것이 바로 HTML입니다.",
                         "visibility": {
                           "type": "step",
-                          "value": 1
+                            "value": 2
                         }
                       },
                       {
@@ -351,29 +409,10 @@ export const html = {
                         ],
                         "visibility": {
                           "type": "step",
-                          "value": 2
+                            "value": 3
                         }
                       },
-                      {
-                        "id": "slide_0007_module_0002",
-                        "type": "code",
-                        "files": [
-                          {
-                            "name": "index.html",
-                            "language": "html",
-                            "content": "<h1>나의 첫 번째 웹페이지</h1>\n<p>HTML은 구조를 만듭니다.</p>\n<img src=\"example.jpg\" alt=\"예시 이미지\">\n<button>클릭해보세요</button>"
-                          },
-                          {
-                            "name": "index.css",
-                            "language": "css",
-                            "content": "body { background-color: #f0f0f0; }"
-                          }
-                        ],
-                        "visibility": {
-                          "type": "step",
-                          "value": 3
-                        }
-                      },
+
                       {
                         "id": "slide_0007_module_0003",
                         "type": "webview",
@@ -400,38 +439,7 @@ export const html = {
                           "value": 5
                         }
                       },
-                      {
-                        "id": "slide_0007_module_0004",
-                        "type": "codeFillTheGap",
-                        "files" : [
-                          {
-                            "name": "index.html",
-                            "language": "html",
-                            "content": "<!DOCTYPE html>\n<html>\n  <head>\n    <meta charset=\"UTF-8\">\n    <title>나의 첫 번째 페이지</title>\n  </head>\n  <body>\n    <h1>[___]</h1>\n    <p>[___]</p>\n  </body>\n</html>",
-                            "isInteractive": true,
-                            "interactionOptions": [
-                              {
-                                "startLine": 7,
-                                "startPos": 10,
-                                "length": 5,
-                                "value": "환영합니다",
-                                "answerIndex": 0
-                              },
-                              {
-                                "startLine": 8,
-                                "startPos": 8,
-                                "length": 7,
-                                "value": "첫 페이지입니다.",
-                                "answerIndex": 1
-                              }
-                            ],
-                          }
-                        ],
-                        "visibility": {
-                          "type": "step",
-                          "value": 6
-                        }
-                      },
+
 
                     ]
                   },
