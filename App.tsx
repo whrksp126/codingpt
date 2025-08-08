@@ -29,7 +29,13 @@ function Main() {
   return (
     <SafeAreaView className="flex-1 bg-white">
       <StatusBar barStyle="dark-content" backgroundColor="#fff" />
-      {isLoggedIn ? <AppNavigator /> : <AuthNavigator />}
+      {isLoggedIn ? (
+        <LessonProvider>
+          <AppNavigator />
+        </LessonProvider>
+      ) : (
+        <AuthNavigator />
+      )}
     </SafeAreaView>
   );
 }
@@ -40,11 +46,9 @@ export default function App() {
       <UserProvider>
         <StoreProvider>
           <AuthProvider>
-            <LessonProvider>
-              <NavigationProvider>
-                <Main />
-              </NavigationProvider>
-            </LessonProvider>
+            <NavigationProvider>
+              <Main />
+            </NavigationProvider>
           </AuthProvider>
         </StoreProvider>
       </UserProvider>

@@ -1,70 +1,42 @@
-import AsyncStorage from '@react-native-async-storage/async-storage';
 import React, { useEffect, useState } from 'react';
-import { View, Text, TouchableOpacity, Image, ScrollView, Alert, ActivityIndicator } from 'react-native';
-import { Star } from 'phosphor-react-native';
-import { checkLoggedIn, api, apiRequest } from '../../utils/api';
-import lessonService from '../../services/lessonService';
+import { View, Text, TouchableOpacity, Image, ScrollView, Alert } from 'react-native';
+import { Code, FileText, PuzzlePiece, Star } from 'phosphor-react-native';
 import { useNavigation } from '../../contexts/NavigationContext';
+import { useUser } from '../../contexts/UserContext';
+import { useLesson } from '../../contexts/LessonContext';
+import lessonService from '../../services/lessonService';
+import { countSectionsAndLessons } from '../../utils/lessonUtils';
+import { CaretLeft, ListNumbers, Files, SealQuestion, TerminalWindow, TreeStructure } from '../../assets/SvgIcon';
+
 
 const LessonDetailScreen = ({ route }: any) => {
   const { goBack, navigate } = useNavigation();
-  const { id, name, icon, description, price, lessonCount, progress, date } = route.params;
-  const item = { id, name, icon, description, price, lessonCount, progress, date };
+  const { user } = useUser();
+  const { lessons } = useLesson();
 
-  // 인증 및 수강 여부 관련 상태
-  const [userId, setUserId] = useState<number | null>(null);
-  const [isEnrolled, setIsEnrolled] = useState<boolean>(false);
-  const [loading, setLoading] = useState(true);
-  const [blocked, setBlocked] = useState<boolean>(false);
+  const { id, name, icon, description, price, progress, date } = route.params;
+  const item = { id, name, icon, description, price, progress, date };
+
+  // 수강 여부 확인
+  const isEnrolled = lessons.some((lesson) => lesson.id === id);
+
+  // section/lesson 개수 계산
+  const enrolledLesson = lessons.find((l) => l.id === Number(id));
+  const { sectionCount, lessonCount } = enrolledLesson
+    ? countSectionsAndLessons(enrolledLesson)
+    : { sectionCount: 0, lessonCount: 0 };
 
   // 탭 구성
   const [activeTab, setActiveTab] = useState('강의소개');
   const tabs = ['강의소개', '목차', '관련코스', '후기'];
-
-  useEffect(() => {
-    const init = async () => {
-      // 로그인 여부 확인
-      const result = await checkLoggedIn();
-
-      if (!result.loggedIn) {
-        setBlocked(true); // hook-safe 방식으로 처리
-        Alert.alert('로그인이 필요합니다.', '', [
-          { text: '확인', onPress: () => navigate('login') },
-        ]);
-        return;
-      }
-
-      const uid = result.userId!;
-      setUserId(uid); // userId 저장
-
-      // 내강의 여부 확인
-      const enrolled = await lessonService.getMyclass(uid, id); // t/f 반환
-      setIsEnrolled(enrolled);
-      setLoading(false);
-    };
-
-    init();
-  }, []);
-
-  // 🔒 로그인 차단 상태일 경우 렌더 중단
-  if (blocked) return <View className="flex-1 bg-white" />;
-
-  // 로딩 중
-  if (loading) {
-    return (
-      <View className="flex-1 justify-center items-center bg-white">
-        <ActivityIndicator size="large" color="#58CC02" />
-      </View>
-    );
-  }
 
   return (
     <View className="flex-1 bg-white">
       <ScrollView contentContainerStyle={{ paddingBottom: 20 }}>
         {/* 상단 헤더: 뒤로가기 버튼 */}
         <View className="flex-row items-center justfy-between bg-white px-[20px] pt-[20px] pb-[20px] gap-x-[20px]">
-          <TouchableOpacity onPress={() => goBack()}>
-            <Image source={require('../../assets/icons/arrow_l.png')} className="w-[13.13px] h-[24.06px] mt-1.5" />
+          <TouchableOpacity style={{ marginTop: 5 }} onPress={() => goBack()}>
+            <CaretLeft width={35} height={35} fill="#CCCCCC" />
           </TouchableOpacity>
           <Text className="text-[22px] font-bold text-[#111111]">{name}</Text>
         </View>
@@ -76,9 +48,22 @@ const LessonDetailScreen = ({ route }: any) => {
             <Text className="text-[27px] font-bold text-black">{name}</Text>
           </View>
           <Text className="text-[15px] text-[#606060] mt-1">{description.replace(/\\n/g, ' ')}</Text>
-          <View className="border border-[#CCCCCC] rounded-[16px] p-[10px] my-[30px]">
-            <Text className="text-sm text-[#606060]">마지막 학습일: 00</Text>
-            <Text className="text-sm text-[#606060]">진도율: %</Text>
+          <View className="border border-[#CCCCCC] rounded-[16px] px-[40px] py-[10px] my-[30px]">
+            <View className="flex-row justify-between items-center">
+              {[
+                { label: '목차', value: sectionCount, icon: <ListNumbers width={18} height={18} fill="#000000" /> },
+                { label: '레슨', value: lessonCount, icon: <Files width={18} height={18} fill="#000000" /> },
+                { label: '퀴즈', value: 300, icon: <SealQuestion width={18} height={18} fill="#000000" /> },
+                { label: '코드 실습', value: 150, icon: <TerminalWindow width={18} height={18} fill="#000000" /> },
+                { label: '프로젝트', value: 2, icon: <TreeStructure width={18} height={18} fill="#000000" /> },
+              ].map((item, idx) => (
+                <View key={idx} className="items-center flex-1">
+                  <View className="mb-[6px]">{item.icon}</View>
+                  <Text className="text-[10px] font-medium text-[#777777]">{item.label}</Text>
+                  <Text className="text-[10px] font-medium text-[#58CC02] mt-1">{item.value}개</Text>
+                </View>
+              ))}
+            </View>
           </View>
           {/* 학습하기 버튼 */}
           <TouchableOpacity
@@ -92,7 +77,7 @@ const LessonDetailScreen = ({ route }: any) => {
             }}
             onPress={async () => {
               if (!isEnrolled) {
-                const registered = await lessonService.postMyclass(userId!, id);
+                const registered = await lessonService.postMyclass(user!.id, id);
                 if (registered) {
                   Alert.alert('수강 등록 완료');
                   navigate('classProgress', item);
