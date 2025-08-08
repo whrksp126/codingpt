@@ -1,7 +1,8 @@
-import React, { useState } from 'react';
-import { View, Text, Pressable, Image, useWindowDimensions } from 'react-native';
+import React, { useState, useEffect } from 'react';
+import { View, Text, Pressable, Image, useWindowDimensions, Button } from 'react-native';
 import { WebView } from 'react-native-webview';
-import { X, Plus } from '../../assets/SvgIcon';
+import { FRONTEND_URL } from '../../utils/service';
+import { ActivityIndicator } from 'react-native';
 
 interface CodeFillTheGapProps {
   module: any;
@@ -14,77 +15,18 @@ const langLogoMap: Record<string, any> = {
   // 필요한 언어 아이콘 추가
 };
 
-// [[[blank id="city" init="5" state="filled" value="서울 특별시"]]]  
 
 export const CodeFillTheGapComponent: React.FC<CodeFillTheGapProps> = ({ module, onLoadComplete }) => {
   const [activeTab, setActiveTab] = useState(0);
-  const [isReadMode, setIsReadMode] = useState(true);
-  const { width } = useWindowDimensions();
+  const [activeFile, setActiveFile] = useState<any>(null);
+  const [isLoading, setIsLoading] = useState(false);
 
-  const renderHTML = (language: string, content: string) => {
-    const lang = language || 'markup'; // fallback
 
-    // Prism 하이라이트를 WebView에서 실행하므로, 여기서 직접 하이라이트 적용
-    // 1. 코드 escape
-    const escapedContent = content
-      .replace(/&/g, '&amp;')
-      .replace(/</g, '&lt;')
-      .replace(/>/g, '&gt;');
+  useEffect(() => {
+    setActiveFile(module.files[activeTab]);
+  }, [activeTab]);
 
-    // 2. Prism 하이라이트 후 '환영합니다' 감싸기 (WebView 내에서 실행)
-    // => WebView에서 Prism.highlightAll() 실행 후, '환영합니다'를 감싸는 스크립트 추가
-
-    return `
-      <!DOCTYPE html>
-      <html>
-        <head>
-          <meta charset="UTF-8" />
-          <meta name="viewport" content="width=device-width, initial-scale=1.0">
-          <link href="https://cdn.jsdelivr.net/npm/prismjs/themes/prism-okaidia.css" rel="stylesheet" />
-          <script src="https://cdn.jsdelivr.net/npm/prismjs/prism.js"></script>
-          <script src="https://cdn.jsdelivr.net/npm/prismjs/components/prism-${lang}.min.js"></script>
-          <style>
-          body {
-            margin: 0;
-            padding: 0;
-            background: #272822;
-            font-size: 14px;
-          }
-          pre, code {
-            font-size: 14px;
-            line-height: 1.4;
-            padding: 0px;
-            margin: 0;
-            white-space: pre-wrap;
-            word-wrap: break-word;
-            overflow-wrap: break-word;
-          }
-          .highlight-red {
-            background: #e53935;
-            color: #fff;
-            border-radius: 4px;
-            padding: 0 4px;
-          }
-          </style>
-        </head>
-        <body>
-          <pre><code class="language-${lang}">${escapedContent}</code></pre>
-          <script>
-            Prism.highlightAll();
-            // 하이라이트 후 '환영합니다' 감싸기
-            setTimeout(function() {
-              var code = document.querySelector('code');
-              if (code) {
-                code.innerHTML = code.innerHTML.replace(/환영합니다/g, '<span class="highlight-red">환영합니다</span>');
-              }
-            }, 10);
-          </script>
-        </body>
-      </html>
-    `;
-  };
-
-  const activeFile = module.files[activeTab];
+  if(!activeFile) return null;
 
   return (
     <>
@@ -118,43 +60,59 @@ export const CodeFillTheGapComponent: React.FC<CodeFillTheGapProps> = ({ module,
                   <Text className="flex-1 text-[#fff] text-[12px] font-[400]">{file.name || ''}</Text>
                 </View>
               </Pressable>
-              {!isReadMode && (
-                <View className={`absolute top-0 right-0 h-[20px] p-[5px] rounded-[5px] ${activeTab === fileIndex ? 'bg-[#fff]' : 'bg-[#3c3c3c]'}`}>
-                  <X width={12} height={12} fill="#00000080" />
-                </View>
-              )}
             </View>
           ))}
         </View>
-        {!isReadMode && (
-          <View className="flex-row items-end h-full">
-            <View className="flex-row items-center justify-center h-[20px] px-[3px]">
-              <Plus width={10} height={10} fill="#00000080" />
-            </View>
-          </View>
-        )}
       </View>
 
-      {/* 코드 미리보기 (WebView) */}
+      {/* 코드 미리보기 (WebView) - 모든 탭의 WebView를 미리 렌더링하고, activeTab만 보이게 */}
       <View style={{ height: 220 }} className="bg-[#272822]">
-        <WebView
-          originWhitelist={['*']}
-          source={{ html: renderHTML(activeFile.language, activeFile.content) }}
-          style={{ flex: 1, backgroundColor: 'transparent' }}
-          scrollEnabled={true}
-          onLoad={() => {
-            // WebView 로드 완료 시 콜백 호출
-            setTimeout(() => {
-              onLoadComplete?.();
-            }, 200);
-          }}
-        />
+        {module.files.map((file, idx) => (
+          <View
+            key={`webview-${idx}`}
+            style={{
+              display: activeTab === idx ? 'flex' : 'none',
+              flex: 1,
+              position: 'absolute',
+              top: 0,
+              left: 0,
+              right: 0,
+              bottom: 0,
+              width: '100%',
+              height: '100%',
+            }}
+          >
+            <WebView
+              originWhitelist={['*']}
+              source={{ uri: `${FRONTEND_URL}${file.url}` }}
+              style={{ flex: 1, backgroundColor: 'transparent' }}
+              scrollEnabled={true}
+              onLoadStart={() => setIsLoading(true)}
+              onLoad={() => {
+                setIsLoading(false);
+                onLoadComplete?.();
+              }}
+            />
+            {isLoading && activeTab === idx && (
+              <View style={{ position: 'absolute', top: 0, left: 0, right: 0, bottom: 0, justifyContent: 'center', alignItems: 'center', backgroundColor: '#27282299', zIndex: 10 }}>
+                <ActivityIndicator size="large" color="#fff" />
+                <Text style={{ color: '#fff', marginTop: 10 }}>로딩 중...</Text>
+              </View>
+            )}
+          </View>
+        ))}
       </View>
 
     </View>
+
+    {/* 옵션 */}
     <View className="flex-row items-center justify-center gap-[16px] px-[10px] py-[8px] mt-[10px]">
       {activeFile.interactionOptions.map((option: any, index: number) => (
-        <View key={`interaction-option-${index}`} className={`
+        <Pressable
+        onPress={() => {  
+          console.log("option", option);
+        }}
+        key={`interaction-option-${index}`} className={`
           flex-row items-center justify-center gap-[5px] 
           min-w-[30px]
           p-[10px] 
@@ -162,7 +120,7 @@ export const CodeFillTheGapComponent: React.FC<CodeFillTheGapProps> = ({ module,
           bg-[transparent] 
           `}>
           <Text className="text-[#4B4B4B] text-[17px] font-[500]">{option.value}</Text>
-        </View>
+        </Pressable>
       ))}
     </View>
     </>

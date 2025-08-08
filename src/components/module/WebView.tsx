@@ -1,5 +1,5 @@
 import React, { useEffect, useState } from 'react';
-import { View, Pressable, Text, TextInput, Image } from 'react-native';
+import { View, Pressable, Text, TextInput, Image, ActivityIndicator } from 'react-native';
 import { WebView } from 'react-native-webview';
 import {
   ArrowLeft,
@@ -94,7 +94,7 @@ export const WebViewComponent: React.FC<WebViewComponentProps> = ({ module, onLo
   const [tabIndexes, setTabIndexes] = useState<number[]>([]);
   const [activeTab, setActiveTab] = useState<number>(0);
   const [isReadMode, setIsReadMode] = useState<boolean>(true);
-
+  const [isLoading, setIsLoading] = useState<boolean>(false);
   useEffect(() => {
     fetchMetaData(module.tabs).then((data) => {
       setTabList(data);
@@ -155,12 +155,14 @@ export const WebViewComponent: React.FC<WebViewComponentProps> = ({ module, onLo
                 </>
               )}
               <Pressable onPress={() => setActiveTab(tabIndex)} className={`flex-row gap-[5px] flex-1 h-[20px] px-[3px] rounded-t-[5px] ${activeTab === tabIndex ? 'bg-[#fff]' : 'bg-[#E5E5E5]'}`}>
-                <View className="flex-row gap-[5px] flex-1 items-center">
+                <View className="flex-row gap-[5px] flex-1 items-start">
+                  <View className="pt-[4px]">
                   {tab.favicon ? (
                     <Image source={{ uri: tab.favicon }} className="w-[12px] h-[12px]" />
                   ) : (
                     <GlobeHemisphereEast width={12} height={12} fill="#000000" />
                   )}
+                  </View>
                   <Text className="flex-1 text-[#000000] text-[12px] font-[400]">{tab.title || ''}</Text>
                 </View>
               </Pressable>
@@ -182,7 +184,7 @@ export const WebViewComponent: React.FC<WebViewComponentProps> = ({ module, onLo
       </View>
 
       {/* 상단 바 */}
-      <View className="flex-row gap-[10px] h-[30px] px-[10px] py-[4px] border-b border-[#E5E5E5]">
+      <View className="flex-row items-center gap-[10px] h-[30px] px-[10px] py-[4px] border-b border-[#E5E5E5]">
         <Pressable onPress={onPressBack}>
           <ArrowLeft width={17} height={17} fill={tabIndexes[activeTab] > 0 ? "#000000" : "#00000080"} />
         </Pressable>
@@ -217,38 +219,62 @@ export const WebViewComponent: React.FC<WebViewComponentProps> = ({ module, onLo
       </View>
 
       {/* 웹뷰 */}
-      <View className="h-[200px]">
-        <WebView
-          source={
-            tabList[activeTab].type === 'html'
-              ? { html: tabList[activeTab].content }
-              : { uri: currentUrl }
-          }
-          originWhitelist={['*']}
-          javaScriptEnabled
-          domStorageEnabled
-          style={{ flex: 1 }}
-          onLoad={() => {
-            // WebView 로드 완료 시 콜백 호출
-            setTimeout(() => {
-              onLoadComplete?.();
-            }, 200);
-          }}
-          onNavigationStateChange={(navState) => {
-            if (tabList[activeTab].type === 'url') {
-              const newStacks = [...tabStacks];
-              const newIndexes = [...tabIndexes];
-              const stack = newStacks[activeTab].slice(0, newIndexes[activeTab] + 1);
-              if (stack[stack.length - 1] !== navState.url) {
-                stack.push(navState.url);
-                newStacks[activeTab] = stack;
-                newIndexes[activeTab] = stack.length - 1;
-                setTabStacks(newStacks);
-                setTabIndexes(newIndexes);
+      <View className="h-[200px]" style={{ position: 'relative' }}>
+        {tabList.map((tab, idx) => (
+          <View
+            key={`webview-${idx}`}
+            style={{
+              display: activeTab === idx ? 'flex' : 'none',
+              flex: 1,
+              position: 'absolute',
+              top: 0,
+              left: 0,
+              right: 0,
+              bottom: 0,
+              width: '100%',
+              height: '100%',
+            }}
+          >
+            <WebView
+              source={
+                tab.type === 'html'
+                  ? { html: tab.content }
+                  : { uri: tabStacks[idx]?.[tabIndexes[idx]] }
               }
-            }
-          }}
-        />
+              originWhitelist={['*']}
+              javaScriptEnabled
+              domStorageEnabled
+              style={{ flex: 1 }}
+              onLoadStart={() => setIsLoading(true)}
+              onLoad={() => {
+                setIsLoading(false);
+                if (activeTab === idx) {
+                  onLoadComplete?.();
+                }
+              }}
+              onNavigationStateChange={(navState) => {
+                if (tab.type === 'url' && activeTab === idx) {
+                  const newStacks = [...tabStacks];
+                  const newIndexes = [...tabIndexes];
+                  const stack = newStacks[idx].slice(0, newIndexes[idx] + 1);
+                  if (stack[stack.length - 1] !== navState.url) {
+                    stack.push(navState.url);
+                    newStacks[idx] = stack;
+                    newIndexes[idx] = stack.length - 1;
+                    setTabStacks(newStacks);
+                    setTabIndexes(newIndexes);
+                  }
+                }
+              }}
+            />
+            {isLoading && activeTab === idx && (
+              <View style={{ position: 'absolute', top: 0, left: 0, right: 0, bottom: 0, justifyContent: 'center', alignItems: 'center', backgroundColor: '#27282299', zIndex: 10 }}>
+                <ActivityIndicator size="large" color="#fff" />
+                <Text style={{ color: '#fff', marginTop: 10 }}>로딩 중...</Text>
+              </View>
+            )}
+          </View>
+        ))}
       </View>
     </View>
   );

@@ -1,12 +1,6 @@
 import AsyncStorage from '@react-native-async-storage/async-storage';
-import Config from 'react-native-config';
-import { Platform } from 'react-native';
-// API 기본 설정
+import { API_URL, FRONTEND_URL } from './service';
 
-// 플랫폼별 API URL 설정
-const API_URL = Platform.OS === 'android' 
-  ? Config.ANDROID_API_URL 
-  : Config.IOS_API_URL; 
 
 // HTTP 메서드 타입
 type HttpMethod = 'GET' | 'POST' | 'PUT' | 'DELETE';
@@ -48,6 +42,7 @@ export async function apiRequest<T>(
   retry = true // 재시도 여부
 ): Promise<ApiResponse<T>> {
   try {
+    console.log("FRONTEND_URL", FRONTEND_URL);
     const url = `${API_URL}${endpoint}`;
     const headers = await getAuthHeaders(); 
 

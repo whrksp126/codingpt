@@ -1,9 +1,9 @@
 import React, { useState } from 'react';
-import { View, Text, Pressable, Image, useWindowDimensions, ActivityIndicator } from 'react-native';
+import { View, Text, Pressable, Image, useWindowDimensions } from 'react-native';
 import { WebView } from 'react-native-webview';
 import { X, Plus } from '../../assets/SvgIcon';
 
-interface CodeComponentProps {
+interface CodeFillTheGapProps {
   module: any;
   onLoadComplete?: () => void;
 }
@@ -14,18 +14,25 @@ const langLogoMap: Record<string, any> = {
   // 필요한 언어 아이콘 추가
 };
 
+// [[[blank id="city" init="5" state="filled" value="서울 특별시"]]]  
 
-export const CodeComponent: React.FC<CodeComponentProps> = ({ module, onLoadComplete }) => {
+export const CodeFillTheGapComponent: React.FC<CodeFillTheGapProps> = ({ module, onLoadComplete }) => {
   const [activeTab, setActiveTab] = useState(0);
   const [isReadMode, setIsReadMode] = useState(true);
   const { width } = useWindowDimensions();
-  const [isLoading, setIsLoading] = useState<boolean>(false);
+
   const renderHTML = (language: string, content: string) => {
     const lang = language || 'markup'; // fallback
+
+    // Prism 하이라이트를 WebView에서 실행하므로, 여기서 직접 하이라이트 적용
+    // 1. 코드 escape
     const escapedContent = content
       .replace(/&/g, '&amp;')
       .replace(/</g, '&lt;')
       .replace(/>/g, '&gt;');
+
+    // 2. Prism 하이라이트 후 '환영합니다' 감싸기 (WebView 내에서 실행)
+    // => WebView에서 Prism.highlightAll() 실행 후, '환영합니다'를 감싸는 스크립트 추가
 
     return `
       <!DOCTYPE html>
@@ -52,11 +59,26 @@ export const CodeComponent: React.FC<CodeComponentProps> = ({ module, onLoadComp
             word-wrap: break-word;
             overflow-wrap: break-word;
           }
+          .highlight-red {
+            background: #e53935;
+            color: #fff;
+            border-radius: 4px;
+            padding: 0 4px;
+          }
           </style>
         </head>
         <body>
           <pre><code class="language-${lang}">${escapedContent}</code></pre>
-          <script>Prism.highlightAll();</script>
+          <script>
+            Prism.highlightAll();
+            // 하이라이트 후 '환영합니다' 감싸기
+            setTimeout(function() {
+              var code = document.querySelector('code');
+              if (code) {
+                code.innerHTML = code.innerHTML.replace(/환영합니다/g, '<span class="highlight-red">환영합니다</span>');
+              }
+            }, 10);
+          </script>
         </body>
       </html>
     `;
@@ -65,6 +87,8 @@ export const CodeComponent: React.FC<CodeComponentProps> = ({ module, onLoadComp
   const activeFile = module.files[activeTab];
 
   return (
+    <>
+    
     <View className="border border-[#5e5e5e] rounded-[10px] overflow-hidden">
       {/* 탭 */}
       <View className="flex-row items-end gap-[10px] h-[26px] px-[10px] bg-[#3c3c3c]">
@@ -112,44 +136,35 @@ export const CodeComponent: React.FC<CodeComponentProps> = ({ module, onLoadComp
       </View>
 
       {/* 코드 미리보기 (WebView) */}
-      <View style={{ height: 220, position: 'relative' }} className="bg-[#272822]">
-        {module.files.map((file, idx) => (
-          <View
-            key={`webview-${idx}`}
-            style={{
-              display: activeTab === idx ? 'flex' : 'none',
-              flex: 1,
-              position: 'absolute',
-              top: 0,
-              left: 0,
-              right: 0,
-              bottom: 0,
-              width: '100%',
-              height: '100%',
-            }}
-          >
-            <WebView
-              originWhitelist={['*']}
-              source={{ html: renderHTML(file.language, file.content) }}
-              style={{ flex: 1, backgroundColor: 'transparent' }}
-              scrollEnabled={true}
-              onLoadStart={() => setIsLoading(true)}
-              onLoad={() => {
-                setIsLoading(false);
-                if (activeTab === idx) {
-                  onLoadComplete?.();
-                }
-              }}
-            />
-            {isLoading && activeTab === idx && (
-              <View style={{ position: 'absolute', top: 0, left: 0, right: 0, bottom: 0, justifyContent: 'center', alignItems: 'center', backgroundColor: '#27282299', zIndex: 10 }}>
-                <ActivityIndicator size="large" color="#fff" />
-                <Text style={{ color: '#fff', marginTop: 10 }}>로딩 중...</Text>
-              </View>
-            )}
-          </View>
-        ))}
+      <View style={{ height: 220 }} className="bg-[#272822]">
+        <WebView
+          originWhitelist={['*']}
+          source={{ html: renderHTML(activeFile.language, activeFile.content) }}
+          style={{ flex: 1, backgroundColor: 'transparent' }}
+          scrollEnabled={true}
+          onLoad={() => {
+            // WebView 로드 완료 시 콜백 호출
+            setTimeout(() => {
+              onLoadComplete?.();
+            }, 200);
+          }}
+        />
       </View>
+
     </View>
+    <View className="flex-row items-center justify-center gap-[16px] px-[10px] py-[8px] mt-[10px]">
+      {activeFile.interactionOptions.map((option: any, index: number) => (
+        <View key={`interaction-option-${index}`} className={`
+          flex-row items-center justify-center gap-[5px] 
+          min-w-[30px]
+          p-[10px] 
+          border border-[#E5E5E5] rounded-[16px] 
+          bg-[transparent] 
+          `}>
+          <Text className="text-[#4B4B4B] text-[17px] font-[500]">{option.value}</Text>
+        </View>
+      ))}
+    </View>
+    </>
   );
 };

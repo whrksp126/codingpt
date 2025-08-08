@@ -331,6 +331,15 @@ export const html = {
                     "title": "HTML은 무엇을 담당하나요?",
                     "modules": [
                       {
+                        "id": "slide_0007_module_0000",
+                        "type": "paragraph",
+                        "content": "### 📄 HTML이란?\n\n**HTML** *(HyperText Markup Language)* 은 웹페이지에서 콘텐츠의 **구조**를 정의하는 언어입니다.\n\n> 브라우저가 텍스트, 이미지, 버튼 등의 요소들을 **어떤 순서로**  \n> **어떤 의미로 배치할지** 이해할 수 있도록 도와주는 것이 바로 HTML입니다.",
+                        "visibility": {
+                          "type": "step",
+                            "value": 1
+                        }
+                      },
+                      {
                         "id": "slide_0007_module_0002",
                         "type": "code",
                         "files": [
@@ -347,72 +356,9 @@ export const html = {
                         ],
                         "visibility": {
                           "type": "step",
-                          "value": 1
+                          "value": 2
                         }
                       },  
-                      {
-                        "id": "slide_0007_module_0004",
-                        "type": "codeFillTheGap",
-                        "files" : [
-                          {
-                            "name": "index.html",
-                            "language": "html",
-                            "content": "<h1>환영합니다</h1>\n<p>HTML은 구조를 만듭니다.</p>\n<img src=\"example.jpg\" alt=\"예시 이미지\">\n<button>클릭해보세요</button>",
-                            "isInteractive": true,
-                            "interactionOptions": [
-                              {
-                                "id": "001",
-                                "value": "환영합니다",
-                                "blankSyntax" : "[[[blank id=\"001\" init=\"5\" state=\"empty\" value=\"\"]]]",
-                                "startLine": 0,
-                                "startPos": 4,
-                              },
-                            ],
-                          },
-                          {
-                            "name": "index.css",
-                            "language": "css",
-                            // "content": "[[[blank id=\"002\" init=\"4\" state=\"empty\" value=\"\"]]] { background-color: #f0f0f0; }",
-                            "content": "body { background-color: #f0f0f0; }",
-                            "isInteractive": true,
-                            "interactionOptions": [
-                              {
-                                "id": "002",
-                                "value": "body",
-                              },
-                            ],
-                          }
-                        ],
-                        "visibility": {
-                          "type": "step",
-                          "value": 1
-                        }
-                      },
-                      {
-                        "id": "slide_0007_module_0000",
-                        "type": "paragraph",
-                        "content": "### 📄 HTML이란?\n\n**HTML** *(HyperText Markup Language)* 은 웹페이지에서 콘텐츠의 **구조**를 정의하는 언어입니다.\n\n> 브라우저가 텍스트, 이미지, 버튼 등의 요소들을 **어떤 순서로**  \n> **어떤 의미로 배치할지** 이해할 수 있도록 도와주는 것이 바로 HTML입니다.",
-                        "visibility": {
-                          "type": "step",
-                            "value": 2
-                        }
-                      },
-                      {
-                        "id": "slide_0007_module_0001",
-                        "type": "multipleChoice",
-                        "question": "다음 중 `<head>` 태그 안에 들어가는 요소가 아닌 것은?",
-                        "options": [
-                          { "label": "```<h1>``` 제목 작성", "isCorrect": true },
-                          { "label": "```<title>``` 문서 제목 설정", "isCorrect": false },
-                          { "label": "```<meta>``` 메타 정보 설정", "isCorrect": false },
-                          { "label": "```<link>``` 외부 스타일시트 연결", "isCorrect": false }
-                        ],
-                        "visibility": {
-                          "type": "step",
-                            "value": 3
-                        }
-                      },
-
                       {
                         "id": "slide_0007_module_0003",
                         "type": "webview",
@@ -428,19 +374,73 @@ export const html = {
                         ],
                         "visibility": {
                           "type": "step",
-                            "value": 4
+                            "value": 3
                         },
+                      },
+                      {
+                        "id": "slide_0007_module_0004",
+                        "type": "codeFillTheGap",
+                        "files" : [
+                          {
+                            "name": "index.html",
+                            "language": "html",
+                            "content": "<h1>환영합니다</h1>\n<p>HTML은 구조를 만듭니다.</p>\n<img src=\"example.jpg\" alt=\"예시 이미지\">\n<button>클릭해보세요</button>",
+                            "url": "/code/1",
+                            "isInteractive": true,
+                            "interactionOptions": [
+                              {
+                                "id": "option-1",
+                                "value": "<h1>",
+                              },
+                              {
+                                "id": "option-2",
+                                "value": "<h>",
+                              }
+                            ],
+                          },
+                          {
+                            "name": "index.css",
+                            "language": "css",
+                            // "content": "[[[blank id=\"002\" init=\"4\" state=\"empty\" value=\"\"]]] { background-color: #f0f0f0; }",
+                            "content": "body { background-color: #f0f0f0; }",
+                            "url": "/code/2",
+                            "isInteractive": true,
+                            "interactionOptions": [
+                              {
+                                "id": "002",
+                                "value": "body",
+                              },
+                            ],
+                          }
+                        ],
+                        "visibility": {
+                          "type": "step",
+                          "value": 4
+                        }
+                      },
+                      {
+                        "id": "slide_0007_module_0001",
+                        "type": "multipleChoice",
+                        "question": "다음 중 `<head>` 태그 안에 들어가는 요소가 아닌 것은?",
+                        "options": [
+                          { "label": "```<h1>``` 제목 작성", "isCorrect": true },
+                          { "label": "```<title>``` 문서 제목 설정", "isCorrect": false },
+                          { "label": "```<meta>``` 메타 정보 설정", "isCorrect": false },
+                          { "label": "```<link>``` 외부 스타일시트 연결", "isCorrect": false }
+                        ],
+                        "visibility": {
+                          "type": "step",
+                            "value": 5
+                        }
                       },
                       {
                         "type": "paragraph",
                         "content": "## 코드 채점 결과",
                         "visibility": {
                           "type": "step",
-                          "value": 5
+                          "value": 6
                         }
                       },
-
-
                     ]
                   },
                   {
