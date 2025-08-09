@@ -9,8 +9,6 @@ import { AnimatedCircularProgress } from 'react-native-circular-progress';
 import { CodesandboxLogo, Clover, HeartStraight, Check, CaretRight } from '../assets/SvgIcon';
 
 
-console.log(Config);
-
 // 강의 항목 타입
 interface Lesson {
   id: string;

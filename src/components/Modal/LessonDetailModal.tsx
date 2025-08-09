@@ -10,7 +10,7 @@ interface LessonDetailModalProps {
 }
 
 const LessonDetailModal = ({ lessonData, visible, onClose }: LessonDetailModalProps) => {
-  console.log(lessonData);
+  
   const { navigate } = useNavigation();
 
   const onPressStart = () => {

@@ -29,11 +29,9 @@ const MyPageScreen = () => {
             try {
               // 1. 서버에 로그아웃 요청
               await authService.logout();
-              console.log('로그아웃 요청 완료');
               // 2. Google 로그아웃
               try {
                 await GoogleSignin.signOut();
-                console.log('Google 로그아웃 완료');
               } catch (googleError) {
                 console.log('Google 로그아웃 실패 (무시):', googleError);
                 // Google 로그아웃 실패해도 계속 진행
@@ -41,13 +39,9 @@ const MyPageScreen = () => {
               // 3. 로컬 토큰 삭제
               await AsyncStorage.removeItem('accessToken');
               await AsyncStorage.removeItem('refreshToken');
-              console.log('로컬 토큰 삭제 완료');
               // 4. 사용자 정보 삭제
               await AuthStorage.clearUserData();
-              console.log('사용자 정보 삭제 완료');
-              
-              console.log('로그아웃 완료');
-              
+                            
               // 4. App.tsx의 isLoggedIn 상태를 false로 변경
               logout();
             } catch (error) {

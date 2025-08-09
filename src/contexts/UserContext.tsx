@@ -20,17 +20,14 @@ export const UserProvider = ({ children }: { children: ReactNode }) => {
   const refreshUser = async () => {
     try {
       const userInfo = await userService.getMe(); // 사용자 정보
-      // console.log('👤 [UserContext] userInfo:', userInfo);
       
       if (userInfo) {
         const heatmap = await userService.getStudyHeatmap(); // 잔디
         const studyDays = getTotalStudyDays(heatmap); // 학습일수
         const finalUserData = { ...userInfo, heatmap, studyDays };
-        // console.log('✅ [UserContext] 최종 유저 데이터:', finalUserData);
         
         setUser(finalUserData);
       } else {
-        console.log('❌ [UserContext] userInfo가 null - setUser(null) 호출');
         setUser(null);
       }
     } catch (e) {
@@ -41,14 +38,12 @@ export const UserProvider = ({ children }: { children: ReactNode }) => {
 
   // user 상태 변경 추적
   useEffect(() => {
-    console.log('🔄 [UserContext] user 상태 변경:', user);
+
   }, [user]);
 
   useEffect(() => {
     (async () => {
-      console.log('🚀 [UserContext] 초기화 시작');
       await refreshUser();
-      console.log('🏁 [UserContext] loading 완료');
       setLoading(false);
     })();
   }, []);

@@ -42,11 +42,9 @@ export async function apiRequest<T>(
   retry = true // 재시도 여부
 ): Promise<ApiResponse<T>> {
   try {
-    console.log("FRONTEND_URL", FRONTEND_URL);
     const url = `${API_URL}${endpoint}`;
     const headers = await getAuthHeaders(); 
 
-    console.log('url...', url);
     const config: RequestInit = {
       method: options.method,
       headers: {
@@ -60,7 +58,6 @@ export async function apiRequest<T>(
     }
 
     const response = await fetch(url, config);
-    console.log('response...', response);
     // access token 만료 시 refresh 시도
     if (response.status === 401 && retry) {
       const newAccessToken = await refreshAccessToken();
@@ -72,7 +69,6 @@ export async function apiRequest<T>(
           body: options.body,
           headers: await getAuthHeaders(), // ✅ 새 accessToken을 반영한 헤더로 갱신
         };
-        console.log('cleanedOptions...', cleanedOptions);
         return apiRequest<T>(endpoint, cleanedOptions, false); // 한 번만 재시도
       }
     }

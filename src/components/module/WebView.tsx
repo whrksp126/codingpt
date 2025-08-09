@@ -94,12 +94,13 @@ export const WebViewComponent: React.FC<WebViewComponentProps> = ({ module, onLo
   const [tabIndexes, setTabIndexes] = useState<number[]>([]);
   const [activeTab, setActiveTab] = useState<number>(0);
   const [isReadMode, setIsReadMode] = useState<boolean>(true);
-  const [isLoading, setIsLoading] = useState<boolean>(false);
+  const [tabLoading, setTabLoading] = useState<boolean[]>([]);
   useEffect(() => {
     fetchMetaData(module.tabs).then((data) => {
       setTabList(data);
       setTabStacks(data.map((tab) => [tab.url || '']));
       setTabIndexes(data.map(() => 0));
+      setTabLoading(data.map(() => false));
     });
   }, [module]);
 
@@ -126,10 +127,13 @@ export const WebViewComponent: React.FC<WebViewComponentProps> = ({ module, onLo
   };
 
   const onPressDeveloperMode = () => {
-    console.log('개발자 모드');
+
   };
 
   if (!tabList.length || !tabStacks[activeTab]) return null;
+
+  // isLoading -> 현재 탭의 로딩 상태
+  const isLoading = tabLoading[activeTab];
 
   return (
     <View className="border border-[#E5E5E5] rounded-[10px] overflow-hidden">
@@ -245,9 +249,19 @@ export const WebViewComponent: React.FC<WebViewComponentProps> = ({ module, onLo
               javaScriptEnabled
               domStorageEnabled
               style={{ flex: 1 }}
-              onLoadStart={() => setIsLoading(true)}
+              onLoadStart={() => {
+                setTabLoading(prev => {
+                  const next = [...prev];
+                  next[idx] = true;
+                  return next;
+                });
+              }}
               onLoad={() => {
-                setIsLoading(false);
+                setTabLoading(prev => {
+                  const next = [...prev];
+                  next[idx] = false;
+                  return next;
+                });
                 if (activeTab === idx) {
                   onLoadComplete?.();
                 }
@@ -267,7 +281,7 @@ export const WebViewComponent: React.FC<WebViewComponentProps> = ({ module, onLo
                 }
               }}
             />
-            {isLoading && activeTab === idx && (
+            {tabLoading[idx] && activeTab === idx && (
               <View style={{ position: 'absolute', top: 0, left: 0, right: 0, bottom: 0, justifyContent: 'center', alignItems: 'center', backgroundColor: '#27282299', zIndex: 10 }}>
                 <ActivityIndicator size="large" color="#fff" />
                 <Text style={{ color: '#fff', marginTop: 10 }}>로딩 중...</Text>

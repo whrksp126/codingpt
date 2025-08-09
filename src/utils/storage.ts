@@ -31,7 +31,6 @@ export const storage = {
   setItem: async (key: string, value: any): Promise<void> => {
     try {
       // TODO: AsyncStorage.setItem(key, JSON.stringify(value)) 사용
-      console.log('Storage setItem:', key, value);
     } catch (error) {
       console.error('Storage setItem error:', error);
       throw error;
@@ -42,7 +41,6 @@ export const storage = {
   getItem: async <T>(key: string): Promise<T | null> => {
     try {
       // TODO: const value = await AsyncStorage.getItem(key) 사용
-      console.log('Storage getItem:', key);
       return null;
     } catch (error) {
       console.error('Storage getItem error:', error);
@@ -54,7 +52,6 @@ export const storage = {
   removeItem: async (key: string): Promise<void> => {
     try {
       // TODO: AsyncStorage.removeItem(key) 사용
-      console.log('Storage removeItem:', key);
     } catch (error) {
       console.error('Storage removeItem error:', error);
       throw error;
@@ -65,7 +62,6 @@ export const storage = {
   clear: async (): Promise<void> => {
     try {
       // TODO: AsyncStorage.clear() 사용
-      console.log('Storage clear');
     } catch (error) {
       console.error('Storage clear error:', error);
       throw error;

@@ -129,7 +129,6 @@ class UserService {
   async updateLearningTime(minutes: number): Promise<boolean> {
     try {
       // TODO: 서버에 학습 시간 업데이트 API 호출
-      console.log('학습 시간 업데이트:', minutes);
       return true;
     } catch (error) {
       console.error('학습 시간 업데이트 실패:', error);
@@ -141,7 +140,6 @@ class UserService {
   async updateStreak(): Promise<boolean> {
     try {
       // TODO: 서버에 연속 학습일 업데이트 API 호출
-      console.log('연속 학습일 업데이트');
       return true;
     } catch (error) {
       console.error('연속 학습일 업데이트 실패:', error);
@@ -161,11 +159,9 @@ class UserService {
         heatmapArray.forEach(({ date, count }) => {
           result[date] = count;
         });
-        console.log('✅ [userService] 변환된 heatmap 데이터:', result);
         return result;
       }
   
-      console.log('⚠️ [userService] heatmap 데이터가 없거나 형식이 잘못됨');
       return {};
     } catch (error) {
       console.error('❌ [userService] Heatmap 데이터 가져오기 실패:', error);

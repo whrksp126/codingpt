@@ -16,7 +16,6 @@ const ClassProgressScreen: React.FC = () => {
   const [selectedLessonData, setSelectedLessonData] = useState<any>(null);
 
   useEffect(() => {
-    console.log(fetchData.class_list[0]);
     setClassData(fetchData.class_list[0]);
   }, []);
 

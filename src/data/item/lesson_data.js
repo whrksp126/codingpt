@@ -327,11 +327,11 @@ export const html = {
                 "title": "HTML의 역할과 중요성",
                 "sliders" : [
                   {
-                    "id": "slide_0007",
+                    "id": 0,
                     "title": "HTML은 무엇을 담당하나요?",
                     "modules": [
                       {
-                        "id": "slide_0007_module_0000",
+                        "id": 0,
                         "type": "paragraph",
                         "content": "### 📄 HTML이란?\n\n**HTML** *(HyperText Markup Language)* 은 웹페이지에서 콘텐츠의 **구조**를 정의하는 언어입니다.\n\n> 브라우저가 텍스트, 이미지, 버튼 등의 요소들을 **어떤 순서로**  \n> **어떤 의미로 배치할지** 이해할 수 있도록 도와주는 것이 바로 HTML입니다.",
                         "visibility": {
@@ -340,7 +340,31 @@ export const html = {
                         }
                       },
                       {
-                        "id": "slide_0007_module_0002",
+                        "id": 1,
+                        "type": "multipleChoice",
+                        "questions": [
+                          {
+                            "title": "다음 중 `<head>` 태그 안에 들어가는 요소가 아닌 것은?",
+                            "interactionOptions": [
+                              { "label": "```<h1>``` 제목 작성"},
+                              { "label": "```<title>``` 문서 제목 설정"},
+                              { "label": "```<meta>``` 메타 정보 설정"},
+                              { "label": "```<link>``` 외부 스타일시트 연결"}
+                            ],
+                            "answer": {
+                              "isCorrect": null,
+                              "answer" : 0,
+                              "userAnswer": null,
+                            }
+                          }
+                        ],
+                        "visibility": {
+                          "type": "step",
+                          "value": 1
+                        }
+                      },
+                      {
+                        "id": 2,
                         "type": "code",
                         "files": [
                           {
@@ -360,7 +384,7 @@ export const html = {
                         }
                       },  
                       {
-                        "id": "slide_0007_module_0003",
+                        "id": 3,
                         "type": "webview",
                         "tabs": [
                           {
@@ -378,7 +402,7 @@ export const html = {
                         },
                       },
                       {
-                        "id": "slide_0007_module_0004",
+                        "id": 4,
                         "type": "codeFillTheGap",
                         "files" : [
                           {
@@ -387,30 +411,50 @@ export const html = {
                             "content": "<h1>환영합니다</h1>\n<p>HTML은 구조를 만듭니다.</p>\n<img src=\"example.jpg\" alt=\"예시 이미지\">\n<button>클릭해보세요</button>",
                             "url": "/code/1",
                             "isInteractive": true,
+                            "inputLength": 1,
                             "interactionOptions": [
                               {
-                                "id": "option-1",
+                                "id": "option-0",
                                 "value": "<h1>",
+                                "disabled": false,
                               },
                               {
-                                "id": "option-2",
+                                "id": "option-1",
                                 "value": "<h>",
+                                "disabled": false,
                               }
                             ],
+                            "answers": [
+                              {
+                                "isCorrect": null,
+                                "answer":"<h1>",
+                                "userAnswer": null,
+                                "optionElIndex": null,
+                              }
+                            ]
                           },
                           {
                             "name": "index.css",
                             "language": "css",
-                            // "content": "[[[blank id=\"002\" init=\"4\" state=\"empty\" value=\"\"]]] { background-color: #f0f0f0; }",
                             "content": "body { background-color: #f0f0f0; }",
                             "url": "/code/2",
                             "isInteractive": true,
+                            "inputLength": 1,
                             "interactionOptions": [
                               {
-                                "id": "002",
+                                "id": "option-0",
                                 "value": "body",
+                                "disabled": false,
                               },
                             ],
+                            "answers": [
+                              {
+                                "isCorrect": null,
+                                "answer": "body",
+                                "userAnswer": null,
+                                "optionElIndex": null,
+                              }
+                            ]
                           }
                         ],
                         "visibility": {
@@ -418,27 +462,14 @@ export const html = {
                           "value": 4
                         }
                       },
+
                       {
-                        "id": "slide_0007_module_0001",
-                        "type": "multipleChoice",
-                        "question": "다음 중 `<head>` 태그 안에 들어가는 요소가 아닌 것은?",
-                        "options": [
-                          { "label": "```<h1>``` 제목 작성", "isCorrect": true },
-                          { "label": "```<title>``` 문서 제목 설정", "isCorrect": false },
-                          { "label": "```<meta>``` 메타 정보 설정", "isCorrect": false },
-                          { "label": "```<link>``` 외부 스타일시트 연결", "isCorrect": false }
-                        ],
-                        "visibility": {
-                          "type": "step",
-                            "value": 5
-                        }
-                      },
-                      {
+                        "id": 5,
                         "type": "paragraph",
                         "content": "## 코드 채점 결과",
                         "visibility": {
                           "type": "step",
-                          "value": 6
+                          "value": 5
                         }
                       },
                     ]

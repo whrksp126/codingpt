@@ -37,12 +37,12 @@ const LessonLearningScreen: React.FC<{ route: any }> = ({ route }) => {
   const { goBack } = useNavigation();
   const [curLesson, setCurLesson] = useState<Lesson | null>(null);
   const [curSlideIndex, setCurSlideIndex] = useState<number>(0);
-  const [curSlide, setCurSlide] = useState<Slide | null>(null);
 
-  const [viewModules, setViewModules] = useState<SlideModule[]>([]);
   const [curStep, setCurStep] = useState<number>(0);
   const [selectedAnswers, setSelectedAnswers] = useState<{ [key: string]: number }>({});
 
+
+  const [isModuleAdded, setIsModuleAdded] = useState<boolean>(false);
 
   const [isNextButtonEnabled, setIsNextButtonEnabled] = useState<boolean>(false);
   const scrollViewRef = useRef<ScrollView>(null);
@@ -50,8 +50,8 @@ const LessonLearningScreen: React.FC<{ route: any }> = ({ route }) => {
 
   useEffect(() => {
     const { lessonData } = route.params;
+
     setCurLesson(lessonData);
-    setCurSlide(lessonData.sliders[curSlideIndex]);
 
 
     const initModules = getStepModules(curStep)
@@ -60,10 +60,32 @@ const LessonLearningScreen: React.FC<{ route: any }> = ({ route }) => {
       setIsNextButtonEnabled(true)
     }
 
-
-    addModuleToScreen(initModules || [])
-
   }, []);
+
+
+  // 모듈 추가 시 즉시 다음 스텝 모듈 표현
+  useEffect(() => {
+    if(isModuleAdded){
+      setSortCurSlideModules();
+      setCurStep(curStep + 1);
+      setIsModuleAdded(false)
+    }
+  }, [isModuleAdded]);
+
+  const setSortCurSlideModules = () => {
+    setCurLesson(prev => {
+      if (!prev) return prev;
+      return {
+        ...prev,
+        sliders: prev.sliders.map(slider => ({
+          ...slider,
+          modules: slider.modules.sort((a: SlideModule, b: SlideModule) => {
+            return (a.visibility?.value ?? 0) - (b.visibility?.value ?? 0);
+          })
+        }))
+      }
+    })
+  }
 
   // 다음 버튼 클릭 시
   const onPressNext = () => {
@@ -71,51 +93,198 @@ const LessonLearningScreen: React.FC<{ route: any }> = ({ route }) => {
     const problemModule = getProblemModule(curStepModules || []);
     if(problemModule){
       // 현재 스텝에 문제가 포함된 경우
-      const problemModuleIndex = curSlide?.modules.findIndex((module) => module.id === problemModule.id) ?? 0;
+      const problemModuleId= curLesson?.sliders[curSlideIndex].modules.findIndex((module) => module.id === problemModule.id) ?? 0;
 
-      if((curLesson?.sliders[curSlideIndex].modules[problemModuleIndex] as any)?.isCorrect === undefined){
-        // 채점하지 않은 경우
+      if((curLesson?.sliders[curSlideIndex].modules[problemModuleId] as any)?.isCorrect === undefined){
+
         if(problemModule.type === 'multipleChoice'){
-          
-          const selectedAnswer = selectedAnswers[`slide-${curSlideIndex}-module-${problemModuleIndex}`];
-          const isCorrect = problemModule.options?.[selectedAnswer]?.isCorrect;
-          setCurLesson(prev => {
-            if(!prev) return prev;
-            return {
-              ...prev,
-              sliders: prev.sliders.map((slider, sliderIndex) => 
-                sliderIndex === curSlideIndex ?
-                { 
-                  ...slider, 
-                  modules: slider.modules.map((module, moduleIndex) => 
-                    moduleIndex === problemModuleIndex ? 
-                    { 
-                      ...module, 
-                      isCorrect: isCorrect 
-                    } 
-                    : 
-                    module
-                  ) 
-                } 
-                : 
-                slider
-              )
-            }
-          })
-          if(isCorrect){
-            console.log('정답입니다!')
-          }else{
-            console.log('오답입니다!')
+          // 서버에서 결과 및 해설 받기
+          const isAllCorrect = problemModule.questions.every((question: any) => question.answer?.answer === question.answer?.userAnswer);
+          // result 객체 생성 (서버에서 받은 값이라고 가정)
+          const result = {
+            isCorrect: [
+              ...problemModule.questions.map((question: any) => ({
+                "isCorrect": question.answer?.answer === question.answer?.userAnswer,
+              })),
+            ],
+            totalStep: 2,
+            modules: [
+              {
+                "id": "1-0",
+                "type": "paragraph",
+                "content": `### 📄${isAllCorrect ? '정답' : '오답'}입니다`,
+                "visibility": {
+                  "type": "step",
+                  "value": 1
+                }
+              },
+              {
+                "id": "1-1",
+                "type": "paragraph",
+                "content": "### 🚫 h1 해더에 넣을 수 없어요!\n\n`<h1>` 태그는 **본문의 가장 중요한 제목**을 나타내는 태그로, `<head>` 영역에는 들어갈 수 없습니다.\n\n- `<head>`에는 문서의 정보(제목, 메타데이터, 스타일 등)만 작성해야 해요.\n- `<h1>`, `<p>`, `<button>` 등 **화면에 표시되는 콘텐츠**는 반드시 `<body>` 안에 작성해야 합니다.\n\n> 💡 **TIP:**\n> `<head>`에는 `<title>`, `<meta>`, `<link>` 등만 넣어주세요!\n",
+                "visibility": {
+                  "type": "step",
+                  "value": 2
+                }
+              },
+            ],
           }
-          // 채점 화면 출력 해야 함
-  
+
+          setIsModuleAdded(true)
+
+          
+          const newLesson = { ...curLesson };
+          const newSliders = [...newLesson.sliders];
+          const curSlider = { ...newSliders[curSlideIndex] };
+          const newModules = [...curSlider.modules];
+
+          for (let i = 0; i < newModules.length; i++) {
+            const module = newModules[i];
+            const moduleStep = module.visibility?.value ?? 0;
+
+            // (1) 현재 스텝보다 뒤에 있는 모듈은 step을 뒤로 미룸
+            if (moduleStep > curStep) {
+              newModules[i] = {
+                ...module,
+                visibility: {
+                  ...module.visibility,
+                  value: moduleStep + (result.totalStep || 0),
+                }
+              };
+            }
+
+            // (2) 문제 모듈이면 정답 결과 반영
+            if (i === problemModuleId && Array.isArray((module as any).questions)) {
+              const newModule = { ...module } as any;
+              newModule.questions = newModule.questions.map((q: any, idx: number) => ({
+                ...q,
+                answer: {
+                  ...q.answer,
+                  isCorrect: result.isCorrect[idx]?.isCorrect
+                }
+              }));
+              newModules[i] = newModule;
+            }
+            // (3) 나머지는 그대로
+          }
+
+          // 서버에서 받은 모듈들(해설 등) step 위치 조정해서 추가
+          const resultModules = (result.modules || []).map((mod) => ({
+            ...mod,
+            visibility: {
+              ...mod.visibility,
+              value: (mod.visibility?.value ?? 0) + curStep
+            }
+          }));
+
+          curSlider.modules = [
+            ...newModules,
+            ...resultModules
+          ];
+          newSliders[curSlideIndex] = curSlider;
+          newLesson.sliders = newSliders;
+
+          setCurLesson(newLesson);
+        }
+
+
+
+        if(problemModule.type === 'codeFillTheGap'){
+          // 서버에서 결과 및 해설 받기
+          // answers 구조: [{isCorrect, answer, userAnswer}, ...]로 변경됨
+          const isAllCorrect = problemModule.files.map((file: any) => {
+            // answers 배열의 각 항목에 대해 정답 여부 판정
+            return file.answers.map((ansObj: any) => {
+              return ansObj.answer === ansObj.userAnswer;
+            });
+          });
+
+          // 각 answers에 isCorrect를 반영
+          const result = {
+            isCorrect: isAllCorrect,
+            totalStep: 2,
+            modules: [
+              {
+                "id": "4-0",
+                "type": "paragraph",
+                "content": `### 📄${isAllCorrect.flat().includes(false) ? '오답' : '정답'}입니다`,
+                "visibility": {
+                  "type": "step",
+                  "value": 1
+                }
+              },
+              {
+                "id": "4-1",
+                "type": "paragraph",
+                "content": "### ✅ <h1> 태그와 body 스타일 설정 방법\n\n- `<h1>` 태그는 본문의 가장 중요한 제목을 나타냅니다. 시작 태그는 `<h1>` 입니다.\n- body 태그에 스타일을 적용하려면 아래와 같이 작성합니다:\n\n```css\nbody {\n  /* 원하는 스타일 작성 */\n}\n```\n\n> 💡 **TIP:**\n> - `<h1>`, `<p>`, `<button>` 등 화면에 보이는 요소는 반드시 `<body>` 안에 작성하세요.\n> - `<head>`에는 `<title>`, `<meta>`, `<link>` 등 문서 정보만 넣어주세요!\n",
+                "visibility": {
+                  "type": "step",
+                  "value": 2
+                }
+              },
+            ],
+          }
+
+          setIsModuleAdded(true)
+
+          const newLesson = { ...curLesson };
+          const newSliders = [...newLesson.sliders];
+          const curSlider = { ...newSliders[curSlideIndex] };
+          const newModules = [...curSlider.modules];
+
+          for (let i = 0; i < newModules.length; i++) {
+            const module = newModules[i];
+            const moduleStep = module.visibility?.value ?? 0;
+
+            // (1) 현재 스텝보다 뒤에 있는 모듈은 step을 뒤로 미룸
+            if (moduleStep > curStep) {
+              newModules[i] = {
+                ...module,
+                visibility: {
+                  ...module.visibility,
+                  value: moduleStep + (result.totalStep || 0),
+                }
+              };
+            }
+            // (2) 문제 모듈이면 정답 결과 반영
+            if (i === problemModuleId && Array.isArray((module as any).files)) {
+              const newModule = { ...module } as any;
+              newModule.files = newModule.files.map((file: any, fileIdx: number) => ({
+                ...file,
+                answers: file.answers.map((ansObj: any, ansIdx: number) => ({
+                  ...ansObj,
+                  isCorrect: isAllCorrect[fileIdx]?.[ansIdx] ?? null
+                }))
+              }));
+              newModules[i] = newModule;
+            }
+            // (3) 나머지는 그대로
+          }
+
+          // 서버에서 받은 모듈들(해설 등) step 위치 조정해서 추가
+          const resultModules = (result.modules || []).map((mod) => ({
+            ...mod,
+            visibility: {
+              ...mod.visibility,
+              value: (mod.visibility?.value ?? 0) + curStep
+            }
+          }));
+
+          curSlider.modules = [
+            ...newModules,
+            ...resultModules
+          ];
+          newSliders[curSlideIndex] = curSlider;
+          newLesson.sliders = newSliders;
+
+          setCurLesson(newLesson);
+          
         }
       }else{
         // 채점 완료 한 경우
         const nextStepModules = getStepModules(curStep + 1)
         if(nextStepModules){
           // 다음 스텝이 있는 경우
-          addModuleToScreen(nextStepModules)
           setCurStep(curStep + 1)
         }else{
           // 다음 스텝이 없는 경우
@@ -126,10 +295,9 @@ const LessonLearningScreen: React.FC<{ route: any }> = ({ route }) => {
     }else{
       // 현재 스텝에 문제가 미포함된 경우
       const nextStepModules = getStepModules(curStep + 1)
-      if(nextStepModules){
+      if(nextStepModules.length > 0){
         // 다음 스텝이 있는 경우
         // 다음 스탭 모듈 출력
-        addModuleToScreen(nextStepModules)
         setCurStep(curStep + 1)
         // 다음 스탭에 문제가 있는 경우
         const problemModule = getProblemModule(nextStepModules || []);
@@ -141,6 +309,7 @@ const LessonLearningScreen: React.FC<{ route: any }> = ({ route }) => {
         }
       }else{
         // 다음 스텝이 없는 경우
+        console.log('다음 스텝이 없는 경우')
         setCurSlideIndex(curSlideIndex + 1)
         setCurStep(0)
         // 다음 슬라이드로 이동
@@ -152,23 +321,17 @@ const LessonLearningScreen: React.FC<{ route: any }> = ({ route }) => {
 
   // modules에서 특정 스텝 데이터만 조회
   const getStepModules = (step: number) => {
-    const stepModules = curSlide?.modules.filter((module) => module?.visibility?.type === 'step' && module.visibility.value === step)
+    const stepModules = curLesson?.sliders[curSlideIndex].modules.filter((module) => module?.visibility?.type === 'step' && module.visibility.value === step)
     return stepModules
   }
 
-  // 입력 받은 모듈 화면에 추가
-  const addModuleToScreen = (modules: SlideModule[]) => {
-    setViewModules(prevModules => [...prevModules, ...modules])
-  }
 
   // 새로운 모듈이 추가될 때 스크롤을 맨 아래로 이동
   useEffect(() => {
-    if (viewModules.length > 0) {
-      setTimeout(() => {
-        scrollViewRef.current?.scrollToEnd({ animated: true });
-      }, 100);
-    }
-  }, [viewModules.length, webViewLoadCount]);
+    setTimeout(() => {
+      scrollViewRef.current?.scrollToEnd({ animated: true });
+    }, 100);
+  }, [webViewLoadCount]);
 
   // 문제 유형 모듈 반환
   const getProblemModule = (modules: SlideModule[]) => {
@@ -176,19 +339,9 @@ const LessonLearningScreen: React.FC<{ route: any }> = ({ route }) => {
     return found ? found : null;
   }
 
-  // 답변 선택 핸들러
-  const handleAnswerSelect = (slideIndex: number, moduleIndex: number, selectedOptionIndex: number) => {
-
-    setSelectedAnswers(prev => ({
-      ...prev,
-      [`slide-${slideIndex}-module-${moduleIndex}`]: selectedOptionIndex
-    }));
-    setIsNextButtonEnabled(true)
-  };
-
   // 선택된 답변 가져오기
-  const getSelectedAnswer = (slideIndex: number, moduleIndex: number) => {
-    return selectedAnswers[`slide-${slideIndex}-module-${moduleIndex}`] ?? -1;
+  const getSelectedAnswer = ({key}: {key: string}) => {
+    return selectedAnswers[key] ?? -1;
   };
   
   if (!curLesson) return null;
@@ -202,7 +355,10 @@ const LessonLearningScreen: React.FC<{ route: any }> = ({ route }) => {
           <X width={35} height={35} fill="#ccc" />
         </Pressable>
         <View className="flex-1 bg-[#E5E5E5] rounded-[10px] overflow-hidden">
-          <View className="w-[100px] h-[20px] rounded-[10px] bg-[#FFC800]" />
+          <View
+            className="h-[20px] rounded-[10px] bg-[#FFC800]"
+            style={{ width: `${((curSlideIndex + 1) / curLesson.sliders.length) * 100}%` }}
+          />
         </View>
         <View className="flex-row items-center gap-[5px]">
           <HeartStraight width={35} height={35} fill="#EE5555" />
@@ -215,10 +371,12 @@ const LessonLearningScreen: React.FC<{ route: any }> = ({ route }) => {
         <ScrollView ref={scrollViewRef} className="flex-1">
           <View className="flex-col gap-[20px] px-[16px] pt-[20px]">
             <Text className="text-[#111] text-[18px] font-[700]">
-              {curSlide?.title || '제목 없음'}
+              {curLesson?.sliders[curSlideIndex].title || '제목 없음'}
             </Text>
 
-            {viewModules.map((module, moduleIndex) => {
+            {curLesson.sliders[curSlideIndex].modules
+              .filter(module => (module.visibility?.type === 'step' ? module.visibility.value <= curStep : true))
+              .map((module, moduleIndex) => {
               switch (module.type) {
                 case 'paragraph':
                   return (
@@ -243,17 +401,7 @@ const LessonLearningScreen: React.FC<{ route: any }> = ({ route }) => {
                       />
                     </View>
                   );
-                case 'codeFillTheGap':
-                  return (
-                    <View key={`slide-${curSlideIndex}-module-${moduleIndex}`}>
-                      <CodeFillTheGapComponent 
-                        module={module}
-                        onLoadComplete={() => {
-                          setWebViewLoadCount(prev => prev + 1);
-                        }}
-                      />
-                    </View>
-                  );
+
                 case 'webview':
                   return (
                     <View key={`slide-${curSlideIndex}-module-${moduleIndex}`}>
@@ -268,12 +416,27 @@ const LessonLearningScreen: React.FC<{ route: any }> = ({ route }) => {
                 case 'multipleChoice':
                   return (
                     <View key={`slide-${curSlideIndex}-module-${moduleIndex}`}>
-                      <MultipleChoiceComponent 
-                        module={module} 
-                        onAnswerSelect={(selectedOptionIndex) => 
-                          handleAnswerSelect(curSlideIndex, moduleIndex, selectedOptionIndex)
-                        }
-                        selectedAnswer={getSelectedAnswer(curSlideIndex, moduleIndex)}
+                    <MultipleChoiceComponent 
+                      setIsNextButtonEnabled={setIsNextButtonEnabled}
+                      curSlideIndex={curSlideIndex}
+                      moduleIndex={moduleIndex}
+                      curLesson={curLesson}
+                      setCurLesson={setCurLesson}
+                    />
+                    </View>
+                  );
+                case 'codeFillTheGap':
+                  return (
+                    <View key={`slide-${curSlideIndex}-module-${moduleIndex}`}>
+                      <CodeFillTheGapComponent 
+                        setIsNextButtonEnabled={setIsNextButtonEnabled}
+                        curSlideIndex={curSlideIndex}
+                        moduleIndex={moduleIndex}
+                        curLesson={curLesson}
+                        setCurLesson={setCurLesson}
+                        onLoadComplete={() => {
+                          setWebViewLoadCount(prev => prev + 1);
+                        }}
                       />
                     </View>
                   );
