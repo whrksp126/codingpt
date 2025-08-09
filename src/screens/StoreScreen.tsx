@@ -2,7 +2,7 @@ import React, { useMemo, useState } from 'react';
 import { View, Text, FlatList, TouchableOpacity, Image, ActivityIndicator } from 'react-native';
 import { useNavigation } from '../contexts/NavigationContext';
 import { useStore } from '../contexts/StoreContext';
-import { Product, StoreCategory } from '../services/storeService';
+import type { Product, StoreCategory } from '../services/storeService';
 
 // 렌더링에 사용할 항목 타입 정의
 interface StoreItem { // product
@@ -35,20 +35,19 @@ const getCategoryIcon = (categoryName: string) => {
 const StoreScreen = () => {
   const { navigate } = useNavigation();
   const { storeData, loading } = useStore();
-  // const [storeItems, setStoreItems] = useState<StoreItem[]>([]);
   const [filter, setFilter] = useState<'전체' | '무료' | '유료'>('전체');
 
   // StoreCategory[] → StoreItem[] 변환 (useMemo로 캐싱)
   const storeItems: StoreItem[] = useMemo(() => {
     return storeData.flatMap((category: StoreCategory) =>
-      category.Products.map((product: Product) => ({
+      (category.Products || []).map((product: Product) => ({
         id: product.id,
         name: product.name,
         icon: getCategoryIcon(category.name),
         description: product.description,
         price: product.price,
         priceType: product.price === 0 ? '무료' : '유료',
-        lessonCount: 0,
+        lessonCount: product.lessonCount ?? 0,
         category: category.name,
         categoryDescription: category.description,
       }))
@@ -117,18 +116,24 @@ const StoreScreen = () => {
         renderItem={({ item: [categoryName, { items, description }] }) => (
           <View className="px-[16px] pb-[10px]">
             {/* 카테고리명 */}
-            <Text className="text-[16px] font-bold text-[#FFC700] mb-1">
-              {categoryName}
-            </Text>
+            <Text className="text-[16px] font-bold text-[#FFC700] mb-1">{categoryName}</Text>
             {/* 카테고리 설명 */}
             <Text className="text-sm text-[#777777]">{description}</Text>
 
             {/* 상품 카드 목록 */}
             {items.map((item) => (
               <TouchableOpacity
-                onPress={() => navigate('lessonDetail', item)}
                 key={item.id}
                 className="flex-row items-center bg-white p-[10px] border border-[#CCCCCC] rounded-[16px] mt-[10px]"
+                onPress={() =>
+                  navigate('lessonDetail', {
+                    id: item.id,
+                    name: item.name,
+                    icon: item.icon,
+                    description: item.description,
+                    price: item.price,
+                  })
+                }
               >
                 <Image
                   source={item.icon}
@@ -145,9 +150,7 @@ const StoreScreen = () => {
                   <View className="flex-row items-center space-x-2">
                     <Text
                       className={`text-[10px] px-[5px] py-[1px] rounded-[2px] overflow-hidden ${
-                        item.priceType === '무료'
-                          ? 'text-[#58CC02] bg-[#F0FFE5]'
-                          : 'text-[#027FCC] bg-[#EDF8FF]'
+                        item.priceType === '무료' ? 'text-[#58CC02] bg-[#F0FFE5]' : 'text-[#027FCC] bg-[#EDF8FF]'
                       }`}
                     >
                       {item.priceType}
