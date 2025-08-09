@@ -1,12 +1,12 @@
-// src/contexts/StoreContext.tsx
-import React, { createContext, useContext, useEffect, useState } from 'react';
+import React, { createContext, useContext, useEffect, useState, useMemo } from 'react';
 import type { ReactNode } from 'react';
-import storeService, { StoreCategory } from '../services/storeService';
+import storeService, { Product, StoreCategory } from '../services/storeService';
 
 interface StoreContextType {
-  storeData: StoreCategory[]; // 카테고리 배열
+  storeData: StoreCategory[];           // 카테고리 배열 (Products까지 포함)
   loading: boolean;
-  reloadStoreData: () => Promise<void>;
+  reloadStoreData: () => Promise<void>; // 수동 갱신
+  productIndex: Map<number, Product>;   // productId → product O(1) 조회용
 }
 
 const StoreContext = createContext<StoreContextType | undefined>(undefined);
@@ -15,13 +15,23 @@ export const StoreProvider = ({ children }: { children: ReactNode }) => {
   const [storeData, setStoreData] = useState<StoreCategory[]>([]);
   const [loading, setLoading] = useState<boolean>(true);
 
+  // productId 인덱스 (storeData가 바뀔 때만 재생성)
+  const productIndex = useMemo(() => {
+    const map = new Map<number, Product>();
+    for (const cat of storeData) {
+      for (const p of cat.Products || []) map.set(p.id, p);
+    }
+    return map;
+  }, [storeData]);
+
   const loadStoreData = async () => {
     try {
       setLoading(true);
       const data = await storeService.getAllStores();
       setStoreData(data);
+      console.log('[StoreContext] 데이터 로딩 완료:', data);
     } catch (error) {
-      console.error('StoreContext 데이터 로딩 실패:', error);
+      console.error('[StoreContext] 데이터 로딩 실패:', error);
     } finally {
       setLoading(false);
     }
@@ -32,7 +42,9 @@ export const StoreProvider = ({ children }: { children: ReactNode }) => {
   }, []);
 
   return (
-    <StoreContext.Provider value={{ storeData, loading, reloadStoreData: loadStoreData }}>
+    <StoreContext.Provider 
+      value={{ storeData, loading, reloadStoreData: loadStoreData, productIndex }}
+    >
       {children}
     </StoreContext.Provider>
   );
@@ -44,4 +56,12 @@ export const useStore = (): StoreContextType => {
     throw new Error('useStore는 StoreProvider 내부에서만 사용해야 합니다.');
   }
   return context;
+};
+
+/**
+ * productId로 Product 한 건 바로 조회
+ */
+export const useProductFromStore = (productId?: number) => {
+  const { productIndex } = useStore();
+  return productId ? productIndex.get(productId) : undefined;
 };

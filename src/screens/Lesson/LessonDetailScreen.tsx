@@ -1,8 +1,9 @@
-import React, { useEffect, useState } from 'react';
+import React, { useState, useMemo } from 'react';
 import { View, Text, TouchableOpacity, Image, ScrollView, Alert } from 'react-native';
-import { Code, FileText, PuzzlePiece, Star } from 'phosphor-react-native';
+import { Star } from 'phosphor-react-native';
 import { useNavigation } from '../../contexts/NavigationContext';
 import { useUser } from '../../contexts/UserContext';
+import { useStore } from '../../contexts/StoreContext';
 import { useLesson } from '../../contexts/LessonContext';
 import lessonService from '../../services/lessonService';
 import { countSectionsAndLessons } from '../../utils/lessonUtils';
@@ -13,22 +14,33 @@ const LessonDetailScreen = ({ route }: any) => {
   const { goBack, navigate } = useNavigation();
   const { user } = useUser();
   const { lessons } = useLesson();
+  const { productIndex } = useStore();
 
-  const { id, name, icon, description, price, progress, date } = route.params;
-  const item = { id, name, icon, description, price, progress, date };
+  // ✅ 네비게이션으로는 최소 정보만 수신
+  const { id, name, icon, description, price } = route.params as {
+    id: number;
+    name: string;
+    icon: any;
+    description: string;
+    price: number;
+  };
+  const productId = Number(id);
+  console.log('productId', productId);0
+
+  // ✅ StoreContext에서 집계값(단일 출처) 조회
+  const productFromStore = productIndex.get(productId);
+  const sectionCount = productFromStore?.sectionCount ?? 0; // 목차 개수
+  const lessonCount = productFromStore?.lessonCount ?? 0;   // 레슨 개수
 
   // 수강 여부 확인
-  const isEnrolled = lessons.some((lesson) => lesson.id === id);
-
-  // section/lesson 개수 계산
-  const enrolledLesson = lessons.find((l) => l.id === Number(id));
-  const { sectionCount, lessonCount } = enrolledLesson
-    ? countSectionsAndLessons(enrolledLesson)
-    : { sectionCount: 0, lessonCount: 0 };
+  const isEnrolled = useMemo(() => lessons.some((l) => l.id === productId), [lessons, productId]);
 
   // 탭 구성
   const [activeTab, setActiveTab] = useState('강의소개');
   const tabs = ['강의소개', '목차', '관련코스', '후기'];
+
+  // 상세 화면에서 재사용할 route payload (최소)
+  const item = { id: productId, name, icon, description, price };
 
   return (
     <View className="flex-1 bg-white">

@@ -1,17 +1,41 @@
 import api from '../utils/api';
-//import { lessonStorage } from '../utils/storage';
 
-// 상품 타입 정의
-export interface Product {
+// ----- 타입 정의 -----
+export type Lesson = {
+  id: number;
+  order_no: number;
+  name: string;
+  type: string;
+  description: string;
+};
+
+export type Section = {
+  id: number;
+  order_no: number;
+  name: string;
+  doc_concept: any;
+  Lessons: Lesson[];
+};
+
+export type Class = {
+  id: number;
+  name: string;
+  description: string;
+  Sections: Section[];
+};
+
+export type Product = {
   id: number;
   name: string;
   description: string;
   type: string;
   price: number;
-  lecture_intro: string | null;
-}
+  lecture_intro: any;
+  sectionCount: number;
+  lessonCount: number;
+  Classes: Class[];
+};
 
-// 상품 카테고리 타입 정의
 export interface StoreCategory {
   id: number;
   name: string;
