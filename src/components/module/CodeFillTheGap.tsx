@@ -62,6 +62,7 @@ export const CodeFillTheGapComponent: React.FC<CodeFillTheGapProps> = ({ onLoadC
             (function() {
               document.getElementById('blank-${ansIdx}').classList.remove('focus', 'rcorrect', 'incorrect');
               document.getElementById('blank-${ansIdx}').classList.add('${ansObj.isCorrect ? 'correct' : 'incorrect'}');
+              document.getElementById('blank-${ansIdx}').disabled = true;
             })();
           `;
         }
