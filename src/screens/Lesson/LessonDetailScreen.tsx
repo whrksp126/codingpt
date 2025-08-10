@@ -13,7 +13,7 @@ import { CaretLeft, ListNumbers, Files, SealQuestion, TerminalWindow, TreeStruct
 const LessonDetailScreen = ({ route }: any) => {
   const { goBack, navigate, push } = useNavigation();
   const { user } = useUser();
-  const { lessons } = useLesson();
+  const { lessons, reloadLessons } = useLesson();
   const { productIndex } = useStore();
 
   // 네비게이션 파라미터
@@ -40,6 +40,26 @@ const LessonDetailScreen = ({ route }: any) => {
 
   // 상세 화면에서 재사용할 route payload (최소)
   const item = { id: productId, name, icon, description, price };
+
+  // 수강 등록 핸들러
+  const handleEnroll = async () => {
+    try {
+      const registered = await lessonService.postMyclass(user!.id, id);
+      if (registered) {
+        // ✅ 등록 후 레슨 목록 즉시 갱신
+        await reloadLessons();
+
+        Alert.alert('수강 등록 완료', '', [
+          { text: '확인', onPress: () => push('classProgress', item) }
+        ]);
+      } else {
+        Alert.alert('수강 등록 실패');
+      }
+    } catch (err) {
+      console.error(err);
+      Alert.alert('오류', '수강 등록 중 문제가 발생했습니다.');
+    }
+  };
 
   return (
     <View className="flex-1 bg-white">
@@ -86,25 +106,7 @@ const LessonDetailScreen = ({ route }: any) => {
               shadowRadius: 25,
               elevation: 5, // Android용
             }}
-            onPress={async () => {
-              if (!isEnrolled) {
-                const registered = await lessonService.postMyclass(user!.id, id);
-                if (registered) {
-                  Alert.alert('수강 등록 완료', '', [
-                    {
-                      text: '확인',
-                      onPress: () => {
-                        push('classProgress', item);
-                      }
-                    }
-                  ]);
-                } else {
-                  Alert.alert('수강 등록 실패');
-                }
-              } else {
-                push('classProgress', item);
-              }
-            }}
+            onPress={isEnrolled ? () => push('classProgress', item) : handleEnroll}
           >
             <Text className="text-white text-[18px] font-bold mt-[-3px]">
               {isEnrolled ? '이어서 학습하기' : '수강신청하기'}
