@@ -33,7 +33,7 @@ const getCategoryIcon = (categoryName: string) => {
 };
 
 const StoreScreen = () => {
-  const { navigate } = useNavigation();
+  const { push } = useNavigation();
   const { storeData, loading } = useStore();
   const [filter, setFilter] = useState<'전체' | '무료' | '유료'>('전체');
 
@@ -126,7 +126,7 @@ const StoreScreen = () => {
                 key={item.id}
                 className="flex-row items-center bg-white p-[10px] border border-[#CCCCCC] rounded-[16px] mt-[10px]"
                 onPress={() =>
-                  navigate('lessonDetail', {
+                  push('lessonDetail', {
                     id: item.id,
                     name: item.name,
                     icon: item.icon,

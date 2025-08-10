@@ -1,5 +1,5 @@
-import React, { useState, useMemo } from 'react';
-import { View, Text, TouchableOpacity, Image, ScrollView, Alert } from 'react-native';
+import React, { useState, useMemo, useRef } from 'react';
+import { View, Text, TouchableOpacity, Image, ScrollView, Alert, InteractionManager } from 'react-native';
 import { Star } from 'phosphor-react-native';
 import { useNavigation } from '../../contexts/NavigationContext';
 import { useUser } from '../../contexts/UserContext';
@@ -11,12 +11,12 @@ import { CaretLeft, ListNumbers, Files, SealQuestion, TerminalWindow, TreeStruct
 
 
 const LessonDetailScreen = ({ route }: any) => {
-  const { goBack, navigate } = useNavigation();
+  const { goBack, navigate, push } = useNavigation();
   const { user } = useUser();
   const { lessons } = useLesson();
   const { productIndex } = useStore();
 
-  // ✅ 네비게이션으로는 최소 정보만 수신
+  // 네비게이션 파라미터
   const { id, name, icon, description, price } = route.params as {
     id: number;
     name: string;
@@ -25,9 +25,8 @@ const LessonDetailScreen = ({ route }: any) => {
     price: number;
   };
   const productId = Number(id);
-  console.log('productId', productId);0
 
-  // ✅ StoreContext에서 집계값(단일 출처) 조회
+  // StoreContext에서 집계값(단일 출처) 조회
   const productFromStore = productIndex.get(productId);
   const sectionCount = productFromStore?.sectionCount ?? 0; // 목차 개수
   const lessonCount = productFromStore?.lessonCount ?? 0;   // 레슨 개수
@@ -91,13 +90,19 @@ const LessonDetailScreen = ({ route }: any) => {
               if (!isEnrolled) {
                 const registered = await lessonService.postMyclass(user!.id, id);
                 if (registered) {
-                  Alert.alert('수강 등록 완료');
-                  navigate('classProgress', item);
+                  Alert.alert('수강 등록 완료', '', [
+                    {
+                      text: '확인',
+                      onPress: () => {
+                        push('classProgress', item);
+                      }
+                    }
+                  ]);
                 } else {
                   Alert.alert('수강 등록 실패');
                 }
               } else {
-                navigate('classProgress', item);
+                push('classProgress', item);
               }
             }}
           >
