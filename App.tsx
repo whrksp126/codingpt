@@ -1,13 +1,13 @@
-import React, { useState } from 'react';
-import { SafeAreaView, SafeAreaProvider } from 'react-native-safe-area-context';
+import React from 'react';
 import { ActivityIndicator, View, StatusBar } from 'react-native';
+import { SafeAreaView, SafeAreaProvider } from 'react-native-safe-area-context';
 
 // Context
 import { NavigationProvider } from './src/contexts/NavigationContext';
 import { StoreProvider } from './src/contexts/StoreContext';
 import { AuthProvider, useAuth } from './src/contexts/AuthContext';
 import { LessonProvider } from './src/contexts/LessonContext';
-import { useUser, UserProvider } from './src/contexts/UserContext';
+import { UserProvider } from './src/contexts/UserContext';
 
 // Navigation
 import AuthNavigator from './src/navigation/AuthNavigator';
