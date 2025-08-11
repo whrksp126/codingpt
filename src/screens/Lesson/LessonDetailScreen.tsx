@@ -1,20 +1,20 @@
-import React, { useState, useMemo, useRef } from 'react';
-import { View, Text, TouchableOpacity, Image, ScrollView, Alert, InteractionManager } from 'react-native';
+import React, { useState, useMemo } from 'react';
+import { View, Text, TouchableOpacity, Image, ScrollView, Alert, Pressable } from 'react-native';
 import { Star } from 'phosphor-react-native';
-import { useNavigation } from '../../contexts/NavigationContext';
+import { useFullSheet } from '../../contexts/FullSheetContext';
 import { useUser } from '../../contexts/UserContext';
 import { useStore } from '../../contexts/StoreContext';
 import { useLesson } from '../../contexts/LessonContext';
 import lessonService from '../../services/lessonService';
 import { countSectionsAndLessons } from '../../utils/lessonUtils';
 import { CaretLeft, ListNumbers, Files, SealQuestion, TerminalWindow, TreeStructure } from '../../assets/SvgIcon';
-
+import ClassProgressScreen from './classProgressScreen';
 
 const LessonDetailScreen = ({ route }: any) => {
-  const { goBack, navigate, push } = useNavigation();
   const { user } = useUser();
   const { lessons, reloadLessons } = useLesson();
   const { productIndex } = useStore();
+  const { pushFullSheet, popFullSheet } = useFullSheet();
 
   // 네비게이션 파라미터
   const { id, name, icon, description, price } = route.params as {
@@ -46,12 +46,8 @@ const LessonDetailScreen = ({ route }: any) => {
     try {
       const registered = await lessonService.postMyclass(user!.id, id);
       if (registered) {
-        // ✅ 등록 후 레슨 목록 즉시 갱신
-        await reloadLessons();
-
-        Alert.alert('수강 등록 완료', '', [
-          { text: '확인', onPress: () => push('classProgress', item) }
-        ]);
+        pushFullSheet(<ClassProgressScreen />);
+        await reloadLessons(); // ✅ 즉시 반영
       } else {
         Alert.alert('수강 등록 실패');
       }
@@ -66,9 +62,9 @@ const LessonDetailScreen = ({ route }: any) => {
       <ScrollView contentContainerStyle={{ paddingBottom: 20 }}>
         {/* 상단 헤더: 뒤로가기 버튼 */}
         <View className="flex-row items-center justfy-between bg-white px-[20px] pt-[20px] pb-[20px] gap-x-[20px]">
-          <TouchableOpacity style={{ marginTop: 5 }} onPress={() => goBack()}>
+          <Pressable style={{ marginTop: 5 }} onPress={popFullSheet}>
             <CaretLeft width={35} height={35} fill="#CCCCCC" />
-          </TouchableOpacity>
+          </Pressable>
           <Text className="text-[22px] font-bold text-[#111111]">{name}</Text>
         </View>
 
@@ -106,7 +102,13 @@ const LessonDetailScreen = ({ route }: any) => {
               shadowRadius: 25,
               elevation: 5, // Android용
             }}
-            onPress={isEnrolled ? () => push('classProgress', item) : handleEnroll}
+            onPress={() => {
+              if (isEnrolled) {
+                pushFullSheet(<ClassProgressScreen />);
+              } else {
+                handleEnroll();
+              }
+            }}
           >
             <Text className="text-white text-[18px] font-bold mt-[-3px]">
               {isEnrolled ? '이어서 학습하기' : '수강신청하기'}

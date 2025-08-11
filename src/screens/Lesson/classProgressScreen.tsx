@@ -1,21 +1,20 @@
 import React, { useEffect, useState } from 'react';
-import Config from 'react-native-config';
-
 import { ScrollView, Pressable, Text, View, Image, Modal, Button } from 'react-native';
+import { useFullSheet } from '../../contexts/FullSheetContext';
 import { useUser } from '../../contexts/UserContext';
-import { useNavigation } from '../../contexts/NavigationContext';
 import { CaretLeft, ChatBubbleTail, Clover, HeartStraight, Notepad, Play, Star } from '../../assets/SvgIcon';
-import {html as fetchData} from '../../data/item/lesson_data.js';
+import { html as fetchData } from '../../data/item/lesson_data.js';
 import LessonDetailModal from '../../components/Modal/LessonDetailModal';
 
 const ClassProgressScreen: React.FC = () => {
   const { user } = useUser();
-  const { goBack } = useNavigation();
+  const { popFullSheet } = useFullSheet();
   const [classData, setClassData] = useState<any>(null);
   const [modalVisible, setModalVisible] = useState(false);
   const [selectedLessonData, setSelectedLessonData] = useState<any>(null);
 
   useEffect(() => {
+    // TODO: productId 기반 실제 데이터 로드로 교체 가능
     setClassData(fetchData.class_list[0]);
   }, []);
 
@@ -30,9 +29,9 @@ const ClassProgressScreen: React.FC = () => {
   return (
     <>
       {/* 헤더 */}
-      <View className="flex-row justify-between items-center px-[16px] pb-[7px]">
+      <View className="flex-row justify-between items-center px-[16px] pb-[7px] pt-[20px]">
         {/* 상단 헤더: 뒤로가기 버튼 */}
-        <Pressable onPress={() => goBack()}>
+        <Pressable onPress={popFullSheet}>
           <CaretLeft width={35} height={35} fill="#CCCCCC" />
         </Pressable>
 

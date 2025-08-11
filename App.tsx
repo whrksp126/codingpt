@@ -1,5 +1,7 @@
 import React from 'react';
 import { ActivityIndicator, View, StatusBar } from 'react-native';
+import { GestureHandlerRootView } from 'react-native-gesture-handler';
+import 'react-native-reanimated';
 import { SafeAreaView, SafeAreaProvider } from 'react-native-safe-area-context';
 
 // Context
@@ -8,6 +10,7 @@ import { StoreProvider } from './src/contexts/StoreContext';
 import { AuthProvider, useAuth } from './src/contexts/AuthContext';
 import { LessonProvider } from './src/contexts/LessonContext';
 import { UserProvider } from './src/contexts/UserContext';
+import { FullSheetProvider } from './src/contexts/FullSheetContext';
 
 // Navigation
 import AuthNavigator from './src/navigation/AuthNavigator';
@@ -31,7 +34,9 @@ function Main() {
       <StatusBar barStyle="dark-content" backgroundColor="#fff" />
       {isLoggedIn ? (
         <LessonProvider>
-          <AppNavigator />
+          <FullSheetProvider>
+            <AppNavigator />
+          </FullSheetProvider>
         </LessonProvider>
       ) : (
         <AuthNavigator />
@@ -42,16 +47,19 @@ function Main() {
 
 export default function App() {
   return (
-    <SafeAreaProvider>
-      <UserProvider>
-        <StoreProvider>
-          <AuthProvider>
-            <NavigationProvider>
-              <Main />
-            </NavigationProvider>
-          </AuthProvider>
-        </StoreProvider>
-      </UserProvider>
-    </SafeAreaProvider>
+    // ✅ 제스처 핸들러는 최상단에서 전체를 감싸야 함
+    <GestureHandlerRootView style={{ flex: 1 }}>
+      <SafeAreaProvider>
+        <UserProvider>
+          <StoreProvider>
+            <AuthProvider>
+              <NavigationProvider>
+                <Main />
+              </NavigationProvider>
+            </AuthProvider>
+          </StoreProvider>
+        </UserProvider>
+      </SafeAreaProvider>
+    </GestureHandlerRootView>
   );
 }

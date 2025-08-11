@@ -1,5 +1,5 @@
 import React from 'react';
-import { View, Text, TouchableOpacity, Animated, Dimensions, InteractionManager } from 'react-native';
+import { View, Text, TouchableOpacity, Animated, Dimensions } from 'react-native';
 import { Home, MyLessons, Store, My } from '../assets/SvgIcon';
 
 // Context

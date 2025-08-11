@@ -2,6 +2,7 @@ import React, { useEffect, useState, useRef } from 'react';
 import { Pressable, ScrollView, Text, View, Image, Dimensions } from 'react-native';
 import { HeartStraight, X } from '../../assets/SvgIcon';
 import { useNavigation } from '../../contexts/NavigationContext';
+import { useFullSheet } from '../../contexts/FullSheetContext';
 import { WebViewComponent } from '../../components/module/WebView';
 import { ParagraghComponent } from '../../components/module/Paragragh';
 import { CodeComponent } from '../../components/module/Code';
@@ -38,7 +39,8 @@ const LessonLearningScreen: React.FC<{ route: any }> = ({ route }) => {
   const { lessonData } = route.params;
   const pagerRef = useRef(null);
   const [visibleSlides, setVisibleSlides] = useState([lessonData?.sliders[0]]);
-
+  
+  const { popFullSheet } = useFullSheet();
   const { goBack } = useNavigation();
   const [curLesson, setCurLesson] = useState<Lesson | null>(lessonData);
   const [curSlideIndex, setCurSlideIndex] = useState<number>(0);
@@ -371,7 +373,7 @@ const LessonLearningScreen: React.FC<{ route: any }> = ({ route }) => {
     <>
       {/* 상단 헤더 */}
       <View className="flex-row items-center gap-[16px] h-[50px] px-[16px] border-b border-[#ccc]">
-        <Pressable onPress={goBack}>
+        <Pressable onPress={popFullSheet}>
           <X width={35} height={35} fill="#ccc" />
         </Pressable>
         <View className="flex-1 bg-[#E5E5E5] rounded-[10px] overflow-hidden">
