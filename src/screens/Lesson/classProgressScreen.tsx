@@ -1,14 +1,16 @@
 import React, { useEffect, useState } from 'react';
 import { ScrollView, Pressable, Text, View, Image, Modal, Button } from 'react-native';
-import { useFullSheet } from '../../contexts/FullSheetContext';
+// import { useFullSheet } from '../../contexts/FullSheetContext';
 import { useUser } from '../../contexts/UserContext';
 import { CaretLeft, ChatBubbleTail, Clover, HeartStraight, Notepad, Play, Star } from '../../assets/SvgIcon';
 import { html as fetchData } from '../../data/item/lesson_data.js';
 import LessonDetailModal from '../../components/Modal/LessonDetailModal';
+import { useNavigation } from '../../contexts/NavigationContext';
 
 const ClassProgressScreen: React.FC = () => {
   const { user } = useUser();
-  const { popFullSheet } = useFullSheet();
+  const { goBack } = useNavigation();
+  // const { popFullSheet } = useFullSheet();
   const [classData, setClassData] = useState<any>(null);
   const [modalVisible, setModalVisible] = useState(false);
   const [selectedLessonData, setSelectedLessonData] = useState<any>(null);
@@ -31,9 +33,15 @@ const ClassProgressScreen: React.FC = () => {
       {/* 헤더 */}
       <View className="flex-row justify-between items-center px-[16px] pb-[7px] pt-[20px]">
         {/* 상단 헤더: 뒤로가기 버튼 */}
-        <Pressable onPress={popFullSheet}>
+        <Pressable onPress={() => {
+          // popFullSheet();
+          goBack();
+        }}>
           <CaretLeft width={35} height={35} fill="#CCCCCC" />
         </Pressable>
+        {/* <Pressable onPress={popFullSheet}>
+          <CaretLeft width={35} height={35} fill="#CCCCCC" />
+        </Pressable> */}
 
 
         

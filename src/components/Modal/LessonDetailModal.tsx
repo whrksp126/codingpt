@@ -2,7 +2,7 @@ import { Modal, View, Text, Pressable } from 'react-native';
 import { useState } from 'react';
 import { Star } from '../../assets/SvgIcon';
 import { useNavigation } from '../../contexts/NavigationContext';
-import { useFullSheet } from '../../contexts/FullSheetContext';
+// import { useFullSheet } from '../../contexts/FullSheetContext';
 import LessonLearningScreen from '../../screens/Lesson/LessonLearningScreen';
 
 interface LessonDetailModalProps {
@@ -12,15 +12,20 @@ interface LessonDetailModalProps {
 }
 
 const LessonDetailModal = ({ lessonData, visible, onClose }: LessonDetailModalProps) => {
-  const { pushFullSheet } = useFullSheet();
+  // const { pushFullSheet } = useFullSheet();
   const { navigate } = useNavigation();
 
   const onPressStart = () => {
     // navigate('lessonLearning', { lessonData });
-    pushFullSheet(
-      <LessonLearningScreen route={{ params: { lessonData } }} />,
-      'lessonLearning'
-    );
+    navigate('lessonLearning', { lessonData });
+    // pushFullSheet(
+    //   <LessonLearningScreen route={{ params: { lessonData } }} />,
+    //   'lessonLearning'
+    // );
+    // pushFullSheet(
+    //   <LessonLearningScreen route={{ params: { lessonData } }} />,
+    //   'lessonLearning'
+    // );
     onClose(); // 모달은 즉시 닫기
   }
 

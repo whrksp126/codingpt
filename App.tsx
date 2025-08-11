@@ -34,32 +34,53 @@ function Main() {
       <StatusBar barStyle="dark-content" backgroundColor="#fff" />
       {isLoggedIn ? (
         <LessonProvider>
-          <FullSheetProvider>
-            <AppNavigator />
-          </FullSheetProvider>
+          <AppNavigator />
         </LessonProvider>
       ) : (
         <AuthNavigator />
       )}
     </SafeAreaView>
+    // <SafeAreaView className="flex-1 bg-white">
+    //   <StatusBar barStyle="dark-content" backgroundColor="#fff" />
+    //   {isLoggedIn ? (
+    //     <LessonProvider>
+    //       <FullSheetProvider>
+    //         <AppNavigator />
+    //       </FullSheetProvider>
+    //     </LessonProvider>
+    //   ) : (
+    //     <AuthNavigator />
+    //   )}
+    // </SafeAreaView>
   );
 }
 
 export default function App() {
   return (
-    // ✅ 제스처 핸들러는 최상단에서 전체를 감싸야 함
-    <GestureHandlerRootView style={{ flex: 1 }}>
-      <SafeAreaProvider>
-        <UserProvider>
-          <StoreProvider>
-            <AuthProvider>
-              <NavigationProvider>
-                <Main />
-              </NavigationProvider>
-            </AuthProvider>
-          </StoreProvider>
-        </UserProvider>
-      </SafeAreaProvider>
-    </GestureHandlerRootView>
+    <SafeAreaProvider>
+      <UserProvider>
+        <StoreProvider>
+          <AuthProvider>
+            <NavigationProvider>
+              <Main />
+            </NavigationProvider>
+          </AuthProvider>
+        </StoreProvider>
+      </UserProvider>
+    </SafeAreaProvider>
+    // // ✅ 제스처 핸들러는 최상단에서 전체를 감싸야 함
+    // <GestureHandlerRootView style={{ flex: 1 }}>
+    //   <SafeAreaProvider>
+    //     <UserProvider>
+    //       <StoreProvider>
+    //         <AuthProvider>
+    //           <NavigationProvider>
+    //             <Main />
+    //           </NavigationProvider>
+    //         </AuthProvider>
+    //       </StoreProvider>
+    //     </UserProvider>
+    //   </SafeAreaProvider>
+    // </GestureHandlerRootView>
   );
 }

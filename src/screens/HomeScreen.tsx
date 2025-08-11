@@ -3,7 +3,7 @@ import { ScrollView, TouchableOpacity, Text, View, FlatList, Image } from 'react
 import LessonCard from '../components/LessonCard';
 import { useUser } from '../contexts/UserContext';
 import { useNavigation } from '../contexts/NavigationContext';
-import { useFullSheet } from '../contexts/FullSheetContext';
+// import { useFullSheet } from '../contexts/FullSheetContext';
 import { getColorByCount, getRecentDays } from '../utils/heatmapUtils';
 import { AnimatedCircularProgress } from 'react-native-circular-progress';
 import { CodesandboxLogo, Clover, HeartStraight, Check, CaretRight } from '../assets/SvgIcon';
@@ -19,7 +19,7 @@ interface Lesson {
 }
 
 const HomeScreen: React.FC = () => {
-  const { pushFullSheet } = useFullSheet();
+  // const { pushFullSheet } = useFullSheet();
   const { navigate } = useNavigation();
   const { user } = useUser();
   
@@ -128,7 +128,8 @@ const HomeScreen: React.FC = () => {
 
                 // ✅ 풀시트로 classProgressScreen 진입
                 // - props가 필요하면 <ClassProgressScreen propA="..." />로 전달
-                pushFullSheet(<ClassProgressScreen />, 'classProgress');
+                // pushFullSheet(<ClassProgressScreen />, 'classProgress');
+                navigate('classProgress');
               }}
             >
               <CodesandboxLogo width={40} height={40} fill="#ffffff" />

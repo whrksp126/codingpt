@@ -2,7 +2,7 @@ import React, { useEffect, useState, useRef } from 'react';
 import { Pressable, ScrollView, Text, View, Image, Dimensions } from 'react-native';
 import { HeartStraight, X } from '../../assets/SvgIcon';
 import { useNavigation } from '../../contexts/NavigationContext';
-import { useFullSheet } from '../../contexts/FullSheetContext';
+// import { useFullSheet } from '../../contexts/FullSheetContext';
 import { WebViewComponent } from '../../components/module/WebView';
 import { ParagraghComponent } from '../../components/module/Paragragh';
 import { CodeComponent } from '../../components/module/Code';
@@ -40,8 +40,8 @@ const LessonLearningScreen: React.FC<{ route: any }> = ({ route }) => {
   const pagerRef = useRef(null);
   const [visibleSlides, setVisibleSlides] = useState([lessonData?.sliders[0]]);
   
-  const { popFullSheet } = useFullSheet();
-  const { goBack } = useNavigation();
+  // const { popFullSheet } = useFullSheet();
+  const { goBack, navigate } = useNavigation();
   const [curLesson, setCurLesson] = useState<Lesson | null>(lessonData);
   const [curSlideIndex, setCurSlideIndex] = useState<number>(0);
 
@@ -80,6 +80,16 @@ const LessonLearningScreen: React.FC<{ route: any }> = ({ route }) => {
     }
   }, [isModuleAdded]);
 
+
+  // 학습 종료 감지
+  useEffect(() => {
+    if(curSlideIndex > (curLesson?.sliders?.length ?? 0) - 1){
+      console.log("학습 종료 감지")
+      navigate('lessonReport', { curLesson });
+
+    }
+  }, [curSlideIndex]);
+
   const setSortCurSlideModules = () => {
     setCurLesson(prev => {
       if (!prev) return prev;
@@ -117,7 +127,6 @@ const LessonLearningScreen: React.FC<{ route: any }> = ({ route }) => {
       if((curLesson?.sliders[curSlideIndex].modules[problemModuleId] as any)?.isCorrect === undefined){
 
         if(problemModule.type === 'multipleChoice'){
-          console.log("problemModule,", problemModule)
           const result = problemModule.result;
           setIsModuleAdded(true)
 
@@ -308,9 +317,12 @@ const LessonLearningScreen: React.FC<{ route: any }> = ({ route }) => {
     <>
       {/* 상단 헤더 */}
       <View className="flex-row items-center gap-[16px] h-[50px] px-[16px] border-b border-[#ccc]">
-        <Pressable onPress={popFullSheet}>
+        <Pressable onPress={() => goBack()}>
           <X width={35} height={35} fill="#ccc" />
         </Pressable>
+        {/* <Pressable onPress={popFullSheet}>
+          <X width={35} height={35} fill="#ccc" />
+        </Pressable> */}
         <View className="flex-1 bg-[#E5E5E5] rounded-[10px] overflow-hidden">
           <View
             className="h-[20px] rounded-[10px] bg-[#FFC800]"
