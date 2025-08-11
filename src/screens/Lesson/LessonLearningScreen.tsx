@@ -117,38 +117,8 @@ const LessonLearningScreen: React.FC<{ route: any }> = ({ route }) => {
       if((curLesson?.sliders[curSlideIndex].modules[problemModuleId] as any)?.isCorrect === undefined){
 
         if(problemModule.type === 'multipleChoice'){
-          // 서버에서 결과 및 해설 받기
-          const isAllCorrect = problemModule.questions.every((question: any) => question.answer?.answer === question.answer?.userAnswer);
-          // result 객체 생성 (서버에서 받은 값이라고 가정)
-          const result = {
-            isCorrect: [
-              ...problemModule.questions.map((question: any) => ({
-                "isCorrect": question.answer?.answer === question.answer?.userAnswer,
-              })),
-            ],
-            totalStep: 2,
-            modules: [
-              {
-                "id": "1-0",
-                "type": "paragraph",
-                "content": `### 📄${isAllCorrect ? '정답' : '오답'}입니다`,
-                "visibility": {
-                  "type": "step",
-                  "value": 1
-                }
-              },
-              {
-                "id": "1-1",
-                "type": "paragraph",
-                "content": "### 🚫 h1 해더에 넣을 수 없어요!\n\n`<h1>` 태그는 **본문의 가장 중요한 제목**을 나타내는 태그로, `<head>` 영역에는 들어갈 수 없습니다.\n\n- `<head>`에는 문서의 정보(제목, 메타데이터, 스타일 등)만 작성해야 해요.\n- `<h1>`, `<p>`, `<button>` 등 **화면에 표시되는 콘텐츠**는 반드시 `<body>` 안에 작성해야 합니다.\n\n> 💡 **TIP:**\n> `<head>`에는 `<title>`, `<meta>`, `<link>` 등만 넣어주세요!\n",
-                "visibility": {
-                  "type": "step",
-                  "value": 2
-                }
-              },
-            ],
-          }
-
+          console.log("problemModule,", problemModule)
+          const result = problemModule.result;
           setIsModuleAdded(true)
 
           
@@ -179,7 +149,7 @@ const LessonLearningScreen: React.FC<{ route: any }> = ({ route }) => {
                 ...q,
                 answer: {
                   ...q.answer,
-                  isCorrect: result.isCorrect[idx]?.isCorrect
+                  isCorrect: q.answer.answer === q.answer.userAnswer
                 }
               }));
               newModules[i] = newModule;
@@ -206,43 +176,8 @@ const LessonLearningScreen: React.FC<{ route: any }> = ({ route }) => {
           setCurLesson(newLesson);
         }
 
-
-
         if(problemModule.type === 'codeFillTheGap'){
-          // 서버에서 결과 및 해설 받기
-          // answers 구조: [{isCorrect, answer, userAnswer}, ...]로 변경됨
-          const isAllCorrect = problemModule.files.map((file: any) => {
-            // answers 배열의 각 항목에 대해 정답 여부 판정
-            return file.answers.map((ansObj: any) => {
-              return ansObj.answer === ansObj.userAnswer;
-            });
-          });
-
-          // 각 answers에 isCorrect를 반영
-          const result = {
-            isCorrect: isAllCorrect,
-            totalStep: 2,
-            modules: [
-              {
-                "id": "4-0",
-                "type": "paragraph",
-                "content": `### 📄${isAllCorrect.flat().includes(false) ? '오답' : '정답'}입니다`,
-                "visibility": {
-                  "type": "step",
-                  "value": 1
-                }
-              },
-              {
-                "id": "4-1",
-                "type": "paragraph",
-                "content": "### ✅ <h1> 태그와 body 스타일 설정 방법\n\n- `<h1>` 태그는 본문의 가장 중요한 제목을 나타냅니다. 시작 태그는 `<h1>` 입니다.\n- body 태그에 스타일을 적용하려면 아래와 같이 작성합니다:\n\n```css\nbody {\n  /* 원하는 스타일 작성 */\n}\n```\n\n> 💡 **TIP:**\n> - `<h1>`, `<p>`, `<button>` 등 화면에 보이는 요소는 반드시 `<body>` 안에 작성하세요.\n> - `<head>`에는 `<title>`, `<meta>`, `<link>` 등 문서 정보만 넣어주세요!\n",
-                "visibility": {
-                  "type": "step",
-                  "value": 2
-                }
-              },
-            ],
-          }
+          const result = problemModule.result;
 
           setIsModuleAdded(true)
 
@@ -272,7 +207,7 @@ const LessonLearningScreen: React.FC<{ route: any }> = ({ route }) => {
                 ...file,
                 answers: file.answers.map((ansObj: any, ansIdx: number) => ({
                   ...ansObj,
-                  isCorrect: isAllCorrect[fileIdx]?.[ansIdx] ?? null
+                  isCorrect: ansObj.answer === ansObj.userAnswer
                 }))
               }));
               newModules[i] = newModule;
@@ -379,7 +314,7 @@ const LessonLearningScreen: React.FC<{ route: any }> = ({ route }) => {
         <View className="flex-1 bg-[#E5E5E5] rounded-[10px] overflow-hidden">
           <View
             className="h-[20px] rounded-[10px] bg-[#FFC800]"
-            style={{ width: `${((curSlideIndex + 1) / curLesson.sliders.length) * 100}%` }}
+            style={{ width: `${((visibleSlides.length) / curLesson.sliders.length) * 100}%` }}
           />
         </View>
         <View className="flex-row items-center gap-[5px]">
@@ -408,7 +343,7 @@ const LessonLearningScreen: React.FC<{ route: any }> = ({ route }) => {
                 </Text>
 
                 {slide.modules
-                  .filter(module => (module.visibility?.type === 'step' ? module.visibility.value <= curSlideStep[curSlideIndex] : true))
+                  .filter(module => (module.visibility?.type === 'step' ? module.visibility.value <= curSlideStep[idx] : true))
                   .map((module, moduleIndex) => {
                   switch (module.type) {
                     case 'paragraph':
@@ -484,14 +419,18 @@ const LessonLearningScreen: React.FC<{ route: any }> = ({ route }) => {
             <View className="flex-row items-center gap-[16px] p-[16px]">
               <Pressable 
                 onPress={onPressNext}
-                disabled={!isNextButtonEnabled}
+                disabled={!isNextButtonEnabled || idx !== visibleSlides.length - 1}
                 className={`
                   flex items-center justify-center flex-1 
                   h-[50px] 
                   rounded-[10px] 
-                  ${isNextButtonEnabled ? 'bg-[#58CC02]' : 'bg-[#E5E5E5]'}
+                  ${isNextButtonEnabled && idx === visibleSlides.length - 1 ? 'bg-[#58CC02]' : 'bg-[#E5E5E5]'}
                 `}>
-                <Text className="text-[#fff] text-[18px] font-[700] text-center">확인</Text>
+                <Text className={`
+                  text-[18px] font-[700] text-center ${!isNextButtonEnabled || idx !== visibleSlides.length - 1 ? 'text-[#AFAFAF]' : 'text-[#fff] '}
+                `}>
+                  확인
+                </Text>
               </Pressable>
             </View>
           </View>
