@@ -352,244 +352,32 @@ export const html = {
                   {
                     "id": "slide_0001",
                     "title": "`<!DOCTYPE html>`의 의미",
-                    "modules": [
-                      {
-                        "type": "paragraph",
-                        "content": "`<!DOCTYPE html>`은 HTML 문서의 **버전과 유형을 정의하는 선언부**입니다. 현재 대부분의 웹 문서는 HTML5를 사용하며, 이를 명시하는 역할을 합니다."
-                      },
-                      {
-                        "type": "image",
-                        "content": "https://cdn.example.com/html-doctype.png",
-                        "visibility": {
-                          "type": "step",
-                          "value": 2
-                        },
-                        "comment": "💡 [이미지 설명] `<!DOCTYPE html>`이 문서 최상단에 위치한 예시 코드 스크린샷"
-                      },
-                      {
-                        "type": "paragraph",
-                        "content": "`<!DOCTYPE html>`이 없거나 잘못 지정되면 브라우저는 문서를 **비표준 모드(quirks mode)**로 해석할 수 있어 레이아웃이 깨질 수 있습니다.",
-                        "visibility": {
-                          "type": "step",
-                          "value": 3
-                        }
-                      }
-                    ]
+                    "modules": []
                   },
                   {
                     "id": "slide_0002",
                     "title": "`<html>`, `<head>`, `<body>` 기본 구조",
-                    "modules": [
-                      {
-                        "type": "paragraph",
-                        "content": "HTML 문서는 `<html>` 태그로 시작해서 끝납니다. 이 안에는 두 가지 주요 영역이 있어요: **`<head>`**와 **`<body>`**."
-                      },
-                      {
-                        "type": "code",
-                        "files": [
-                          {
-                            "name": "index.html",
-                            "language": "html",
-                            "content": "<html>\n  <head>\n    <title>문서 제목</title>\n  </head>\n  <body>\n    <h1>페이지 내용</h1>\n  </body>\n</html>"
-                          }
-                        ],
-                        "visibility": {
-                          "type": "step",
-                          "value": 2
-                        }
-                      },
-                      {
-                        "type": "image",
-                        "content": "https://cdn.example.com/html-head-body.png",
-                        "visibility": {
-                          "type": "step",
-                          "value": 3
-                        },
-                        "comment": "💡 [이미지 설명] `<html>` 태그 안에 `<head>`와 `<body>`가 포함된 구조를 다이어그램으로 표현"
-                      },
-                      {
-                        "type": "paragraph",
-                        "content": "- `<head>`: 문서 정보, 외부 리소스, 인코딩 정보 등을 포함\n- `<body>`: 사용자에게 보이는 실제 콘텐츠가 들어감",
-                        "visibility": {
-                          "type": "step",
-                          "value": 4
-                        }
-                      }
-                    ]
+                    "modules": []
                   },
                   {
                     "id": "slide_0003",
                     "title": "`<head>` 영역의 주요 요소들",
-                    "modules": [
-                      {
-                        "type": "paragraph",
-                        "content": "`<head>`는 브라우저가 페이지를 해석하는 데 필요한 정보를 담고 있어요. 눈에 보이지는 않지만 매우 중요한 영역입니다."
-                      },
-                      {
-                        "type": "code",
-                        "files": [
-                          {
-                            "name": "index.html",
-                            "language": "html",
-                            "content": "<head>\n  <meta charset=\"UTF-8\">\n  <title>문서 제목</title>\n  <link rel=\"stylesheet\" href=\"style.css\">\n  <script src=\"main.js\"></script>\n</head>"
-                          }
-                        ],
-                        "visibility": {
-                          "type": "step",
-                          "value": 2
-                        }
-                      },
-                      {
-                        "type": "paragraph",
-                        "content": "- `<meta>`: 문자 인코딩이나 설명 같은 메타정보 설정\n- `<title>`: 브라우저 탭에 표시되는 제목\n- `<link>`: CSS 같은 외부 리소스를 연결\n- `<script>`: 자바스크립트 파일을 연결",
-                        "visibility": {
-                          "type": "step",
-                          "value": 3
-                        }
-                      },
-                      {
-                        "type": "image",
-                        "content": "https://cdn.example.com/html-head-tags.png",
-                        "visibility": {
-                          "type": "step",
-                          "value": 4
-                        },
-                        "comment": "💡 [이미지 설명] `<head>` 영역에 들어가는 주요 태그를 간단한 아이콘으로 시각화한 다이어그램 (예: title은 탭, meta는 톱니바퀴 등)"
-                      }
-                    ]
+                    "modules": []
                   },
                   {
                     "id": "slide_0004",
                     "title": "`<body>` 영역과 콘텐츠 배치",
-                    "modules": [
-                      {
-                        "type": "paragraph",
-                        "content": "`<body>`는 실제로 사용자가 브라우저에서 보는 모든 콘텐츠를 담는 영역입니다. 텍스트, 이미지, 버튼 등 대부분의 요소가 이 안에 들어갑니다."
-                      },
-                      {
-                        "type": "code",
-                        "files": [
-                          {
-                            "name": "index.html",
-                            "language": "html",
-                            "content": "<body>\n  <h1>여기는 제목입니다</h1>\n  <p>여기는 단락 내용입니다</p>\n  <img src=\"cat.png\" alt=\"고양이 이미지\">\n  <button>클릭하세요</button>\n</body>"
-                          }
-                        ],
-                        "visibility": {
-                          "type": "step",
-                          "value": 2
-                        }
-                      },
-                      {
-                        "type": "paragraph",
-                        "content": "- `<h1>`: 제목 (Heading)\n- `<p>`: 단락 (Paragraph)\n- `<img>`: 이미지\n- `<button>`: 버튼",
-                        "visibility": {
-                          "type": "step",
-                          "value": 3
-                        }
-                      },
-                      {
-                        "type": "image",
-                        "content": "https://cdn.example.com/html-body-example.png",
-                        "visibility": {
-                          "type": "step",
-                          "value": 4
-                        },
-                        "comment": "💡 [이미지 설명] 위 코드가 브라우저에서 실제로 어떻게 보여지는지 예시 스크린샷 (제목, 단락, 이미지, 버튼 포함된 화면)"
-                      }
-                    ]
+                    "modules": []
                   },
                   {
                     "id": "slide_0005",
                     "title": "`<!DOCTYPE html>`과 `<html>` 태그의 역할",
-                    "modules": [
-                      {
-                        "type": "paragraph",
-                        "content": "`<!DOCTYPE html>`은 이 문서가 HTML5 문서임을 선언합니다. 이는 브라우저가 문서를 올바르게 해석하는 데 도움이 됩니다."
-                      },
-                      {
-                        "type": "paragraph",
-                        "content": "`<html>` 태그는 HTML 문서의 최상위 루트 요소로, `<head>`와 `<body>`를 감싸는 역할을 합니다.",
-                        "visibility": {
-                          "type": "step",
-                          "value": 2
-                        }
-                      },
-                      {
-                        "type": "code",
-                        "files": [
-                          {
-                            "name": "index.html",
-                            "language": "html",
-                            "content": "<!DOCTYPE html>\n<html>\n  ...\n</html>"
-                          }
-                        ],
-                        "visibility": {
-                          "type": "step",
-                          "value": 3
-                        }
-                      },
-                      {
-                        "type": "image",
-                        "content": "https://cdn.example.com/html-doctype-html.png",
-                        "visibility": {
-                          "type": "step",
-                          "value": 4
-                        },
-                        "comment": "💡 [이미지 설명] 브라우저 주소창에 HTML5 문서가 열렸을 때 정상적으로 해석되는 모습과 함께, DOCTYPE이 빠진 경우 깨진 레이아웃 비교 이미지"
-                      }
-                    ]
+                    "modules": []
                   },
                   {
                     "id": "slide_0006",
                     "title": "HTML 기본 구조 정리 및 확인 문제",
-                    "modules": [
-                      {
-                        "type": "paragraph",
-                        "content": "아래 HTML 코드에서 빠진 부분을 채워 웹 문서의 기본 구조를 완성해 보세요."
-                      },
-                      {
-                        "type": "codeFillTheGap",
-                        "files" : [
-                          {
-                            "name": "index.html",
-                            "language": "html",
-                            "content": "<!DOCTYPE html>\n<html>\n  <head>\n    <meta charset=\"UTF-8\">\n    <title>나의 첫 번째 페이지</title>\n  </head>\n  <body>\n    <h1>[___]</h1>\n    <p>[___]</p>\n  </body>\n</html>",
-                            "isInteractive": true,
-                            "interactionOptions": [
-                              {
-                                "startLine": 7,
-                                "startPos": 10,
-                                "length": 5,
-                                "value": "환영합니다",
-                                "answerIndex": 0
-                              },
-                              {
-                                "startLine": 8,
-                                "startPos": 8,
-                                "length": 7,
-                                "value": "첫 페이지입니다.",
-                                "answerIndex": 1
-                              }
-                            ],
-                          }
-                        ],
-                      },
-                      {
-                        "type": "multipleChoice",
-                        "question": "다음 중 `<head>` 태그 안에 들어가는 요소가 아닌 것은?",
-                        "options": [
-                          { "label": "문서 제목 설정", "isCorrect": false },
-                          { "label": "메타 정보 설정", "isCorrect": false },
-                          { "label": "외부 스타일시트 연결", "isCorrect": false },
-                          { "label": "<h1> 제목 작성", "isCorrect": true }
-                        ],
-                        "visibility": {
-                          "type": "step",
-                          "value": 2
-                        }
-                      }
-                    ]
+                    "modules": []
                   }                                                                                                
                 ],
               }
