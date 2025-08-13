@@ -253,7 +253,7 @@ const LessonLearningScreen: React.FC<{ route: any }> = ({ route }) => {
             updated[curSlideIndex] = (updated[curSlideIndex] || 0) + 1;
             return updated;
           })
-        }else{
+        } else {
           // 다음 스텝이 없는 경우
           setCurSlideIndex(curSlideIndex + 1)
         }
@@ -278,9 +278,10 @@ const LessonLearningScreen: React.FC<{ route: any }> = ({ route }) => {
           // 코드 빈칸 선택 채우기 문제는 하나라도 선택하길 기다림
         }
       }else{
-        // 다음 스텝이 없는 경우
-        console.log('다음 스텝이 없는 경우')
+        // 다음 스텝이 없는 경우ㅠ
         setCurSlideIndex(curSlideIndex + 1)
+        console.log('들어오기는 하는건지....');
+        console.log(curSlideIndex);
         goToNextSlide();
         // 다음 슬라이드로 이동
       }
