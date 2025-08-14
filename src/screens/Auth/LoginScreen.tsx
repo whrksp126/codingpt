@@ -60,11 +60,16 @@ const LoginScreen: React.FC = () => {
       if (response.success && response.data) {
         const { accessToken, refreshToken } = response.data;
 
+        console.log('accessToken', accessToken);
+
         // 1. 로그인 상태 반영 (context 내부에서 토큰 저장)
         await login(accessToken, refreshToken);
 
+        console.log('refreshToken', refreshToken);
+
         // 2. UserContext 저장
         await refreshUser();
+
 
         // 3. 홈으로 이동
         navigate('home'); // ✅ currentScreen이 home인 경우 AppNavigator로 진입

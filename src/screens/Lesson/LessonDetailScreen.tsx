@@ -1,20 +1,21 @@
 import React, { useState, useMemo } from 'react';
 import { View, Text, TouchableOpacity, Image, ScrollView, Alert, Pressable } from 'react-native';
 import { Star } from 'phosphor-react-native';
-import { useFullSheet } from '../../contexts/FullSheetContext';
+// import { useFullSheet } from '../../contexts/FullSheetContext';
 import { useUser } from '../../contexts/UserContext';
 import { useStore } from '../../contexts/StoreContext';
 import { useLesson } from '../../contexts/LessonContext';
 import lessonService from '../../services/lessonService';
 import { countSectionsAndLessons } from '../../utils/lessonUtils';
 import { CaretLeft, ListNumbers, Files, SealQuestion, TerminalWindow, TreeStructure } from '../../assets/SvgIcon';
-import ClassProgressScreen from './classProgressScreen';
-
+// import ClassProgressScreen from './classProgressScreen';
+import { useNavigation } from '../../contexts/NavigationContext';
 const LessonDetailScreen = ({ route }: any) => {
   const { user } = useUser();
   const { lessons, reloadLessons } = useLesson();
   const { productIndex } = useStore();
-  const { pushFullSheet, popFullSheet } = useFullSheet();
+  const { navigate, goBack } = useNavigation();
+  // const { pushFullSheet, popFullSheet } = useFullSheet();
 
   // 네비게이션 파라미터
   const { id, name, icon, description, price } = route.params as {
@@ -46,7 +47,10 @@ const LessonDetailScreen = ({ route }: any) => {
     try {
       const registered = await lessonService.postMyclass(user!.id, id);
       if (registered) {
-        pushFullSheet(<ClassProgressScreen />);
+        // pushFullSheet(<ClassProgressScreen />);
+
+        navigate('classProgress');
+
         await reloadLessons(); // ✅ 즉시 반영
       } else {
         Alert.alert('수강 등록 실패');
@@ -62,7 +66,7 @@ const LessonDetailScreen = ({ route }: any) => {
       <ScrollView contentContainerStyle={{ paddingBottom: 20 }}>
         {/* 상단 헤더: 뒤로가기 버튼 */}
         <View className="flex-row items-center justfy-between bg-white px-[20px] pt-[20px] pb-[20px] gap-x-[20px]">
-          <Pressable style={{ marginTop: 5 }} onPress={popFullSheet}>
+          <Pressable style={{ marginTop: 5 }} onPress={() => goBack()}>
             <CaretLeft width={35} height={35} fill="#CCCCCC" />
           </Pressable>
           <Text className="text-[22px] font-bold text-[#111111]">{name}</Text>
@@ -104,7 +108,8 @@ const LessonDetailScreen = ({ route }: any) => {
             }}
             onPress={() => {
               if (isEnrolled) {
-                pushFullSheet(<ClassProgressScreen />);
+                // pushFullSheet(<ClassProgressScreen />);
+                navigate('classProgress');
               } else {
                 handleEnroll();
               }

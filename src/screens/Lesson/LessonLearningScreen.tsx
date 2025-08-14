@@ -280,8 +280,6 @@ const LessonLearningScreen: React.FC<{ route: any }> = ({ route }) => {
       }else{
         // 다음 스텝이 없는 경우ㅠ
         setCurSlideIndex(curSlideIndex + 1)
-        console.log('들어오기는 하는건지....');
-        console.log(curSlideIndex);
         goToNextSlide();
         // 다음 슬라이드로 이동
       }

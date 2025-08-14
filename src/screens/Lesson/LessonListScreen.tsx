@@ -1,14 +1,15 @@
 // 내 강의 페이지
 import React, { useState, useMemo, useCallback } from 'react';
 import { View, Text, FlatList, TouchableOpacity, Image, ActivityIndicator } from 'react-native';
-import { useFullSheet } from '../../contexts/FullSheetContext';
+// import { useFullSheet } from '../../contexts/FullSheetContext';
 import { useUser } from '../../contexts/UserContext';
 import { useLesson } from '../../contexts/LessonContext';
 import { parseLessonList, getIconByTitle, ParsedLesson } from '../../utils/lessonUtils';
 import LessonDetailScreen from './LessonDetailScreen';
+import { useNavigation } from '../../contexts/NavigationContext';
 
 const LessonListScreen = () => {
-  const { pushFullSheet, popFullSheet } = useFullSheet();
+  const { navigate } = useNavigation();
   const { user } = useUser();
   const { lessons, loading: lessonLoading } = useLesson();
 
@@ -41,13 +42,14 @@ const LessonListScreen = () => {
     date?: string;
     progress?: number;
   }) => {
-    pushFullSheet(
-      <LessonDetailScreen
-        onClose={popFullSheet}
-        route={{ params: payload }}
-      />
-    );
-  }, [pushFullSheet, popFullSheet]);
+    navigate('lessonDetail', {
+      id: payload.id,
+      name: payload.name,
+      icon: payload.icon,
+      description: payload.description,
+      price: payload.price,
+    });
+  }, []);
 
   // 강의 카드 렌더링 (터치 시 풀시트로 상세 열기)
   const renderLesson = useCallback(({ item }: { item: ParsedLesson & { icon: any } }) => {

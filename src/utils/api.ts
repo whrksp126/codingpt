@@ -43,6 +43,7 @@ export async function apiRequest<T>(
 ): Promise<ApiResponse<T>> {
   try {
     const url = `${API_URL}${endpoint}`;
+    console.log('url', url);
     const headers = await getAuthHeaders(); 
 
     const config: RequestInit = {
