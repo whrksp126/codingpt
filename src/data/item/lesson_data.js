@@ -1,6 +1,6 @@
 export const html = {
     
-  // 강의 정보
+  // 강의 정보 (class)
   id: 1,
   title: "HTML 기초",
   description: "HTML 기초 강의",
@@ -344,6 +344,7 @@ export const html = {
                 ],
               },
 
+              // 여기 새로 만드는 곳!
               { 
                   "id": "lesson_00003",
                   "title": "HTML 기초: 태그와 구조 이해",
@@ -381,8 +382,16 @@ export const html = {
                               {
                                   "id": 0,
                                   "type": "paragraph",
-                                  "content": "✅ 정답: `<body>` 입니다. `<head>`는 메타데이터, `<meta>`/`<link>`는 설정·연결용이에요.",
-                                  "visibility": { "type": "step", "value": 1 }
+                                  "content": "🎉 잘했어요!",
+                                  "visibility": { "type": "step", "value": 1 },
+                                  "condition": "correct"
+                              },
+                              {
+                                  "id": 1,
+                                  "type": "paragraph",
+                                  "content": "❌ 정답은 `<body>`입니다. `<head>`는 메타데이터, `<meta>`/`<link>`는 설정·연결용이에요.",
+                                  "visibility": { "type": "step", "value": 1 },
+                                  "condition": "wrong"
                               }
                               ]
                           }
@@ -395,22 +404,22 @@ export const html = {
                               "name": "index.html",
                               "language": "html",
                               "content": "<!DOCTYPE html>\n<{{BLANK-1}} lang=\"ko\">\n  <{{BLANK-2}}>\n    <meta charset=\"UTF-8\" />\n    <title>나의 첫 HTML</title>\n  </{{BLANK-2}}>\n  <{{BLANK-3}}>\n    <h1>안녕하세요</h1>\n    <p>HTML 문서의 기본 구조를 배우는 중!</p>\n  </{{BLANK-3}}>\n</{{BLANK-1}}>",
-                              "url": "/code/1",
+                              "url": "/code/5",
                               "isInteractive": true,
                               "inputLength": 3,
                               "interactionOptions": [
-                                  { "id": "option-1", "value": "html", "disabled": false },
-                                  { "id": "option-2", "value": "head", "disabled": false },
-                                  { "id": "option-3", "value": "body", "disabled": false }
+                                  { "id": "option-1", "value": "<html>", "disabled": false },
+                                  { "id": "option-2", "value": "</head>", "disabled": false },
+                                  { "id": "option-3", "value": "<body>", "disabled": false }
                               ],
                               "answers": [
-                                  { "isCorrect": null, "answer": "html", "userAnswer": null, "optionElIndex": null },
-                                  { "isCorrect": null, "answer": "head", "userAnswer": null, "optionElIndex": null },
-                                  { "isCorrect": null, "answer": "body", "userAnswer": null, "optionElIndex": null }
+                                  { "isCorrect": null, "answer": "<html>", "userAnswer": null, "optionElIndex": null },
+                                  { "isCorrect": null, "answer": "</head>", "userAnswer": null, "optionElIndex": null },
+                                  { "isCorrect": null, "answer": "<body>", "userAnswer": null, "optionElIndex": null }
                               ]
                               }
                           ],
-                          "visibility": { "type": "step", "value": 4 },
+                          "visibility": { "type": "step", "value": 3 },
                           "result": {
                               "totalStep": 1,
                               "modules": [
@@ -418,7 +427,15 @@ export const html = {
                                   "id": 0,
                                   "type": "paragraph",
                                   "content": "🎉 잘했어요! 이제 이 코드를 미리보기에서 확인해보세요.",
-                                  "visibility": { "type": "step", "value": 1 }
+                                  "visibility": { "type": "step", "value": 1 },
+                                  "condition": "correct"
+                              },
+                              {
+                                  "id": 1,
+                                  "type": "paragraph",
+                                  "content": "❌ HTML 문서는 `<html>` 안에 `<head>`와 `<body>`가 나란히 있어야 하며, `<body>`는 `<head>` 밖에 작성합니다.\n아래 미리보기에서 확인해보세요!",
+                                  "visibility": { "type": "step", "value": 1 },
+                                  "condition": "wrong"
                               }
                               ]
                           }
@@ -432,7 +449,7 @@ export const html = {
                               "content": "<!DOCTYPE html><html lang=\"ko\"><head><meta charset=\"UTF-8\"><title>미리보기</title><style>body{font-family:system-ui;padding:16px}</style></head><body><h1>안녕하세요</h1><p>HTML 문서의 기본 구조를 배우는 중!</p></body></html>"
                               }
                           ],
-                          "visibility": { "type": "step", "value": 5 }
+                          "visibility": { "type": "step", "value": 4 }
                           }
                       ]
                       },
@@ -468,26 +485,17 @@ export const html = {
                               {
                                   "id": 0,
                                   "type": "paragraph",
-                                  "content": "✅ 정답은 `<h1>`입니다. 페이지 핵심 제목은 보통 1개만 사용해요.",
-                                  "visibility": { "type": "step", "value": 1 }
-                              }
-                              ]
-                          }
-                          },
-                          {
-                          "id": 2,
-                          "type": "trueFalse",
-                          "question": "문장 여러 개를 `<span>`으로 감싸면 문단이 된다.",
-                          "answer": { "isCorrect": null, "answer": false, "userAnswer": null },
-                          "visibility": { "type": "step", "value": 3 },
-                          "result": {
-                              "totalStep": 1,
-                              "modules": [
+                                  "content": "🎉 잘했어요! 페이지 핵심 제목은 보통 1개만 사용해요.",
+                                  "visibility": { "type": "step", "value": 1 },
+                                  "condition": "correct"
+                              },
+                              ,
                               {
-                                  "id": 0,
+                                  "id": 1,
                                   "type": "paragraph",
-                                  "content": "❌ 오답! 문단은 `<p>`로 표현해요. `<span>`은 인라인 범위 표시용입니다.",
-                                  "visibility": { "type": "step", "value": 1 }
+                                  "content": "❌ 정답은 `<h1>`입니다. 페이지 핵심 제목은 보통 1개만 사용해요.",
+                                  "visibility": { "type": "step", "value": 1 },
+                                  "condition": "wrong"
                               }
                               ]
                           }
@@ -500,29 +508,40 @@ export const html = {
                               "name": "index.html",
                               "language": "html",
                               "content": "<h{{BLANK-1}}>나의 블로그</h{{BLANK-1}}>\n<{{BLANK-2}}>첫 글입니다.</{{BLANK-2}}>",
-                              "url": "/code/lesson00003/1/index.html",
+                              "url": "/code/6",
                               "isInteractive": true,
                               "inputLength": 2,
                               "interactionOptions": [
-                                  { "id": "option-1", "value": "1", "disabled": false },
-                                  { "id": "option-2", "value": "p", "disabled": false }
+                                  { "id": "option-1", "value": "<h1>", "disabled": false },
+                                  { "id": "option-2", "value": "</h1>", "disabled": false },
+                                  { "id": "option-3", "value": "<p>", "disabled": false },
+                                  { "id": "option-4", "value": "</p>", "disabled": false }
                               ],
                               "answers": [
-                                  { "isCorrect": null, "answer": "1", "userAnswer": null, "optionElIndex": null },
-                                  { "isCorrect": null, "answer": "p", "userAnswer": null, "optionElIndex": null }
+                                  { "isCorrect": null, "answer": "<h1>", "userAnswer": null, "optionElIndex": null },
+                                  { "isCorrect": null, "answer": "</p>", "userAnswer": null, "optionElIndex": null }
                               ]
                               }
                           ],
-                          "visibility": { "type": "step", "value": 4 },
+                          "visibility": { "type": "step", "value": 3 },
                           "result": {
                               "totalStep": 1,
                               "modules": [
                               {
                                   "id": 0,
                                   "type": "paragraph",
-                                  "content": "👍 제목은 `<h1>`로, 문단은 `<p>`로 완성!",
-                                  "visibility": { "type": "step", "value": 1 }
+                                  "content": "🎉 잘했어요! 제목은 `<h1>`로, 문단은 `<p>`로 완성!",
+                                  "visibility": { "type": "step", "value": 1 },
+                                  "condition": "correct"
+                              },
+                              {
+                                  "id": 1,
+                                  "type": "paragraph",
+                                  "content": "❌ `<h1>`와 `<p>` 태그는 시작과 종료 태그가 반드시 짝을 이루어야 해요!",
+                                  "visibility": { "type": "step", "value": 1 },
+                                  "condition": "wrong"
                               }
+                              
                               ]
                           }
                           },
@@ -535,7 +554,7 @@ export const html = {
                               "content": "<!DOCTYPE html><html lang=\"ko\"><head><meta charset=\"UTF-8\"><title>미리보기</title><style>body{font-family:system-ui;padding:16px}</style></head><body><h1>나의 블로그</h1><p>첫 글입니다.</p></body></html>"
                               }
                           ],
-                          "visibility": { "type": "step", "value": 5 }
+                          "visibility": { "type": "step", "value": 4 }
                           }
                       ]
                       },
@@ -571,45 +590,36 @@ export const html = {
                               {
                                   "id": 0,
                                   "type": "paragraph",
-                                  "content": "✅ 정답은 `alt`입니다. 화면 읽기 도구가 이미지를 설명할 수 있어요.",
-                                  "visibility": { "type": "step", "value": 1 }
+                                  "content": "🎉 잘했어요! 화면 읽기 도구가 이미지를 설명할 수 있어요.",
+                                  "visibility": { "type": "step", "value": 1 },
+                                  "condition": "correct"
+                              },
+                              {
+                                  "id": 1,
+                                  "type": "paragraph",
+                                  "content": "❌ 정답은 `alt`입니다. 화면 읽기 도구가 이미지를 설명할 수 있어요.",
+                                  "visibility": { "type": "step", "value": 1 },
+                                  "condition": "wrong"
                               }
                               ]
                           }
                           },
                           {
                           "id": 2,
-                          "type": "trueFalse",
-                          "question": "`<a>` 태그의 `href` 속성은 생략 가능하며, 생략해도 링크가 정상 동작한다.",
-                          "answer": { "isCorrect": null, "answer": false, "userAnswer": null },
-                          "visibility": { "type": "step", "value": 3 },
-                          "result": {
-                              "totalStep": 1,
-                              "modules": [
-                              {
-                                  "id": 0,
-                                  "type": "paragraph",
-                                  "content": "❌ 오답! `href`가 없으면 실제 이동할 대상이 없어 링크로 동작하지 않아요.",
-                                  "visibility": { "type": "step", "value": 1 }
-                              }
-                              ]
-                          }
-                          },
-                          {
-                          "id": 3,
                           "type": "codeFillTheGap",
                           "files": [
                               {
                               "name": "index.html",
                               "language": "html",
                               "content": "<p>문서를 더 배우려면 <a {{BLANK-1}}=\"https://developer.mozilla.org/ko/\">MDN</a>으로 이동!</p>\n<img {{BLANK-2}}=\"/images/logo.png\" {{BLANK-3}}=\"로고 이미지\" />",
-                              "url": "/code/lesson00003/2/index.html",
+                              "url": "/code/7",
                               "isInteractive": true,
                               "inputLength": 3,
                               "interactionOptions": [
-                                  { "id": "option-1", "value": "href", "disabled": false },
-                                  { "id": "option-2", "value": "src", "disabled": false },
-                                  { "id": "option-3", "value": "alt", "disabled": false }
+                                  { "id": "option-1", "value": "src", "disabled": false },
+                                  { "id": "option-2", "value": "href", "disabled": false },
+                                  { "id": "option-3", "value": "link", "disabled": false },
+                                  { "id": "option-4", "value": "alt", "disabled": false }
                               ],
                               "answers": [
                                   { "isCorrect": null, "answer": "href", "userAnswer": null, "optionElIndex": null },
@@ -618,15 +628,23 @@ export const html = {
                               ]
                               }
                           ],
-                          "visibility": { "type": "step", "value": 4 },
+                          "visibility": { "type": "step", "value": 3 },
                           "result": {
                               "totalStep": 1,
                               "modules": [
                               {
                                   "id": 0,
                                   "type": "paragraph",
-                                  "content": "👌 링크의 `href`, 이미지의 `src`/`alt`를 올바르게 채웠어요!",
-                                  "visibility": { "type": "step", "value": 1 }
+                                  "content": "🎉 잘했어요! 이제 이 코드를 미리보기에서 확인해보세요.",
+                                  "visibility": { "type": "step", "value": 1 },
+                                  "condition": "correct"
+                              },
+                              {
+                                  "id": 1,
+                                  "type": "paragraph",
+                                  "content": "❌ 링크는 `href`, 이미지의 경로는 `src`, 이미지 설명은 `alt` 속성을 사용해요.",
+                                  "visibility": { "type": "step", "value": 1 },
+                                  "condition": "wrong"
                               }
                               ]
                           }
@@ -640,7 +658,7 @@ export const html = {
                               "content": "<!DOCTYPE html><html lang=\"ko\"><head><meta charset=\"UTF-8\"><title>미리보기</title><style>body{font-family:system-ui;padding:16px}img{height:40px}</style></head><body><p>문서를 더 배우려면 <a href=\"https://developer.mozilla.org/ko/\">MDN</a>으로 이동!</p><img src=\"/images/logo.png\" alt=\"로고 이미지\" /></body></html>"
                               }
                           ],
-                          "visibility": { "type": "step", "value": 5 }
+                          "visibility": { "type": "step", "value": 4 }
                           }
                       ]
                       },
@@ -676,17 +694,43 @@ export const html = {
                               {
                                   "id": 0,
                                   "type": "paragraph",
-                                  "content": "✅ 정답은 `<ol> + <li>`입니다. `<ul>`은 불릿(•) 목록이에요.",
-                                  "visibility": { "type": "step", "value": 1 }
+                                  "content": "🎉 잘했어요! `<ul>`은 불릿(•) 목록이에요.",
+                                  "visibility": { "type": "step", "value": 1 },
+                                  "condition": "correct"
+                              },
+                              {
+                                  "id": 1,
+                                  "type": "paragraph",
+                                  "content": "❌ 정답은 `<ol> + <li>`입니다. `<ul>`은 불릿(•) 목록이에요.",
+                                  "visibility": { "type": "step", "value": 1 },
+                                  "condition": "wrong"
                               }
                               ]
                           }
                           },
                           {
                           "id": 2,
-                          "type": "trueFalse",
-                          "question": "`<button>`은 링크 이동 용도로만 사용해야 한다.",
-                          "answer": { "isCorrect": null, "answer": false, "userAnswer": null },
+                          "type": "codeFillTheGap",
+                          "files": [
+                              {
+                              "name": "index.html",
+                              "language": "html",
+                              "content": "<h2>할 일</h2>\n<{{BLANK-1}}>\n  <li>HTML 공부</li>\n  <li>CSS 연습</li>\n</{{BLANK-1}}>\n<{{BLANK-2}}>확인</{{BLANK-2}}>",
+                              "url": "/code/8",
+                              "isInteractive": true,
+                              "inputLength": 2,
+                              "interactionOptions": [
+                                  { "id": "option-1", "value": "<ul>", "disabled": false },
+                                  { "id": "option-2", "value": "</ul>", "disabled": false },
+                                  { "id": "option-3", "value": "<button>", "disabled": false },
+                                  { "id": "option-4", "value": "</button>", "disabled": false }
+                              ],
+                              "answers": [
+                                  { "isCorrect": null, "answer": "<ul>", "userAnswer": null, "optionElIndex": null },
+                                  { "isCorrect": null, "answer": "</button>", "userAnswer": null, "optionElIndex": null }
+                              ]
+                              }
+                          ],
                           "visibility": { "type": "step", "value": 3 },
                           "result": {
                               "totalStep": 1,
@@ -694,42 +738,16 @@ export const html = {
                               {
                                   "id": 0,
                                   "type": "paragraph",
-                                  "content": "❌ 오답! `<button>`은 **동작 트리거**(이벤트) 용도이고, 페이지 이동은 보통 `<a>`를 사용해요.",
-                                  "visibility": { "type": "step", "value": 1 }
-                              }
-                              ]
-                          }
-                          },
-                          {
-                          "id": 3,
-                          "type": "codeFillTheGap",
-                          "files": [
+                                  "content": "🎉 잘했어요! 이제 이 코드를 미리보기에서 확인해보세요.",
+                                  "visibility": { "type": "step", "value": 1 },
+                                  "condition": "correct"
+                              },
                               {
-                              "name": "index.html",
-                              "language": "html",
-                              "content": "<h2>할 일</h2>\n<{{BLANK-1}}>\n  <li>HTML 공부</li>\n  <li>CSS 연습</li>\n</{{BLANK-1}}>\n<{{BLANK-2}}>확인</{{BLANK-2}}>",
-                              "url": "/code/lesson00003/3/index.html",
-                              "isInteractive": true,
-                              "inputLength": 2,
-                              "interactionOptions": [
-                                  { "id": "option-1", "value": "ul", "disabled": false },
-                                  { "id": "option-2", "value": "button", "disabled": false }
-                              ],
-                              "answers": [
-                                  { "isCorrect": null, "answer": "ul", "userAnswer": null, "optionElIndex": null },
-                                  { "isCorrect": null, "answer": "button", "userAnswer": null, "optionElIndex": null }
-                              ]
-                              }
-                          ],
-                          "visibility": { "type": "step", "value": 4 },
-                          "result": {
-                              "totalStep": 1,
-                              "modules": [
-                              {
-                                  "id": 0,
+                                  "id": 1,
                                   "type": "paragraph",
-                                  "content": "👏 순서 없는 목록과 버튼 태그를 정확히 사용했어요!",
-                                  "visibility": { "type": "step", "value": 1 }
+                                  "content": "❌ 목록 항목(<li>)들은 반드시 목록 태그(<ul> 또는 <ol>)로 감싸야 하며, 시작 태그와 종료 태그가 짝을 이뤄야 해요.",
+                                  "visibility": { "type": "step", "value": 1 },
+                                  "condition": "wrong"
                               }
                               ]
                           }
@@ -743,7 +761,7 @@ export const html = {
                               "content": "<!DOCTYPE html><html lang=\"ko\"><head><meta charset=\"UTF-8\"><title>미리보기</title><style>body{font-family:system-ui;padding:16px}button{padding:8px 12px;border:1px solid #ccc;border-radius:8px}</style></head><body><h2>할 일</h2><ul><li>HTML 공부</li><li>CSS 연습</li></ul><button>확인</button></body></html>"
                               }
                           ],
-                          "visibility": { "type": "step", "value": 5 }
+                          "visibility": { "type": "step", "value": 4 }
                           }
                       ]
                       }

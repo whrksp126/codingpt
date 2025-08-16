@@ -18,6 +18,7 @@ const ClassProgressScreen: React.FC = () => {
   useEffect(() => {
     // TODO: productId 기반 실제 데이터 로드로 교체 가능
     setClassData(fetchData.class_list[0]);
+    // console.log('fetchData : ', fetchData.class_list[0]);
   }, []);
 
   const onPressLessonButton = (sectionIndex: number, lessonIndex: number) => {
