@@ -1,10 +1,10 @@
 import React, { useMemo, useState } from 'react';
 import { View, Text, FlatList, TouchableOpacity, Image, ActivityIndicator } from 'react-native';
-import { useFullSheet } from '../contexts/FullSheetContext';
+// import { useFullSheet } from '../contexts/FullSheetContext';
 import { useStore } from '../contexts/StoreContext';
 import type { Product, StoreCategory } from '../services/storeService';
 import LessonDetailScreen from './Lesson/LessonDetailScreen';
-
+import { useNavigation } from '../contexts/NavigationContext';
 // 렌더링에 사용할 항목 타입 정의
 interface StoreItem { // product
   id: number;
@@ -35,7 +35,8 @@ const getCategoryIcon = (categoryName: string) => {
 
 const StoreScreen = () => {
   const { storeData, loading } = useStore();
-  const { pushFullSheet, popFullSheet } = useFullSheet();
+  const { navigate } = useNavigation();
+  // const { pushFullSheet, popFullSheet } = useFullSheet();
   const [filter, setFilter] = useState<'전체' | '무료' | '유료'>('전체');
 
   // StoreCategory[] → StoreItem[] 변환 (useMemo로 캐싱)
@@ -76,21 +77,30 @@ const StoreScreen = () => {
 
   // ✅ 공통 오프너: 상품을 누르면 LessonDetail을 "풀시트"로 띄움
   const openLessonDetailSheet = (item: StoreItem) => {
-    // LessonDetailScreen은 route.params를 기대하므로 동일 형태로 전달
-    pushFullSheet(
-      <LessonDetailScreen
-        onClose={popFullSheet}              // 풀시트 닫기
-        route={{
-          params: {
-            id: item.id,
-            name: item.name,
-            icon: item.icon,
-            description: item.description,
-            price: item.price,
-          },
-        }}
-      />
-    );
+    // // LessonDetailScreen은 route.params를 기대하므로 동일 형태로 전달
+    // pushFullSheet(
+    //   <LessonDetailScreen
+    //     onClose={popFullSheet}              // 풀시트 닫기
+    //     route={{
+    //       params: {
+    //         id: item.id,
+    //         name: item.name,
+    //         icon: item.icon,
+    //         description: item.description,
+    //         price: item.price,
+    //       },
+    //     }}
+    //   />
+    // );
+
+    navigate('lessonDetail', {
+      id: item.id,
+      name: item.name,
+      icon: item.icon,
+      description: item.description,
+      price: item.price,
+    });
+
   };
 
   if (loading) {
