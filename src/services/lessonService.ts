@@ -22,16 +22,70 @@ export interface Lesson {
   slides?: Slide[];
 }
 
+// export interface Slide {
+//   id: number;
+//   title: string;
+//   content: string;
+//   type: 'text' | 'code';
+//   language?: string;
+// }
+
+export interface LessonItem {
+  id?: number | string;
+  title?: string;
+  // 필요한 필드 생기면 확장
+}
+
+export interface SectionItem {
+  title: string;
+  progress: number;
+  lessons: LessonItem[];
+  concept: string;
+}
+
+export interface ClassItem {
+  id: number;
+  sections: SectionItem[];
+}
+
+/** 서버에서 내려오는 slide 루트 */
 export interface Slide {
   id: number;
-  title: string;
-  content: string;
-  type: 'text' | 'code';
-  language?: string;
+  contents: {
+    class_list?: ClassItem[];
+  };
 }
 
 // 강의 서비스 클래스
 class LessonService {
+  // temp
+  // 레슨별 슬라이드 가져오기
+  async getSlidesByLesson(): Promise<Slide> {
+    try {
+      const response = await api.lessons.getSlidesByLesson();
+
+      if (!response?.success || !response?.data) {
+        throw new Error('No data');
+      }
+
+      const raw = response.data as Slide | Slide[];
+
+      // ✅ 배열로 오면 첫 번째만 사용 (현재 화면 요구사항)
+      const slide: Slide = Array.isArray(raw) ? raw[0] : raw;
+
+      if (!slide || typeof slide !== 'object') {
+        throw new Error('Invalid slide shape');
+      }
+      return slide;
+    } catch (error) {
+      console.error('레슨별 슬라이드 가져오기 실패:', error);
+      return {
+        id: 0,
+        contents: { class_list: [] },
+      };;
+    }
+  }
+
   // 모든 강의 가져오기
   async getAllLessons(): Promise<Lesson[]> {
     try {

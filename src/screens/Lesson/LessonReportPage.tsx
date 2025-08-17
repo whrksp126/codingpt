@@ -14,6 +14,8 @@ const LessonReportPage: React.FC<{ route: any }> = ({ route }) => {
     // 슬라이드를 통으로 저장하는게 좋을 듯,
 
     console.log("curLesson,", curLesson)
+    // 경험치 추가
+    // 학습 기록 저장
   }, [curLesson]);
 
   return (

@@ -165,6 +165,11 @@ export const api = {
       apiRequest('/lessons', {
         method: 'GET',
       }),
+
+    getSlidesByLesson: () => // test
+      apiRequest('/api/lesson/slides', {
+        method: 'GET',
+      }),
     
     getById: (id: number) =>
       apiRequest(`/api/myclass/${id}`, {
