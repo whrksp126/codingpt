@@ -102,7 +102,7 @@ const LessonLearningScreen: React.FC<{ route: any }> = ({ route }) => {
     console.log('curSlideIndex changed =>', curSlideIndex);
     if(curSlideIndex > (curLesson?.sliders?.length ?? 0) - 1){
       console.log("학습 종료 감지");
-      navigate('lessonReport', { curLesson });
+      navigate('lessonReport', { curLesson, productId: 1, sectionId: 1, lessonId: 3 }); // temp
 
     }
   }, [curSlideIndex]);

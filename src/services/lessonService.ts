@@ -87,6 +87,32 @@ class LessonService {
     }
   }
 
+  // 레슨별 학습 상태 및 결과 저장
+  async completeLessonWithResult(params: {
+    userId: number;
+    productId: number;
+    lessonId: number;
+    result: any;  // curLesson 전체 JSON
+  }): Promise<boolean> {
+    try {
+      const response = await api.myclass.complete({
+        user_id: params.userId,
+        product_id: params.productId,
+        lesson_id: params.lessonId,
+        result: params.result,
+      });
+      if (response.success && response.data) {
+        // TODO: 나중에 레슨 컨텍스트 업데이트 필요
+        console.log("레슨별 학습 결과 저장 서비스 response,", response);
+        return response.success;
+      }
+      return false;
+    } catch (error) {
+      console.error('레슨별 학습 결과 저장 실패:', error);
+      return false;
+    }
+  }
+
   // 모든 강의 가져오기
   async getAllLessons(): Promise<Lesson[]> {
     try {

@@ -193,18 +193,30 @@ export const api = {
     checkEnrolled: (userId: number, productId: number) =>
       apiRequest(`/api/myclass/check?user_id=${userId}&product_id=${productId}`, {
         method: 'GET',
-    }),
+      }),
 
     getAllMyclass: (userId: number) =>
       apiRequest(`/api/myclass/${userId}`, {
         method: 'GET',
-    }),
+      }),
 
     postMyclass: (data: any) =>
       apiRequest(`/api/myclass`, {
         method: 'POST',
         body: data,
-    }),
+      }),
+
+    // 레슨 완료 + 결과 저장
+    complete: (payload: {
+      user_id: number;
+      product_id: number;
+      lesson_id: number;
+      result: any;
+    }) =>
+      apiRequest(`/api/myclass/complete`, {
+        method: 'PATCH',
+        body: payload,
+      }),
   },
 
   // 사용자 관련
@@ -228,6 +240,12 @@ export const api = {
     getStudyHeatmap: () =>
       apiRequest<Record<string, number>>(`/api/users/heatmap`, {
         method: 'GET',
+      }),
+    
+    postStudyHeatmap: (payload: { user_id: number; product_id: number; section_id?: number; lesson_id: number }) =>
+      apiRequest(`/api/users/heatmap`, {
+        method: 'POST',
+        body: payload,
       }),
 
     updateXp: (userId: number, xp: number) =>
