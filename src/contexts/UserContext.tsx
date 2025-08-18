@@ -6,7 +6,7 @@ import { getTotalStudyDays } from '../utils/heatmapUtils';
 
 interface UserContextType {
   user: User | null;
-  setUser: (user: User | null) => void;
+  setUser: (user: User | null | ((prev: User | null) => User | null)) => void;
   loading: boolean;
   refreshUser: () => Promise<void>; // 👈 상태 갱신용 함수 추가
 }

@@ -1,5 +1,6 @@
 import api from '../utils/api';
 import { lessonStorage } from '../utils/storage';
+import { LessonResultForDB } from '../types/lessonResult';
 
 // 상품(클래스/커리큘럼) 타입 정의
 export interface Product {
@@ -236,6 +237,17 @@ class LessonService {
     const data = { user_id: userId, product_id: productId };
     const res = await api.myclass.postMyclass(data);
     return res.success === true;
+  }
+
+  // 학습 결과 저장
+  async saveLessonResult(lessonResult: LessonResultForDB): Promise<boolean> {
+    try {
+      const response = await api.lessons.saveLessonResult(lessonResult);
+      return response.success;
+    } catch (error) {
+      console.error('학습 결과 저장 실패:', error);
+      return false;
+    }
   }
 }
 

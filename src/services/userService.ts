@@ -168,6 +168,19 @@ class UserService {
       return {};
     }
   }
+
+  // 사용자 경험치(XP) 업데이트
+  async updateXp(userId: number, xp: number): Promise<any> {
+    try {
+      console.log("XP 업데이트 data,", xp);
+      const response = await api.user.updateXp(userId, xp);
+      console.log("XP 업데이트 response,", response);
+      return response.data;
+    } catch (error) {
+      console.error('❌ [userService] 경험치 업데이트 실패:', error);
+      return false;
+    }
   }
+}
 
 export default new UserService(); 

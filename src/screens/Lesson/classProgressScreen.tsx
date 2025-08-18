@@ -3,7 +3,7 @@ import { ScrollView, Pressable, Text, View, Image, Modal, Button } from 'react-n
 // import { useFullSheet } from '../../contexts/FullSheetContext';
 import { useUser } from '../../contexts/UserContext';
 import { CaretLeft, ChatBubbleTail, Clover, HeartStraight, Notepad, Play, Star } from '../../assets/SvgIcon';
-import { html as fetchData } from '../../data/item/lesson_data.js';
+// import { html as fetchData } from '../../data/item/lesson_data.js';
 import LessonDetailModal from '../../components/Modal/LessonDetailModal';
 import { useNavigation } from '../../contexts/NavigationContext';
 import lessonService from '../../services/lessonService';

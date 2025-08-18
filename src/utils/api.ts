@@ -3,7 +3,7 @@ import { API_URL, FRONTEND_URL } from './service';
 
 
 // HTTP 메서드 타입
-type HttpMethod = 'GET' | 'POST' | 'PUT' | 'DELETE';
+type HttpMethod = 'GET' | 'POST' | 'PUT' | 'PATCH' | 'DELETE';
 
 // API 응답 타입
 interface ApiResponse<T> {
@@ -162,7 +162,7 @@ export const api = {
   // 강의 관련
   lessons: {
     getAll: () =>
-      apiRequest('/lessons', {
+      apiRequest('/api/lessons', {
         method: 'GET',
       }),
 
@@ -177,12 +177,12 @@ export const api = {
       }),
     
     getProgress: (lessonId: string) =>
-      apiRequest(`/lessons/${lessonId}/progress`, {
+      apiRequest(`/api/lessons/${lessonId}/progress`, {
         method: 'GET',
       }),
     
     updateProgress: (lessonId: string, progress: number) =>
-      apiRequest(`/lessons/${lessonId}/progress`, {
+      apiRequest(`/api/lessons/${lessonId}/progress`, {
         method: 'PUT',
         body: { progress },
       }),
@@ -215,20 +215,26 @@ export const api = {
       }),
 
     getProfile: () =>
-      apiRequest('/user/profile', {
+      apiRequest('/api/users/profile', {
         method: 'GET',
       }),
     
     updateProfile: (data: any) =>
-      apiRequest('/user/profile', {
+      apiRequest('/api/users/profile', {
         method: 'PUT',
         body: data,
       }),
       
     getStudyHeatmap: () =>
-    apiRequest<Record<string, number>>(`/api/users/heatmap`, {
-      method: 'GET',
-    }),
+      apiRequest<Record<string, number>>(`/api/users/heatmap`, {
+        method: 'GET',
+      }),
+
+    updateXp: (userId: number, xp: number) =>
+      apiRequest(`/api/users/${userId}/xp`, {
+        method: 'PATCH',
+        body: { xp: xp },
+      }),
   },
 };
 
