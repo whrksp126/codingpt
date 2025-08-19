@@ -168,6 +168,41 @@ class UserService {
       return {};
     }
   }
+
+  // 사용자 학습 heatmap 데이터 저장
+  async postStudyHeatmap(params: { userId: number; productId: number; sectionId: number; lessonId: number }): Promise<any> {
+    try {
+      const response = await api.user.postStudyHeatmap({
+        user_id: params.userId,
+        product_id: params.productId,
+        section_id: params.sectionId,
+        lesson_id: params.lessonId,
+      });
+      console.log("Heatmap 데이터 저장 response,", response);
+      if (response.success && response.data) {
+        return response.data;
+      }
+      return false;
+    }
+    catch (error) {
+      console.error('❌ [userService] Heatmap 데이터 저장 실패:', error);
+      return false;
+    }
   }
+
+
+  // 사용자 경험치(XP) 업데이트
+  async updateXp(userId: number, xp: number): Promise<any> {
+    try {
+      console.log("XP 업데이트 data,", xp);
+      const response = await api.user.updateXp(userId, xp);
+      console.log("XP 업데이트 response,", response);
+      return response.data;
+    } catch (error) {
+      console.error('❌ [userService] 경험치 업데이트 실패:', error);
+      return false;
+    }
+  }
+}
 
 export default new UserService(); 

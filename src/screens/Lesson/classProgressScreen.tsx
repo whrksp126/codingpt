@@ -3,9 +3,10 @@ import { ScrollView, Pressable, Text, View, Image, Modal, Button } from 'react-n
 // import { useFullSheet } from '../../contexts/FullSheetContext';
 import { useUser } from '../../contexts/UserContext';
 import { CaretLeft, ChatBubbleTail, Clover, HeartStraight, Notepad, Play, Star } from '../../assets/SvgIcon';
-import { html as fetchData } from '../../data/item/lesson_data.js';
+// import { html as fetchData } from '../../data/item/lesson_data.js';
 import LessonDetailModal from '../../components/Modal/LessonDetailModal';
 import { useNavigation } from '../../contexts/NavigationContext';
+import lessonService from '../../services/lessonService';
 
 const ClassProgressScreen: React.FC = () => {
   const { user } = useUser();
@@ -16,8 +17,22 @@ const ClassProgressScreen: React.FC = () => {
   const [selectedLessonData, setSelectedLessonData] = useState<any>(null);
 
   useEffect(() => {
-    // TODO: productId 기반 실제 데이터 로드로 교체 가능
-    setClassData(fetchData.class_list[0]);
+    // TODO: productId 기반 실제 데이터 로드로 교체 필요
+    // setClassData(fetchData.class_list[0]);
+    (async () => {
+      try {
+        // DB에서 가져온 임시 데이터
+        const res = await lessonService.getSlidesByLesson();
+        // 화면은 class_list[0]만 사용 (기존 더미 구조 유지)
+        const fetchData = res.contents?.class_list?.[0];
+        setClassData(fetchData);
+        console.log('setClassData : ', fetchData);
+      } catch (e) {
+        console.error('load class progress failed:', e);
+      }
+    })();
+    
+    // console.log('fetchData : ', fetchData.class_list[0]);
   }, []);
 
   const onPressLessonButton = (sectionIndex: number, lessonIndex: number) => {
