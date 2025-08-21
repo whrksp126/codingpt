@@ -217,6 +217,12 @@ export const api = {
         method: 'PATCH',
         body: payload,
       }),
+    
+    // 학습 결과 조회
+    getLessonResult: (userId: number, lessonId: number) =>
+      apiRequest(`/api/myclass/${userId}/lesson/${lessonId}/result`, {
+        method: 'GET',
+      }),
   },
 
   // 사용자 관련

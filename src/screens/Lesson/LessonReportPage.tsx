@@ -8,12 +8,12 @@ import { CaretLeft, Lightning, Target } from '../../assets/SvgIcon';
 
 // 학습 종료 페이지
 const LessonReportPage: React.FC<{ route: any }> = ({ route }) => {
-  const { curLesson, productId, sectionId, lessonId } = route.params;
+  const { curLesson, lessonResult, productId, sectionId, lessonId } = route.params;
   console.log("curLesson,", curLesson);
+  console.log("lessonResult,", lessonResult);
   console.log("productId,", productId);
   console.log("sectionId,", sectionId);
   console.log("lessonId,", lessonId);
-  const { navigation } = useNavigation();
 
   const { user, setUser, refreshUser } = useUser();
 
@@ -30,42 +30,47 @@ const LessonReportPage: React.FC<{ route: any }> = ({ route }) => {
     if (!user?.id || !productId || !sectionId || !lessonId) return;
     console.log("curLesson,", curLesson);
 
-    // 1) 경험치(XP) 업데이트
-    const earned = calcEarnedXp(curLesson); // XP 계산
-    userService.updateXp(user.id, earned).then((res) => {
-      console.log("1) 경험치(XP) 업데이트 res,", res);
-      if (res && res.xp !== undefined) {
-        setUser((prev) => prev ? { ...prev, xp: res.xp } : prev);
-      }
-    }).catch((err) => {
-      console.log("XP 업데이트 실패:", err);
-    });
+    // 복습 모드가 아닌 경우에만 학습 기록 저장
+    if (!lessonResult?.isReview) {
+      // 1) 경험치(XP) 업데이트
+      const earned = calcEarnedXp(curLesson); // XP 계산
+      userService.updateXp(user.id, earned).then((res) => {
+        console.log("1) 경험치(XP) 업데이트 res,", res);
+        if (res && res.xp !== undefined) {
+          setUser((prev) => prev ? { ...prev, xp: res.xp } : prev);
+        }
+      }).catch((err) => {
+        console.log("XP 업데이트 실패:", err);
+      });
 
-    // 2) 레슨 학습상태 업데이트 및 결과(results) 저장
-    lessonService.completeLessonWithResult({
-      userId: user.id,
-      productId: productId,
-      lessonId: lessonId,
-      result: curLesson,
-    }).then((res) => {
-      console.log("2) 학습 기록 저장 res,", res);
-    }).catch((err) => {
-      console.log("학습 기록 저장 실패:", err);
-    });
+      // 2) 레슨 학습상태 업데이트 및 결과(results) 저장
+      lessonService.completeLessonWithResult({
+        userId: user.id,
+        productId: productId,
+        lessonId: lessonId,
+        result: curLesson,
+      }).then((res) => {
+        console.log("2) 학습 기록 저장 res,", res);
+      }).catch((err) => {
+        console.log("학습 기록 저장 실패:", err);
+      });
 
-    // 3) 잔디 추가 및 총 학습 일수 업데이트
-    userService.postStudyHeatmap({
-      userId: user.id,
-      productId: productId,
-      sectionId: sectionId,
-      lessonId: lessonId,
-    }).then(async (res) => {
-      console.log("3) 학습 일수 업데이트 res,", res);
-      await refreshUser();
-    }).catch((err) => {
-      console.log("학습 일수 업데이트 실패:", err);
-    });
-  }, [user?.id, productId, sectionId, lessonId, curLesson]);
+      // 3) 잔디 추가 및 총 학습 일수 업데이트
+      userService.postStudyHeatmap({
+        userId: user.id,
+        productId: productId,
+        sectionId: sectionId,
+        lessonId: lessonId,
+      }).then(async (res) => {
+        console.log("3) 학습 일수 업데이트 res,", res);
+        await refreshUser();
+      }).catch((err) => {
+        console.log("학습 일수 업데이트 실패:", err);
+      });
+    } else {
+      console.log("복습 모드 - 학습 기록 저장 건너뜀");
+    }
+  }, [user?.id, productId, sectionId, lessonId, curLesson, lessonResult]);
 
   return (
     <View className="relative flex-1">

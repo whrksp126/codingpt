@@ -23,6 +23,7 @@ interface SlideModule{
     label: string;
     isCorrect: boolean;
   }[];
+  result?: any; // 문제 모듈의 결과 데이터
 }
 
 interface Slide {
@@ -36,14 +37,24 @@ interface Lesson {
 }
 
 const LessonLearningScreen: React.FC<{ route: any }> = ({ route }) => {
-  const { lessonData } = route.params; // 레슨 데이터 (나중에 DB에서 가져와야함)
-  // console.log('lessonData : ', lessonData);
-  const pagerRef = useRef(null);
-  const [visibleSlides, setVisibleSlides] = useState([lessonData?.sliders[0]]);
-  // console.log('visibleSlides : ', visibleSlides); // 초기에 첫번째 슬라이드 데이터
+  const { lessonData } = route.params;
+  console.log("LessonLearningScreen route,", route);
+  console.log("LessonLearningScreen lessonData,", lessonData);
   
+  // 데이터 유효성 검사
+  if (!lessonData || !lessonData.sliders || !Array.isArray(lessonData.sliders)) {
+    console.error('LessonLearningScreen: 유효하지 않은 lessonData', lessonData);
+    return (
+      <View className="flex-1 justify-center items-center">
+        <Text className="text-[16px] text-[#666]">레슨 데이터를 불러올 수 없습니다.</Text>
+      </View>
+    );
+  }
+
   // const { popFullSheet } = useFullSheet();
   const { goBack, navigate } = useNavigation();
+  const pagerRef = useRef<any>(null);
+  const [visibleSlides, setVisibleSlides] = useState([lessonData.sliders[0]]);
   const [curLesson, setCurLesson] = useState<Lesson | null>(lessonData);
   const [curSlideIndex, setCurSlideIndex] = useState<number>(0);
 
@@ -325,34 +336,34 @@ const LessonLearningScreen: React.FC<{ route: any }> = ({ route }) => {
           goToNextSlide();
         }
       }
-    } else {
-      // 현재 스텝에 문제가 미포함된 경우
-      const nextStepModules = getStepModules(curSlideStep[curSlideIndex] + 1)
-      if(nextStepModules.length > 0){
-        // 다음 스텝이 있는 경우
-        // 다음 스탭 모듈 출력
-        setCurSlideStep(prev => {
-          const updated = [...prev];
-          updated[curSlideIndex] = (updated[curSlideIndex] || 0) + 1;
-          return updated;
-        })
-        // 다음 스탭에 문제가 있는 경우
-        const problemModule = getProblemModule(nextStepModules || []);
-        if(problemModule){
-          // 확인 버튼 비활성화
-          setIsNextButtonEnabled(false)
-          // 사지선다 문제는 하나라도 선택을 기다림
-          // 코드 빈칸 선택 채우기 문제는 하나라도 선택하길 기다림
+          } else {
+        // 현재 스텝에 문제가 미포함된 경우
+        const nextStepModules = getStepModules(curSlideStep[curSlideIndex] + 1)
+        if(nextStepModules && nextStepModules.length > 0){
+          // 다음 스텝이 있는 경우
+          // 다음 스탭 모듈 출력
+          setCurSlideStep(prev => {
+            const updated = [...prev];
+            updated[curSlideIndex] = (updated[curSlideIndex] || 0) + 1;
+            return updated;
+          })
+          // 다음 스탭에 문제가 있는 경우
+          const problemModule = getProblemModule(nextStepModules || []);
+          if(problemModule){
+            // 확인 버튼 비활성화
+            setIsNextButtonEnabled(false)
+            // 사지선다 문제는 하나라도 선택을 기다림
+            // 코드 빈칸 선택 채우기 문제는 하나라도 선택하길 기다림
+          }
+        }else{
+          // 다음 스텝이 없는 경우ㅠ
+          setCurSlideIndex(curSlideIndex + 1);
+          goToNextSlide();
+          // 다음 슬라이드로 이동
         }
-      }else{
-        // 다음 스텝이 없는 경우ㅠ
-        setCurSlideIndex(curSlideIndex + 1);
-        goToNextSlide();
-        // 다음 슬라이드로 이동
-      }
-      
+        
 
-    }
+      }
   }
 
   // modules에서 특정 스텝 데이터만 조회
@@ -421,8 +432,8 @@ const LessonLearningScreen: React.FC<{ route: any }> = ({ route }) => {
                 </Text>
 
                 {slide.modules
-                  .filter(module => (module.visibility?.type === 'step' ? module.visibility.value <= curSlideStep[idx] : true))
-                  .map((module, moduleIndex) => {
+                  .filter((module: SlideModule) => (module.visibility?.type === 'step' ? module.visibility.value <= curSlideStep[idx] : true))
+                  .map((module: SlideModule, moduleIndex: number) => {
                   switch (module.type) {
                     case 'paragraph':
                       return (

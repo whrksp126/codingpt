@@ -113,6 +113,18 @@ class LessonService {
     }
   }
 
+  // 학습 결과 조회
+  async getLessonResult(userId: number, lessonId: number): Promise<any> {
+    try {
+      const response = await api.myclass.getLessonResult(userId, lessonId);
+      console.log("학습 결과 조회 서비스 response,", response);
+      return response.data;
+    } catch (error) {
+      console.error('학습 결과 조회 실패:', error);
+      return null;
+    }
+  }
+
   // 모든 강의 가져오기
   async getAllLessons(): Promise<Lesson[]> {
     try {
@@ -266,15 +278,15 @@ class LessonService {
   }
 
   // 학습 결과 저장
-  async saveLessonResult(lessonResult: LessonResultForDB): Promise<boolean> {
-    try {
-      const response = await api.lessons.saveLessonResult(lessonResult);
-      return response.success;
-    } catch (error) {
-      console.error('학습 결과 저장 실패:', error);
-      return false;
-    }
-  }
+  // async saveLessonResult(lessonResult: LessonResultForDB): Promise<boolean> {
+  //   try {
+  //     const response = await api.lessons.saveLessonResult(lessonResult);
+  //     return response.success;
+  //   } catch (error) {
+  //     console.error('학습 결과 저장 실패:', error);
+  //     return false;
+  //   }
+  // }
 }
 
 export default new LessonService(); 

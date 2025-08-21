@@ -5,19 +5,25 @@ import { Star } from 'phosphor-react-native';
 import { useUser } from '../../contexts/UserContext';
 import { useStore } from '../../contexts/StoreContext';
 import { useLesson } from '../../contexts/LessonContext';
+import { useNavigation } from '../../contexts/NavigationContext';
 import lessonService from '../../services/lessonService';
 import { countSectionsAndLessons } from '../../utils/lessonUtils';
 import { CaretLeft, ListNumbers, Files, SealQuestion, TerminalWindow, TreeStructure } from '../../assets/SvgIcon';
 // import ClassProgressScreen from './classProgressScreen';
-import { useNavigation } from '../../contexts/NavigationContext';
+
 const LessonDetailScreen = ({ route }: any) => {
   const { user } = useUser();
-  const { lessons, reloadLessons } = useLesson();
+  const { lessons, reloadLessons, setActiveProduct } = useLesson();
   const { productIndex } = useStore();
   const { navigate, goBack } = useNavigation();
   // const { pushFullSheet, popFullSheet } = useFullSheet();
 
-  // 네비게이션 파라미터
+  console.log("LessonDetailScreen route,", route);
+  console.log("LessonDetailScreen user,", user);
+  console.log("LessonDetailScreen lessons,", lessons);
+  console.log("LessonDetailScreen productIndex,", productIndex);
+
+  // 네비게이션 파라미터 (product)
   const { id, name, icon, description, price } = route.params as {
     id: number;
     name: string;
@@ -25,6 +31,7 @@ const LessonDetailScreen = ({ route }: any) => {
     description: string;
     price: number;
   };
+
   const productId = Number(id);
 
   // StoreContext에서 집계값(단일 출처) 조회
@@ -33,7 +40,7 @@ const LessonDetailScreen = ({ route }: any) => {
   const lessonCount = productFromStore?.lessonCount ?? 0;   // 레슨 개수
 
   // 수강 여부 확인
-  const isEnrolled = useMemo(() => lessons.some((l) => l.id === productId), [lessons, productId]);
+  const isEnrolled = useMemo(() => lessons.some(l => l.id === productId), [lessons, productId]);
 
   // 탭 구성
   const [activeTab, setActiveTab] = useState('강의소개');
@@ -48,10 +55,10 @@ const LessonDetailScreen = ({ route }: any) => {
       const registered = await lessonService.postMyclass(user!.id, id);
       if (registered) {
         // pushFullSheet(<ClassProgressScreen />);
-
-        navigate('classProgress');
-
         await reloadLessons(); // ✅ 즉시 반영
+        setActiveProduct(productId);     // ✅ 선택 상태 저장
+        navigate('classProgress');
+        
       } else {
         Alert.alert('수강 등록 실패');
       }
@@ -59,6 +66,11 @@ const LessonDetailScreen = ({ route }: any) => {
       console.error(err);
       Alert.alert('오류', '수강 등록 중 문제가 발생했습니다.');
     }
+  };
+
+  const goStudy = () => {
+    setActiveProduct(productId);         // ✅ 선택 상태 저장
+    navigate('classProgress');
   };
 
   return (
@@ -108,7 +120,7 @@ const LessonDetailScreen = ({ route }: any) => {
             }}
             onPress={() => {
               if (isEnrolled) {
-                // pushFullSheet(<ClassProgressScreen />);
+                setActiveProduct(productId);      // ✅ 선택 상태 저장
                 navigate('classProgress');
               } else {
                 handleEnroll();
