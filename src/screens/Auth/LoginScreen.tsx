@@ -39,13 +39,14 @@ const LoginScreen: React.FC = () => {
       await GoogleSignin.signIn();
       const tokens = await GoogleSignin.getTokens();
       const idToken = tokens.idToken;
-
+      console.log('idToken', idToken);
       if (!idToken) {
         Alert.alert('오류', 'ID Token이 존재하지 않습니다.');
         return;
       }
 
       await sendIdTokenToServer(idToken);
+      console.log('End sendIdTokenToServer');
     } catch (error) {
       console.error('Google 로그인 실패:', error);
       Alert.alert('로그인 실패', 'Google 로그인 중 오류가 발생했습니다.');
@@ -56,6 +57,7 @@ const LoginScreen: React.FC = () => {
 
   const sendIdTokenToServer = async (idToken: string) => {
     try {
+      console.log('Start sendIdTokenToServer');
       const response = await authService.login(idToken);
       if (response.success && response.data) {
         const { accessToken, refreshToken } = response.data;

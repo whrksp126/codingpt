@@ -57,7 +57,8 @@ export async function apiRequest<T>(
     if (options.body && options.method !== 'GET') {
       config.body = JSON.stringify(options.body);
     }
-
+    console.log('config', config);
+    console.log('url', url);
     const response = await fetch(url, config);
     // access token 만료 시 refresh 시도
     if (response.status === 401 && retry) {
@@ -73,7 +74,7 @@ export async function apiRequest<T>(
         return apiRequest<T>(endpoint, cleanedOptions, false); // 한 번만 재시도
       }
     }
-
+    console.log('response', response);
     const data = await response.json();
 
     if (!response.ok) {
