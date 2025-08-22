@@ -1,5 +1,5 @@
 import AsyncStorage from '@react-native-async-storage/async-storage';
-import { API_URL, FRONTEND_URL } from './service';
+import { BACK_URL } from './service';
 
 
 // HTTP 메서드 타입
@@ -42,7 +42,7 @@ export async function apiRequest<T>(
   retry = true // 재시도 여부
 ): Promise<ApiResponse<T>> {
   try {
-    const url = `${API_URL}${endpoint}`;
+    const url = `${BACK_URL}${endpoint}`;
     console.log('url', url);
     const headers = await getAuthHeaders(); 
 
@@ -100,7 +100,7 @@ async function refreshAccessToken(): Promise<string | null> {
   if (!refreshToken) return null;
 
   try {
-    const res = await fetch(`${API_URL}/api/users/refresh`, {
+      const res = await fetch(`${BACK_URL}/api/users/refresh`, {
       method: 'POST',
       headers: getDefaultHeaders(),
       body: JSON.stringify({ refreshToken }),

@@ -2,7 +2,7 @@ import React, { useState, useEffect, useRef } from 'react';
 import { View, Text, Pressable, Image } from 'react-native';
 import { WebView } from 'react-native-webview';
 import type { WebView as WebViewType } from 'react-native-webview';
-import { FRONTEND_URL } from '../../utils/service';
+import { FRONT_URL } from '../../utils/service';
 import { ActivityIndicator } from 'react-native';
 
 interface CodeFillTheGapProps {
@@ -312,7 +312,7 @@ export const CodeFillTheGapComponent: React.FC<CodeFillTheGapProps> = ({ onLoadC
             <WebView
               ref={webviewRefs.current[idx] || (webviewRefs.current[idx] = React.createRef<WebViewType>())}
               originWhitelist={['*']}
-              source={{ uri: `${FRONTEND_URL}${file.url}` }}
+              source={{ uri: `${FRONT_URL}${file.url}` }}
               style={{ flex: 1, backgroundColor: 'transparent' }}
               scrollEnabled={true}
               onLoadStart={() => setIsLoading(true)}
