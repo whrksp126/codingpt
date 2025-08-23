@@ -1,6 +1,6 @@
 export const html = {
     
-  // 강의 정보
+  // 강의 정보 (class)
   id: 1,
   title: "HTML 기초",
   description: "HTML 기초 강의",
@@ -344,254 +344,428 @@ export const html = {
                 ],
               },
 
+              // 여기 새로 만드는 곳!
               { 
-                "id": "lesson_00003",
-                "title": "HTML 파일 구조 소개",
-                "isCompleted": false,
-                "sliders": [
-                  {
-                    "id": "slide_0001",
-                    "title": "`<!DOCTYPE html>`의 의미",
-                    "modules": [
+                  "id": "lesson_00003",
+                  "title": "HTML 기초: 태그와 구조 이해",
+                  "isCompleted": false,
+                  "sliders": [
                       {
-                        "type": "paragraph",
-                        "content": "`<!DOCTYPE html>`은 HTML 문서의 **버전과 유형을 정의하는 선언부**입니다. 현재 대부분의 웹 문서는 HTML5를 사용하며, 이를 명시하는 역할을 합니다."
-                      },
-                      {
-                        "type": "image",
-                        "content": "https://cdn.example.com/html-doctype.png",
-                        "visibility": {
-                          "type": "step",
-                          "value": 2
-                        },
-                        "comment": "💡 [이미지 설명] `<!DOCTYPE html>`이 문서 최상단에 위치한 예시 코드 스크린샷"
-                      },
-                      {
-                        "type": "paragraph",
-                        "content": "`<!DOCTYPE html>`이 없거나 잘못 지정되면 브라우저는 문서를 **비표준 모드(quirks mode)**로 해석할 수 있어 레이아웃이 깨질 수 있습니다.",
-                        "visibility": {
-                          "type": "step",
-                          "value": 3
-                        }
-                      }
-                    ]
-                  },
-                  {
-                    "id": "slide_0002",
-                    "title": "`<html>`, `<head>`, `<body>` 기본 구조",
-                    "modules": [
-                      {
-                        "type": "paragraph",
-                        "content": "HTML 문서는 `<html>` 태그로 시작해서 끝납니다. 이 안에는 두 가지 주요 영역이 있어요: **`<head>`**와 **`<body>`**."
-                      },
-                      {
-                        "type": "code",
-                        "files": [
+                      "id": 0,
+                      "title": "HTML 문서 뼈대 이해하기",
+                      "modules": [
                           {
-                            "name": "index.html",
-                            "language": "html",
-                            "content": "<html>\n  <head>\n    <title>문서 제목</title>\n  </head>\n  <body>\n    <h1>페이지 내용</h1>\n  </body>\n</html>"
-                          }
-                        ],
-                        "visibility": {
-                          "type": "step",
-                          "value": 2
-                        }
-                      },
-                      {
-                        "type": "image",
-                        "content": "https://cdn.example.com/html-head-body.png",
-                        "visibility": {
-                          "type": "step",
-                          "value": 3
-                        },
-                        "comment": "💡 [이미지 설명] `<html>` 태그 안에 `<head>`와 `<body>`가 포함된 구조를 다이어그램으로 표현"
-                      },
-                      {
-                        "type": "paragraph",
-                        "content": "- `<head>`: 문서 정보, 외부 리소스, 인코딩 정보 등을 포함\n- `<body>`: 사용자에게 보이는 실제 콘텐츠가 들어감",
-                        "visibility": {
-                          "type": "step",
-                          "value": 4
-                        }
-                      }
-                    ]
-                  },
-                  {
-                    "id": "slide_0003",
-                    "title": "`<head>` 영역의 주요 요소들",
-                    "modules": [
-                      {
-                        "type": "paragraph",
-                        "content": "`<head>`는 브라우저가 페이지를 해석하는 데 필요한 정보를 담고 있어요. 눈에 보이지는 않지만 매우 중요한 영역입니다."
-                      },
-                      {
-                        "type": "code",
-                        "files": [
+                          "id": 0,
+                          "type": "paragraph",
+                          "content": "### 🧱 HTML 문서의 기본 구조\n- `<!DOCTYPE html>`: 문서가 **HTML5**임을 선언\n- `<html>`: 문서의 루트(최상위) 요소\n- `<head>`: 문서의 메타데이터(제목, 인코딩, 외부 리소스 등)\n- `<body>`: 실제 화면에 보이는 **콘텐츠** 영역",
+                          "visibility": { "type": "step", "value": 1 }
+                          },
                           {
-                            "name": "index.html",
-                            "language": "html",
-                            "content": "<head>\n  <meta charset=\"UTF-8\">\n  <title>문서 제목</title>\n  <link rel=\"stylesheet\" href=\"style.css\">\n  <script src=\"main.js\"></script>\n</head>"
-                          }
-                        ],
-                        "visibility": {
-                          "type": "step",
-                          "value": 2
-                        }
-                      },
-                      {
-                        "type": "paragraph",
-                        "content": "- `<meta>`: 문자 인코딩이나 설명 같은 메타정보 설정\n- `<title>`: 브라우저 탭에 표시되는 제목\n- `<link>`: CSS 같은 외부 리소스를 연결\n- `<script>`: 자바스크립트 파일을 연결",
-                        "visibility": {
-                          "type": "step",
-                          "value": 3
-                        }
-                      },
-                      {
-                        "type": "image",
-                        "content": "https://cdn.example.com/html-head-tags.png",
-                        "visibility": {
-                          "type": "step",
-                          "value": 4
-                        },
-                        "comment": "💡 [이미지 설명] `<head>` 영역에 들어가는 주요 태그를 간단한 아이콘으로 시각화한 다이어그램 (예: title은 탭, meta는 톱니바퀴 등)"
-                      }
-                    ]
-                  },
-                  {
-                    "id": "slide_0004",
-                    "title": "`<body>` 영역과 콘텐츠 배치",
-                    "modules": [
-                      {
-                        "type": "paragraph",
-                        "content": "`<body>`는 실제로 사용자가 브라우저에서 보는 모든 콘텐츠를 담는 영역입니다. 텍스트, 이미지, 버튼 등 대부분의 요소가 이 안에 들어갑니다."
-                      },
-                      {
-                        "type": "code",
-                        "files": [
-                          {
-                            "name": "index.html",
-                            "language": "html",
-                            "content": "<body>\n  <h1>여기는 제목입니다</h1>\n  <p>여기는 단락 내용입니다</p>\n  <img src=\"cat.png\" alt=\"고양이 이미지\">\n  <button>클릭하세요</button>\n</body>"
-                          }
-                        ],
-                        "visibility": {
-                          "type": "step",
-                          "value": 2
-                        }
-                      },
-                      {
-                        "type": "paragraph",
-                        "content": "- `<h1>`: 제목 (Heading)\n- `<p>`: 단락 (Paragraph)\n- `<img>`: 이미지\n- `<button>`: 버튼",
-                        "visibility": {
-                          "type": "step",
-                          "value": 3
-                        }
-                      },
-                      {
-                        "type": "image",
-                        "content": "https://cdn.example.com/html-body-example.png",
-                        "visibility": {
-                          "type": "step",
-                          "value": 4
-                        },
-                        "comment": "💡 [이미지 설명] 위 코드가 브라우저에서 실제로 어떻게 보여지는지 예시 스크린샷 (제목, 단락, 이미지, 버튼 포함된 화면)"
-                      }
-                    ]
-                  },
-                  {
-                    "id": "slide_0005",
-                    "title": "`<!DOCTYPE html>`과 `<html>` 태그의 역할",
-                    "modules": [
-                      {
-                        "type": "paragraph",
-                        "content": "`<!DOCTYPE html>`은 이 문서가 HTML5 문서임을 선언합니다. 이는 브라우저가 문서를 올바르게 해석하는 데 도움이 됩니다."
-                      },
-                      {
-                        "type": "paragraph",
-                        "content": "`<html>` 태그는 HTML 문서의 최상위 루트 요소로, `<head>`와 `<body>`를 감싸는 역할을 합니다.",
-                        "visibility": {
-                          "type": "step",
-                          "value": 2
-                        }
-                      },
-                      {
-                        "type": "code",
-                        "files": [
-                          {
-                            "name": "index.html",
-                            "language": "html",
-                            "content": "<!DOCTYPE html>\n<html>\n  ...\n</html>"
-                          }
-                        ],
-                        "visibility": {
-                          "type": "step",
-                          "value": 3
-                        }
-                      },
-                      {
-                        "type": "image",
-                        "content": "https://cdn.example.com/html-doctype-html.png",
-                        "visibility": {
-                          "type": "step",
-                          "value": 4
-                        },
-                        "comment": "💡 [이미지 설명] 브라우저 주소창에 HTML5 문서가 열렸을 때 정상적으로 해석되는 모습과 함께, DOCTYPE이 빠진 경우 깨진 레이아웃 비교 이미지"
-                      }
-                    ]
-                  },
-                  {
-                    "id": "slide_0006",
-                    "title": "HTML 기본 구조 정리 및 확인 문제",
-                    "modules": [
-                      {
-                        "type": "paragraph",
-                        "content": "아래 HTML 코드에서 빠진 부분을 채워 웹 문서의 기본 구조를 완성해 보세요."
-                      },
-                      {
-                        "type": "codeFillTheGap",
-                        "files" : [
-                          {
-                            "name": "index.html",
-                            "language": "html",
-                            "content": "<!DOCTYPE html>\n<html>\n  <head>\n    <meta charset=\"UTF-8\">\n    <title>나의 첫 번째 페이지</title>\n  </head>\n  <body>\n    <h1>[___]</h1>\n    <p>[___]</p>\n  </body>\n</html>",
-                            "isInteractive": true,
-                            "interactionOptions": [
+                          "id": 1,
+                          "type": "multipleChoice",
+                          "questions": [
                               {
-                                "startLine": 7,
-                                "startPos": 10,
-                                "length": 5,
-                                "value": "환영합니다",
-                                "answerIndex": 0
+                              "title": "다음 중 **화면에 직접 표시되는** 내용을 담는 태그는?",
+                              "interactionOptions": [
+                                  { "label": "<head>" },
+                                  { "label": "<meta>" },
+                                  { "label": "<link>" },
+                                  { "label": "<body>" }
+                              ],
+                              "answer": { "isCorrect": null, "answer": 3, "userAnswer": null }
+                              }
+                          ],
+                          "visibility": { "type": "step", "value": 2 },
+                          "result": {
+                              "totalStep": 1,
+                              "modules": [
+                              {
+                                  "id": 0,
+                                  "type": "paragraph",
+                                  "content": "🎉 잘했어요!",
+                                  "visibility": { "type": "step", "value": 1 },
+                                  "condition": "correct"
                               },
                               {
-                                "startLine": 8,
-                                "startPos": 8,
-                                "length": 7,
-                                "value": "첫 페이지입니다.",
-                                "answerIndex": 1
+                                  "id": 1,
+                                  "type": "paragraph",
+                                  "content": "❌ 정답은 `<body>`입니다. `<head>`는 메타데이터, `<meta>`/`<link>`는 설정·연결용이에요.",
+                                  "visibility": { "type": "step", "value": 1 },
+                                  "condition": "wrong"
                               }
-                            ],
+                              ]
                           }
-                        ],
+                          },
+                          {
+                          "id": 2,
+                          "type": "codeFillTheGap",
+                          "files": [
+                              {
+                              "name": "index.html",
+                              "language": "html",
+                              "content": "<!DOCTYPE html>\n<{{BLANK-1}} lang=\"ko\">\n  <{{BLANK-2}}>\n    <meta charset=\"UTF-8\" />\n    <title>나의 첫 HTML</title>\n  </{{BLANK-2}}>\n  <{{BLANK-3}}>\n    <h1>안녕하세요</h1>\n    <p>HTML 문서의 기본 구조를 배우는 중!</p>\n  </{{BLANK-3}}>\n</{{BLANK-1}}>",
+                              "url": "/code/5",
+                              "isInteractive": true,
+                              "inputLength": 3,
+                              "interactionOptions": [
+                                  { "id": "option-1", "value": "<html>", "disabled": false },
+                                  { "id": "option-2", "value": "</head>", "disabled": false },
+                                  { "id": "option-3", "value": "<body>", "disabled": false }
+                              ],
+                              "answers": [
+                                  { "isCorrect": null, "answer": "<html>", "userAnswer": null, "optionElIndex": null },
+                                  { "isCorrect": null, "answer": "</head>", "userAnswer": null, "optionElIndex": null },
+                                  { "isCorrect": null, "answer": "<body>", "userAnswer": null, "optionElIndex": null }
+                              ]
+                              }
+                          ],
+                          "visibility": { "type": "step", "value": 3 },
+                          "result": {
+                              "totalStep": 1,
+                              "modules": [
+                              {
+                                  "id": 0,
+                                  "type": "paragraph",
+                                  "content": "🎉 잘했어요! 이제 이 코드를 미리보기에서 확인해보세요.",
+                                  "visibility": { "type": "step", "value": 1 },
+                                  "condition": "correct"
+                              },
+                              {
+                                  "id": 1,
+                                  "type": "paragraph",
+                                  "content": "❌ HTML 문서는 `<html>` 안에 `<head>`와 `<body>`가 나란히 있어야 하며, `<body>`는 `<head>` 밖에 작성합니다.\n아래 미리보기에서 확인해보세요!",
+                                  "visibility": { "type": "step", "value": 1 },
+                                  "condition": "wrong"
+                              }
+                              ]
+                          }
+                          },
+                          {
+                          "id": 3,
+                          "type": "webview",
+                          "tabs": [
+                              {
+                              "type": "html",
+                              "content": "<!DOCTYPE html><html lang=\"ko\"><head><meta charset=\"UTF-8\"><title>미리보기</title><style>body{font-family:system-ui;padding:16px}</style></head><body><h1>안녕하세요</h1><p>HTML 문서의 기본 구조를 배우는 중!</p></body></html>"
+                              }
+                          ],
+                          "visibility": { "type": "step", "value": 4 }
+                          }
+                      ]
                       },
                       {
-                        "type": "multipleChoice",
-                        "question": "다음 중 `<head>` 태그 안에 들어가는 요소가 아닌 것은?",
-                        "options": [
-                          { "label": "문서 제목 설정", "isCorrect": false },
-                          { "label": "메타 정보 설정", "isCorrect": false },
-                          { "label": "외부 스타일시트 연결", "isCorrect": false },
-                          { "label": "<h1> 제목 작성", "isCorrect": true }
-                        ],
-                        "visibility": {
-                          "type": "step",
-                          "value": 2
-                        }
+                      "id": 1,
+                      "title": "제목과 문단 태그",
+                      "modules": [
+                          {
+                          "id": 0,
+                          "type": "paragraph",
+                          "content": "### 📝 텍스트의 골격: 제목과 문단\n- `<h1>` ~ `<h6>`: **중요도**에 따른 제목\n- `<p>`: 하나의 **문단**을 의미",
+                          "visibility": { "type": "step", "value": 1 }
+                          },
+                          {
+                          "id": 1,
+                          "type": "multipleChoice",
+                          "questions": [
+                              {
+                              "title": "페이지의 가장 중요한 제목에 적합한 태그는?",
+                              "interactionOptions": [
+                                  { "label": "<h6>" },
+                                  { "label": "<h1>" },
+                                  { "label": "<p>" },
+                                  { "label": "<span>" }
+                              ],
+                              "answer": { "isCorrect": null, "answer": 1, "userAnswer": null }
+                              }
+                          ],
+                          "visibility": { "type": "step", "value": 2 },
+                          "result": {
+                              "totalStep": 1,
+                              "modules": [
+                              {
+                                  "id": 0,
+                                  "type": "paragraph",
+                                  "content": "🎉 잘했어요! 페이지 핵심 제목은 보통 1개만 사용해요.",
+                                  "visibility": { "type": "step", "value": 1 },
+                                  "condition": "correct"
+                              },
+                              ,
+                              {
+                                  "id": 1,
+                                  "type": "paragraph",
+                                  "content": "❌ 정답은 `<h1>`입니다. 페이지 핵심 제목은 보통 1개만 사용해요.",
+                                  "visibility": { "type": "step", "value": 1 },
+                                  "condition": "wrong"
+                              }
+                              ]
+                          }
+                          },
+                          {
+                          "id": 3,
+                          "type": "codeFillTheGap",
+                          "files": [
+                              {
+                              "name": "index.html",
+                              "language": "html",
+                              "content": "<h{{BLANK-1}}>나의 블로그</h{{BLANK-1}}>\n<{{BLANK-2}}>첫 글입니다.</{{BLANK-2}}>",
+                              "url": "/code/6",
+                              "isInteractive": true,
+                              "inputLength": 2,
+                              "interactionOptions": [
+                                  { "id": "option-1", "value": "<h1>", "disabled": false },
+                                  { "id": "option-2", "value": "</h1>", "disabled": false },
+                                  { "id": "option-3", "value": "<p>", "disabled": false },
+                                  { "id": "option-4", "value": "</p>", "disabled": false }
+                              ],
+                              "answers": [
+                                  { "isCorrect": null, "answer": "<h1>", "userAnswer": null, "optionElIndex": null },
+                                  { "isCorrect": null, "answer": "</p>", "userAnswer": null, "optionElIndex": null }
+                              ]
+                              }
+                          ],
+                          "visibility": { "type": "step", "value": 3 },
+                          "result": {
+                              "totalStep": 1,
+                              "modules": [
+                              {
+                                  "id": 0,
+                                  "type": "paragraph",
+                                  "content": "🎉 잘했어요! 제목은 `<h1>`로, 문단은 `<p>`로 완성!",
+                                  "visibility": { "type": "step", "value": 1 },
+                                  "condition": "correct"
+                              },
+                              {
+                                  "id": 1,
+                                  "type": "paragraph",
+                                  "content": "❌ `<h1>`와 `<p>` 태그는 시작과 종료 태그가 반드시 짝을 이루어야 해요!",
+                                  "visibility": { "type": "step", "value": 1 },
+                                  "condition": "wrong"
+                              }
+                              
+                              ]
+                          }
+                          },
+                          {
+                          "id": 4,
+                          "type": "webview",
+                          "tabs": [
+                              {
+                              "type": "html",
+                              "content": "<!DOCTYPE html><html lang=\"ko\"><head><meta charset=\"UTF-8\"><title>미리보기</title><style>body{font-family:system-ui;padding:16px}</style></head><body><h1>나의 블로그</h1><p>첫 글입니다.</p></body></html>"
+                              }
+                          ],
+                          "visibility": { "type": "step", "value": 4 }
+                          }
+                      ]
+                      },
+                      {
+                      "id": 2,
+                      "title": "링크와 이미지",
+                      "modules": [
+                          {
+                          "id": 0,
+                          "type": "paragraph",
+                          "content": "### 🔗🖼️ 하이퍼링크와 이미지\n- `<a href=\"...\">`: 다른 문서로 이동하는 **링크**\n- `<img src=\"...\" alt=\"...\">`: 이미지를 표현, `alt`는 대체 텍스트",
+                          "visibility": { "type": "step", "value": 1 }
+                          },
+                          {
+                          "id": 1,
+                          "type": "multipleChoice",
+                          "questions": [
+                              {
+                              "title": "접근성을 위해 이미지에 **꼭** 추가해야 하는 속성은?",
+                              "interactionOptions": [
+                                  { "label": "title" },
+                                  { "label": "alt" },
+                                  { "label": "width" },
+                                  { "label": "loading" }
+                              ],
+                              "answer": { "isCorrect": null, "answer": 1, "userAnswer": null }
+                              }
+                          ],
+                          "visibility": { "type": "step", "value": 2 },
+                          "result": {
+                              "totalStep": 1,
+                              "modules": [
+                              {
+                                  "id": 0,
+                                  "type": "paragraph",
+                                  "content": "🎉 잘했어요! 화면 읽기 도구가 이미지를 설명할 수 있어요.",
+                                  "visibility": { "type": "step", "value": 1 },
+                                  "condition": "correct"
+                              },
+                              {
+                                  "id": 1,
+                                  "type": "paragraph",
+                                  "content": "❌ 정답은 `alt`입니다. 화면 읽기 도구가 이미지를 설명할 수 있어요.",
+                                  "visibility": { "type": "step", "value": 1 },
+                                  "condition": "wrong"
+                              }
+                              ]
+                          }
+                          },
+                          {
+                          "id": 2,
+                          "type": "codeFillTheGap",
+                          "files": [
+                              {
+                              "name": "index.html",
+                              "language": "html",
+                              "content": "<p>문서를 더 배우려면 <a {{BLANK-1}}=\"https://developer.mozilla.org/ko/\">MDN</a>으로 이동!</p>\n<img {{BLANK-2}}=\"/images/logo.png\" {{BLANK-3}}=\"로고 이미지\" />",
+                              "url": "/code/7",
+                              "isInteractive": true,
+                              "inputLength": 3,
+                              "interactionOptions": [
+                                  { "id": "option-1", "value": "src", "disabled": false },
+                                  { "id": "option-2", "value": "href", "disabled": false },
+                                  { "id": "option-3", "value": "link", "disabled": false },
+                                  { "id": "option-4", "value": "alt", "disabled": false }
+                              ],
+                              "answers": [
+                                  { "isCorrect": null, "answer": "href", "userAnswer": null, "optionElIndex": null },
+                                  { "isCorrect": null, "answer": "src", "userAnswer": null, "optionElIndex": null },
+                                  { "isCorrect": null, "answer": "alt", "userAnswer": null, "optionElIndex": null }
+                              ]
+                              }
+                          ],
+                          "visibility": { "type": "step", "value": 3 },
+                          "result": {
+                              "totalStep": 1,
+                              "modules": [
+                              {
+                                  "id": 0,
+                                  "type": "paragraph",
+                                  "content": "🎉 잘했어요! 이제 이 코드를 미리보기에서 확인해보세요.",
+                                  "visibility": { "type": "step", "value": 1 },
+                                  "condition": "correct"
+                              },
+                              {
+                                  "id": 1,
+                                  "type": "paragraph",
+                                  "content": "❌ 링크는 `href`, 이미지의 경로는 `src`, 이미지 설명은 `alt` 속성을 사용해요.",
+                                  "visibility": { "type": "step", "value": 1 },
+                                  "condition": "wrong"
+                              }
+                              ]
+                          }
+                          },
+                          {
+                          "id": 4,
+                          "type": "webview",
+                          "tabs": [
+                              {
+                              "type": "html",
+                              "content": "<!DOCTYPE html><html lang=\"ko\"><head><meta charset=\"UTF-8\"><title>미리보기</title><style>body{font-family:system-ui;padding:16px}img{height:40px}</style></head><body><p>문서를 더 배우려면 <a href=\"https://developer.mozilla.org/ko/\">MDN</a>으로 이동!</p><img src=\"/images/logo.png\" alt=\"로고 이미지\" /></body></html>"
+                              }
+                          ],
+                          "visibility": { "type": "step", "value": 4 }
+                          }
+                      ]
+                      },
+                      {
+                      "id": 3,
+                      "title": "목록과 버튼",
+                      "modules": [
+                          {
+                          "id": 0,
+                          "type": "paragraph",
+                          "content": "### ✅ 목록과 상호작용 요소\n- `<ul>`/`<ol>`: 순서 없는/있는 **목록**\n- `<li>`: 각 목록의 항목\n- `<button>`: 클릭 가능한 **버튼**",
+                          "visibility": { "type": "step", "value": 1 }
+                          },
+                          {
+                          "id": 1,
+                          "type": "multipleChoice",
+                          "questions": [
+                              {
+                              "title": "번호가 자동으로 매겨지는 목록에 적합한 태그 조합은?",
+                              "interactionOptions": [
+                                  { "label": "<ul> + <li>" },
+                                  { "label": "<ol> + <li>" },
+                                  { "label": "<div> + <li>" },
+                                  { "label": "<p> + <li>" }
+                              ],
+                              "answer": { "isCorrect": null, "answer": 1, "userAnswer": null }
+                              }
+                          ],
+                          "visibility": { "type": "step", "value": 2 },
+                          "result": {
+                              "totalStep": 1,
+                              "modules": [
+                              {
+                                  "id": 0,
+                                  "type": "paragraph",
+                                  "content": "🎉 잘했어요! `<ul>`은 불릿(•) 목록이에요.",
+                                  "visibility": { "type": "step", "value": 1 },
+                                  "condition": "correct"
+                              },
+                              {
+                                  "id": 1,
+                                  "type": "paragraph",
+                                  "content": "❌ 정답은 `<ol> + <li>`입니다. `<ul>`은 불릿(•) 목록이에요.",
+                                  "visibility": { "type": "step", "value": 1 },
+                                  "condition": "wrong"
+                              }
+                              ]
+                          }
+                          },
+                          {
+                          "id": 2,
+                          "type": "codeFillTheGap",
+                          "files": [
+                              {
+                              "name": "index.html",
+                              "language": "html",
+                              "content": "<h2>할 일</h2>\n<{{BLANK-1}}>\n  <li>HTML 공부</li>\n  <li>CSS 연습</li>\n</{{BLANK-1}}>\n<{{BLANK-2}}>확인</{{BLANK-2}}>",
+                              "url": "/code/8",
+                              "isInteractive": true,
+                              "inputLength": 2,
+                              "interactionOptions": [
+                                  { "id": "option-1", "value": "<ul>", "disabled": false },
+                                  { "id": "option-2", "value": "</ul>", "disabled": false },
+                                  { "id": "option-3", "value": "<button>", "disabled": false },
+                                  { "id": "option-4", "value": "</button>", "disabled": false }
+                              ],
+                              "answers": [
+                                  { "isCorrect": null, "answer": "<ul>", "userAnswer": null, "optionElIndex": null },
+                                  { "isCorrect": null, "answer": "</button>", "userAnswer": null, "optionElIndex": null }
+                              ]
+                              }
+                          ],
+                          "visibility": { "type": "step", "value": 3 },
+                          "result": {
+                              "totalStep": 1,
+                              "modules": [
+                              {
+                                  "id": 0,
+                                  "type": "paragraph",
+                                  "content": "🎉 잘했어요! 이제 이 코드를 미리보기에서 확인해보세요.",
+                                  "visibility": { "type": "step", "value": 1 },
+                                  "condition": "correct"
+                              },
+                              {
+                                  "id": 1,
+                                  "type": "paragraph",
+                                  "content": "❌ 목록 항목(<li>)들은 반드시 목록 태그(<ul> 또는 <ol>)로 감싸야 하며, 시작 태그와 종료 태그가 짝을 이뤄야 해요.",
+                                  "visibility": { "type": "step", "value": 1 },
+                                  "condition": "wrong"
+                              }
+                              ]
+                          }
+                          },
+                          {
+                          "id": 4,
+                          "type": "webview",
+                          "tabs": [
+                              {
+                              "type": "html",
+                              "content": "<!DOCTYPE html><html lang=\"ko\"><head><meta charset=\"UTF-8\"><title>미리보기</title><style>body{font-family:system-ui;padding:16px}button{padding:8px 12px;border:1px solid #ccc;border-radius:8px}</style></head><body><h2>할 일</h2><ul><li>HTML 공부</li><li>CSS 연습</li></ul><button>확인</button></body></html>"
+                              }
+                          ],
+                          "visibility": { "type": "step", "value": 4 }
+                          }
+                      ]
                       }
-                    ]
-                  }                                                                                                
-                ],
+                  ]
               }
             ],
             "concept": "# HTML이란 무엇인가?\n\nHTML(HyperText Markup Language)은 웹 페이지의 **기본 구조를 정의하는 마크업 언어**입니다. 우리가 웹에서 보는 모든 텍스트, 이미지, 버튼 등의 구성요소들은 HTML로 작성된 문서를 통해 브라우저가 해석하여 화면에 출력됩니다.\n\n---\n\n## 📌 웹과 브라우저의 동작 원리\n\n- 사용자가 웹 주소를 입력하면, **브라우저는 서버로부터 HTML 파일을 요청**합니다.\n- 받은 HTML을 **해석(parsing)** 하고, 여기에 포함된 **CSS, JS, 이미지 등의 리소스**도 추가로 로딩합니다.\n- 최종적으로 브라우저는 **렌더링 엔진**을 통해 시각적으로 사용자에게 페이지를 보여줍니다.\n\n---\n\n## 📌 HTML의 역할과 중요성\n\n- 콘텐츠의 **구조(Structure)** 를 정의합니다.\n- 웹 접근성 및 검색엔진 최적화(SEO)에 핵심적인 역할을 합니다.\n- CSS와 JavaScript와 함께 동작하여 **웹의 시각적 스타일**과 **동작**을 제어할 수 있도록 기반을 제공합니다.\n\n> 💡 HTML은 콘텐츠의 \"의미\"를 표현하는 언어입니다. 예: `<h1>`은 가장 중요한 제목이라는 의미를 가집니다.\n\n---\n\n## 📌 HTML 파일의 기본 구조\n\nHTML 문서는 일반적으로 아래와 같은 구조를 가집니다:\n\n```html\n<!DOCTYPE html>\n<html>\n  <head>\n    <meta charset=\"UTF-8\">\n    <title>문서 제목</title>\n  </head>\n  <body>\n    <h1>여기는 제목입니다</h1>\n    <p>여기는 단락 내용입니다</p>\n  </body>\n</html>\n```\n\n- `<!DOCTYPE html>`: HTML5 문서임을 선언\n- `<html>`: 문서 전체를 감싸는 루트 요소\n- `<head>`: 제목, 문자 인코딩, 외부 리소스 등 메타 정보\n- `<body>`: 사용자가 실제로 보게 되는 콘텐츠\n\n---\n\nHTML은 **웹의 뼈대**이며, CSS와 JS 없이도 의미 있는 콘텐츠를 표현할 수 있도록 설계되어 있습니다."

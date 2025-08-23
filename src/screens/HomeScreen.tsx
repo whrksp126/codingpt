@@ -1,5 +1,4 @@
 import React from 'react';
-import Config from 'react-native-config';
 import { ScrollView, TouchableOpacity, Text, View, FlatList, Image } from 'react-native';
 import LessonCard from '../components/LessonCard';
 import { useUser } from '../contexts/UserContext';
@@ -7,6 +6,7 @@ import { useNavigation } from '../contexts/NavigationContext';
 import { getColorByCount, getRecentDays } from '../utils/heatmapUtils';
 import { AnimatedCircularProgress } from 'react-native-circular-progress';
 import { CodesandboxLogo, Clover, HeartStraight, Check, CaretRight } from '../assets/SvgIcon';
+import ClassProgressScreen from './Lesson/classProgressScreen';
 
 
 // 강의 항목 타입
@@ -120,7 +120,14 @@ const HomeScreen: React.FC = () => {
           <View className="items-center mt-[14px] mb-[28px]">
             <TouchableOpacity
               className="bg-[#93D333] w-[236px] h-[46px] rounded-[50px] py-3 px-6 flex-row items-center justify-center"
-              onPress={() => navigate('classProgress')}
+              onPress={() => {
+                // TODO: 최근 학습 데이터가 없으면 상점으로 이동시키고 싶다면 아래 분기 사용
+                // if (!user?.recent?.productId) return navigate('Store');
+
+                // ✅ 풀시트로 classProgressScreen 진입
+                // - props가 필요하면 <ClassProgressScreen propA="..." />로 전달
+                navigate('classProgress');
+              }}
             >
               <CodesandboxLogo width={40} height={40} fill="#ffffff" />
               <Text className="text-white text-[18px] font-bold ml-[10px]" style={{ marginTop: -3 }}>학습하러 가기</Text>
@@ -158,7 +165,7 @@ const HomeScreen: React.FC = () => {
         <View className="mt-[10px] px-[10px]">
           <View className="flex-row justify-between items-center">
             <Text className="text-[16px] font-semibold text-[#111111]">학습 중인 클래스</Text>
-            <TouchableOpacity onPress={() => navigate('LessonList')}>
+            <TouchableOpacity onPress={() => navigate('myLessons')}>
               <CaretRight width={10} height={18} fill="#CCCCCC" />
             </TouchableOpacity>
           </View>
@@ -178,7 +185,7 @@ const HomeScreen: React.FC = () => {
         <View className="mt-[10px] px-[10px] pb-[20px]">
           <View className="flex-row justify-between items-center">
             <Text className="text-[16px] font-semibold text-[#111111]">추천 커리큘럼</Text>
-            <TouchableOpacity onPress={() => navigate('LessonList')}>
+            <TouchableOpacity onPress={() => navigate('myLessons')}>
               <CaretRight width={10} height={18} fill="#CCCCCC" />
             </TouchableOpacity>
           </View>

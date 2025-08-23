@@ -1,22 +1,27 @@
-import React, { useState, useMemo, useRef } from 'react';
-import { View, Text, TouchableOpacity, Image, ScrollView, Alert, InteractionManager } from 'react-native';
+import React, { useState, useMemo } from 'react';
+import { View, Text, TouchableOpacity, Image, ScrollView, Alert, Pressable } from 'react-native';
 import { Star } from 'phosphor-react-native';
-import { useNavigation } from '../../contexts/NavigationContext';
 import { useUser } from '../../contexts/UserContext';
 import { useStore } from '../../contexts/StoreContext';
 import { useLesson } from '../../contexts/LessonContext';
+import { useNavigation } from '../../contexts/NavigationContext';
 import lessonService from '../../services/lessonService';
 import { countSectionsAndLessons } from '../../utils/lessonUtils';
 import { CaretLeft, ListNumbers, Files, SealQuestion, TerminalWindow, TreeStructure } from '../../assets/SvgIcon';
-
+// import ClassProgressScreen from './classProgressScreen';
 
 const LessonDetailScreen = ({ route }: any) => {
-  const { goBack, navigate, push } = useNavigation();
   const { user } = useUser();
-  const { lessons, reloadLessons } = useLesson();
+  const { lessons, reloadLessons, setActiveProduct } = useLesson();
   const { productIndex } = useStore();
+  const { navigate, goBack } = useNavigation();
 
-  // 네비게이션 파라미터
+  console.log("LessonDetailScreen route,", route);
+  console.log("LessonDetailScreen user,", user);
+  console.log("LessonDetailScreen lessons,", lessons);
+  console.log("LessonDetailScreen productIndex,", productIndex);
+
+  // 네비게이션 파라미터 (product)
   const { id, name, icon, description, price } = route.params as {
     id: number;
     name: string;
@@ -24,6 +29,7 @@ const LessonDetailScreen = ({ route }: any) => {
     description: string;
     price: number;
   };
+
   const productId = Number(id);
 
   // StoreContext에서 집계값(단일 출처) 조회
@@ -32,7 +38,7 @@ const LessonDetailScreen = ({ route }: any) => {
   const lessonCount = productFromStore?.lessonCount ?? 0;   // 레슨 개수
 
   // 수강 여부 확인
-  const isEnrolled = useMemo(() => lessons.some((l) => l.id === productId), [lessons, productId]);
+  const isEnrolled = useMemo(() => lessons.some(l => l.id === productId), [lessons, productId]);
 
   // 탭 구성
   const [activeTab, setActiveTab] = useState('강의소개');
@@ -46,12 +52,10 @@ const LessonDetailScreen = ({ route }: any) => {
     try {
       const registered = await lessonService.postMyclass(user!.id, id);
       if (registered) {
-        // ✅ 등록 후 레슨 목록 즉시 갱신
-        await reloadLessons();
-
-        Alert.alert('수강 등록 완료', '', [
-          { text: '확인', onPress: () => push('classProgress', item) }
-        ]);
+        await reloadLessons(); // ✅ 즉시 반영
+        setActiveProduct(productId);     // ✅ 선택 상태 저장
+        navigate('classProgress');
+        
       } else {
         Alert.alert('수강 등록 실패');
       }
@@ -61,14 +65,19 @@ const LessonDetailScreen = ({ route }: any) => {
     }
   };
 
+  const goStudy = () => {
+    setActiveProduct(productId);         // ✅ 선택 상태 저장
+    navigate('classProgress');
+  };
+
   return (
     <View className="flex-1 bg-white">
       <ScrollView contentContainerStyle={{ paddingBottom: 20 }}>
         {/* 상단 헤더: 뒤로가기 버튼 */}
         <View className="flex-row items-center justfy-between bg-white px-[20px] pt-[20px] pb-[20px] gap-x-[20px]">
-          <TouchableOpacity style={{ marginTop: 5 }} onPress={() => goBack()}>
+          <Pressable style={{ marginTop: 5 }} onPress={() => goBack()}>
             <CaretLeft width={35} height={35} fill="#CCCCCC" />
-          </TouchableOpacity>
+          </Pressable>
           <Text className="text-[22px] font-bold text-[#111111]">{name}</Text>
         </View>
 
@@ -106,7 +115,14 @@ const LessonDetailScreen = ({ route }: any) => {
               shadowRadius: 25,
               elevation: 5, // Android용
             }}
-            onPress={isEnrolled ? () => push('classProgress', item) : handleEnroll}
+            onPress={() => {
+              if (isEnrolled) {
+                setActiveProduct(productId);      // ✅ 선택 상태 저장
+                navigate('classProgress');
+              } else {
+                handleEnroll();
+              }
+            }}
           >
             <Text className="text-white text-[18px] font-bold mt-[-3px]">
               {isEnrolled ? '이어서 학습하기' : '수강신청하기'}

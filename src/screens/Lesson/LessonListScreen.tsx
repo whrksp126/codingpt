@@ -1,10 +1,11 @@
 // 내 강의 페이지
-import React, { useState, useMemo } from 'react';
+import React, { useState, useMemo, useCallback } from 'react';
 import { View, Text, FlatList, TouchableOpacity, Image, ActivityIndicator } from 'react-native';
-import { useNavigation } from '../../contexts/NavigationContext';
 import { useUser } from '../../contexts/UserContext';
 import { useLesson } from '../../contexts/LessonContext';
 import { parseLessonList, getIconByTitle, ParsedLesson } from '../../utils/lessonUtils';
+import LessonDetailScreen from './LessonDetailScreen';
+import { useNavigation } from '../../contexts/NavigationContext';
 
 const LessonListScreen = () => {
   const { navigate } = useNavigation();
@@ -16,7 +17,7 @@ const LessonListScreen = () => {
   // 전체 강의 리스트 가공
   const parsedLessons = useMemo(() => parseLessonList(lessons), [lessons]);
 
-  // 필터 적용 + 아이콘 추가
+  // 필터 적용 + 아이콘 매핑
   const filteredLessons: (ParsedLesson & { icon: any })[] = useMemo(() => {
     return parsedLessons
       .filter((lesson) => {
@@ -29,17 +30,40 @@ const LessonListScreen = () => {
       }));
   }, [parsedLessons, filter]);
 
-  // 강의 카드 렌더링
-  const renderLesson = ({ item }: { item: ParsedLesson & { icon: any } }) => {
+  // LessonDetailScreen을 "풀시트"로 띄우는 오프너
+  const openLessonDetailSheet = useCallback((payload: {
+    id: number;
+    name: string;
+    icon: any;
+    description: string;
+    price: number;
+    date?: string;
+    progress?: number;
+  }) => {
+    navigate('lessonDetail', {
+      id: payload.id,
+      name: payload.name,
+      icon: payload.icon,
+      description: payload.description,
+      price: payload.price,
+    });
+  }, []);
+
+  // 강의 카드 렌더링 (터치 시 풀시트로 상세 열기)
+  const renderLesson = useCallback(({ item }: { item: ParsedLesson & { icon: any } }) => {
+    // lessons에서 원본 product 찾아 route.params 구성
     const product = lessons.find((c) => c.id === Number(item.id));
     if (!product) return null;
 
     return (
       <TouchableOpacity
         onPress={() =>
-          navigate('lessonDetail', {
-            ...product,
+          openLessonDetailSheet({
+            id: product.id,
+            name: product.name,
             icon: item.icon,
+            description: product.description,
+            price: product.price,
             date: item.date,
             progress: item.progress,
           })
@@ -66,9 +90,9 @@ const LessonListScreen = () => {
         </View>
       </TouchableOpacity>
     );
-  };
+  }, [lessons, openLessonDetailSheet]);
 
-  // 로딩 상태 처리
+  // 5) 로딩 상태
   if (lessonLoading) {
     return (
       <View className="flex-1 justify-center items-center bg-white">
@@ -78,6 +102,7 @@ const LessonListScreen = () => {
     );
   }
 
+  // 6) 화면
   return (
     <View className="flex-1 bg-white pt-5">
       <Text className="text-[22px] font-bold mb-5 pl-4">내 강의</Text>

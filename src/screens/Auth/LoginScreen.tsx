@@ -39,13 +39,14 @@ const LoginScreen: React.FC = () => {
       await GoogleSignin.signIn();
       const tokens = await GoogleSignin.getTokens();
       const idToken = tokens.idToken;
-
+      console.log('idToken', idToken);
       if (!idToken) {
         Alert.alert('오류', 'ID Token이 존재하지 않습니다.');
         return;
       }
 
       await sendIdTokenToServer(idToken);
+      console.log('End sendIdTokenToServer');
     } catch (error) {
       console.error('Google 로그인 실패:', error);
       Alert.alert('로그인 실패', 'Google 로그인 중 오류가 발생했습니다.');
@@ -56,15 +57,21 @@ const LoginScreen: React.FC = () => {
 
   const sendIdTokenToServer = async (idToken: string) => {
     try {
+      console.log('Start sendIdTokenToServer');
       const response = await authService.login(idToken);
       if (response.success && response.data) {
         const { accessToken, refreshToken } = response.data;
 
+        console.log('accessToken', accessToken);
+
         // 1. 로그인 상태 반영 (context 내부에서 토큰 저장)
         await login(accessToken, refreshToken);
 
+        console.log('refreshToken', refreshToken);
+
         // 2. UserContext 저장
         await refreshUser();
+
 
         // 3. 홈으로 이동
         navigate('home'); // ✅ currentScreen이 home인 경우 AppNavigator로 진입

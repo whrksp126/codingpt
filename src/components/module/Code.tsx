@@ -125,7 +125,6 @@ export const CodeComponent: React.FC<CodeComponentProps> = ({ module, onLoadComp
           <View
             key={`webview-${idx}`}
             style={{
-              display: activeTab === idx ? 'flex' : 'none',
               flex: 1,
               position: 'absolute',
               top: 0,
@@ -134,6 +133,10 @@ export const CodeComponent: React.FC<CodeComponentProps> = ({ module, onLoadComp
               bottom: 0,
               width: '100%',
               height: '100%',
+              opacity: activeTab === idx ? 1 : 0,
+              zIndex: activeTab === idx ? 1 : 0,
+              // display: activeTab === idx ? 'flex' : 'none',
+
             }}
           >
             <WebView

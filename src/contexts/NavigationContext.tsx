@@ -6,7 +6,8 @@ type RouteName =
   | TabName
   | 'lessonDetail'
   | 'classProgress'
-  | 'lessonLearning';
+  | 'lessonLearning'
+  | 'lessonReport';
 
 type Route = { name: RouteName; params?: any };
 type NavAction = 'push' | 'pop' | 'replace' | 'switch' | 'reset';
@@ -86,7 +87,6 @@ export const NavigationProvider: React.FC<NavigationProviderProps> = ({ children
     // React의 배치 업데이트를 고려하여 상태 업데이트를 한 번에 처리
     setStacks(prev => {
       const next = { ...prev, [currentTab]: [...prev[currentTab], { name: screen, params }] };
-      console.log('[PUSH]', currentTab, 'stack size ->', next[currentTab].length);
       return next;
     });
     

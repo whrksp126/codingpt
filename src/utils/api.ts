@@ -1,9 +1,9 @@
 import AsyncStorage from '@react-native-async-storage/async-storage';
-import { API_URL, FRONTEND_URL } from './service';
+import { BACK_URL } from './service';
 
 
 // HTTP 메서드 타입
-type HttpMethod = 'GET' | 'POST' | 'PUT' | 'DELETE';
+type HttpMethod = 'GET' | 'POST' | 'PUT' | 'PATCH' | 'DELETE';
 
 // API 응답 타입
 interface ApiResponse<T> {
@@ -42,7 +42,8 @@ export async function apiRequest<T>(
   retry = true // 재시도 여부
 ): Promise<ApiResponse<T>> {
   try {
-    const url = `${API_URL}${endpoint}`;
+    const url = `${BACK_URL}${endpoint}`;
+    console.log('url', url);
     const headers = await getAuthHeaders(); 
 
     const config: RequestInit = {
@@ -56,7 +57,8 @@ export async function apiRequest<T>(
     if (options.body && options.method !== 'GET') {
       config.body = JSON.stringify(options.body);
     }
-
+    console.log('config', config);
+    console.log('url', url);
     const response = await fetch(url, config);
     // access token 만료 시 refresh 시도
     if (response.status === 401 && retry) {
@@ -72,7 +74,7 @@ export async function apiRequest<T>(
         return apiRequest<T>(endpoint, cleanedOptions, false); // 한 번만 재시도
       }
     }
-
+    console.log('response', response);
     const data = await response.json();
 
     if (!response.ok) {
@@ -98,7 +100,7 @@ async function refreshAccessToken(): Promise<string | null> {
   if (!refreshToken) return null;
 
   try {
-    const res = await fetch(`${API_URL}/api/users/refresh`, {
+      const res = await fetch(`${BACK_URL}/api/users/refresh`, {
       method: 'POST',
       headers: getDefaultHeaders(),
       body: JSON.stringify({ refreshToken }),
@@ -161,7 +163,12 @@ export const api = {
   // 강의 관련
   lessons: {
     getAll: () =>
-      apiRequest('/lessons', {
+      apiRequest('/api/lessons', {
+        method: 'GET',
+      }),
+
+    getSlidesByLesson: () => // test
+      apiRequest('/api/lesson/slides', {
         method: 'GET',
       }),
     
@@ -171,12 +178,12 @@ export const api = {
       }),
     
     getProgress: (lessonId: string) =>
-      apiRequest(`/lessons/${lessonId}/progress`, {
+      apiRequest(`/api/lessons/${lessonId}/progress`, {
         method: 'GET',
       }),
     
     updateProgress: (lessonId: string, progress: number) =>
-      apiRequest(`/lessons/${lessonId}/progress`, {
+      apiRequest(`/api/lessons/${lessonId}/progress`, {
         method: 'PUT',
         body: { progress },
       }),
@@ -187,18 +194,36 @@ export const api = {
     checkEnrolled: (userId: number, productId: number) =>
       apiRequest(`/api/myclass/check?user_id=${userId}&product_id=${productId}`, {
         method: 'GET',
-    }),
+      }),
 
     getAllMyclass: (userId: number) =>
       apiRequest(`/api/myclass/${userId}`, {
         method: 'GET',
-    }),
+      }),
 
     postMyclass: (data: any) =>
       apiRequest(`/api/myclass`, {
         method: 'POST',
         body: data,
-    }),
+      }),
+
+    // 레슨 완료 + 결과 저장
+    complete: (payload: {
+      user_id: number;
+      product_id: number;
+      lesson_id: number;
+      result: any;
+    }) =>
+      apiRequest(`/api/myclass/complete`, {
+        method: 'PATCH',
+        body: payload,
+      }),
+    
+    // 학습 결과 조회
+    getLessonResult: (userId: number, lessonId: number) =>
+      apiRequest(`/api/myclass/${userId}/lesson/${lessonId}/result`, {
+        method: 'GET',
+      }),
   },
 
   // 사용자 관련
@@ -209,20 +234,32 @@ export const api = {
       }),
 
     getProfile: () =>
-      apiRequest('/user/profile', {
+      apiRequest('/api/users/profile', {
         method: 'GET',
       }),
     
     updateProfile: (data: any) =>
-      apiRequest('/user/profile', {
+      apiRequest('/api/users/profile', {
         method: 'PUT',
         body: data,
       }),
       
     getStudyHeatmap: () =>
-    apiRequest<Record<string, number>>(`/api/users/heatmap`, {
-      method: 'GET',
-    }),
+      apiRequest<Record<string, number>>(`/api/users/heatmap`, {
+        method: 'GET',
+      }),
+    
+    postStudyHeatmap: (payload: { user_id: number; product_id: number; section_id?: number; lesson_id: number }) =>
+      apiRequest(`/api/users/heatmap`, {
+        method: 'POST',
+        body: payload,
+      }),
+
+    updateXp: (userId: number, xp: number) =>
+      apiRequest(`/api/users/${userId}/xp`, {
+        method: 'PATCH',
+        body: { xp: xp },
+      }),
   },
 };
 

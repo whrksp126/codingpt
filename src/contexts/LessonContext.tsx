@@ -1,4 +1,4 @@
-import React, { createContext, useContext, useEffect, useState, ReactNode } from 'react';
+import React, { createContext, useContext, useEffect, useMemo, useState } from 'react';
 import lessonService from '../services/lessonService';
 import { useUser } from './UserContext';
 
@@ -6,7 +6,13 @@ export interface LessonStatus {
   id: number;
   myclass_id: number;
   lesson_id: number;
-  status: number;
+  status: number; // 1: 미시작, 2: 완료
+  result: any; // 학습 결과
+}
+
+export interface Slide {
+  id: number;
+  contents: any; // 레슨 데이터
 }
 
 export interface Lesson {
@@ -15,6 +21,7 @@ export interface Lesson {
   name: string;
   type: string;
   description: string;
+  Slides: Slide[];
 }
 
 export interface Section {
@@ -44,11 +51,28 @@ export interface Product {
   status: LessonStatus[];
 }
 
+/** ===== 컨텍스트 타입 ===== */
 export interface LessonContextType {
   lessons: Product[];
   setLessons: React.Dispatch<React.SetStateAction<Product[]>>;
   loading: boolean;
   reloadLessons: () => Promise<void>; // 외부에서 수동 갱신용
+
+  // 현재 선택 상태(어느 제품/섹션/레슨인지)
+  activeProductId: number | null;
+  activeSectionId: number | null;
+  activeLessonId: number | null;
+  setActiveProduct: (productId: number) => void;
+  setActivePSL: (productId: number, sectionId: number, lessonId: number) => void;
+
+  // 레슨 러닝 페이로드 캐시(lessonId -> payload)
+  lessonPayloads: Record<number, any>;
+  getOrBuildLessonPayload: (lessonId: number) => Promise<any>;
+
+  // 헬퍼
+  getProduct: (productId: number) => Product | undefined;
+  getSectionsOfProduct: (productId: number) => Section[];
+  getFirstUnfinishedPointer: (product: Product) => { sectionIdx: number; lessonIdx: number };
 }
 
 const LessonContext = createContext<LessonContextType | undefined>(undefined);
@@ -59,6 +83,15 @@ export const LessonProvider = ({ children }: { children: React.ReactNode }) => {
   const [lessons, setLessons] = useState<Product[]>([]);
   const [loading, setLoading] = useState(true);
 
+  // 선택 상태
+  const [activeProductId, setActiveProductId] = useState<number | null>(null);
+  const [activeSectionId, setActiveSectionId] = useState<number | null>(null);
+  const [activeLessonId, setActiveLessonId] = useState<number | null>(null);
+
+  // lessonId → 러닝 페이로드({ sliders: ... }와 같은 UI 소비 구조)
+  const [lessonPayloads, setLessonPayloads] = useState<Record<number, any>>({});
+
+  /** 데이터 로드 (내강의) */
   // 앱 시작 시 한 번만 백엔드에서 데이터 로딩
   const loadLessonData = async () => {
     // user가 없으면 데이터를 로딩하지 않음
@@ -67,7 +100,6 @@ export const LessonProvider = ({ children }: { children: React.ReactNode }) => {
       setLoading(false);
       return;
     }
-
     try {
       setLoading(true);
       const data = await lessonService.getMyclassById(user.id);
@@ -82,19 +114,112 @@ export const LessonProvider = ({ children }: { children: React.ReactNode }) => {
 
   // user가 변경될 때마다 lesson 데이터를 다시 로딩
   useEffect(() => {
-    if (userLoading) {
-      // UserContext가 아직 로딩 중이면 기다림
-      return;
+    if (!userLoading) {
+      loadLessonData();
     }
-    
-    loadLessonData();
   }, [user, userLoading]);
 
-  return (
-    <LessonContext.Provider value={{ lessons, setLessons, loading, reloadLessons: loadLessonData }}>
-      {children}
-    </LessonContext.Provider>
-  );
+  /** 선택 상태 세터 */
+  const setActiveProduct = (productId: number) => {
+    setActiveProductId(productId);
+    setActiveSectionId(null);
+    setActiveLessonId(null);
+  };
+  const setActivePSL = (productId: number, sectionId: number, lessonId: number) => {
+    setActiveProductId(productId);
+    setActiveSectionId(sectionId);
+    setActiveLessonId(lessonId);
+  };
+
+  /** 헬퍼: 컨텍스트에서 엔티티 찾기 */
+  const getProduct = (productId: number) => lessons.find(p => p.id === productId);
+  const getSectionsOfProduct = (productId: number): Section[] => getProduct(productId)?.Classes?.[0]?.Sections ?? [];
+
+  /** 첫 미완료 레슨 포인터 */
+  const getFirstUnfinishedPointer = (product: Product) => {
+    const sections = product.Classes?.[0]?.Sections ?? [];
+    for (let sIdx = 0; sIdx < sections.length; sIdx++) {
+      const sec = sections[sIdx];
+      for (let lIdx = 0; lIdx < sec.Lessons.length; lIdx++) {
+        const les = sec.Lessons[lIdx];
+        const st = product.status?.find(s => s.lesson_id === les.id);
+        if (!st || st.status !== 2) return { sectionIdx: sIdx, lessonIdx: lIdx };
+      }
+    }
+    const lastS = Math.max(0, sections.length - 1);
+    const lastL = Math.max(0, (sections[lastS]?.Lessons.length ?? 1) - 1);
+    return { sectionIdx: lastS, lessonIdx: lastL };
+  };
+
+  /** ✨ 레슨 페이로드 빌드(로컬 Slides 기반) */
+  const buildPayloadFromSlides = (slides: Slide[]) => {
+    // 서버가 슬라이드별로 조각을 나눠주더라도, 러닝 화면은 `{ sliders: [...] }`를 기대.
+    // 1) contents에 최종 러닝 JSON이 통째로 들어오는 케이스 → 첫 contents 사용
+    // 2) 슬라이드 조각 배열을 합쳐야 하는 케이스 → 적절히 병합 (아래는 단순 예시)
+    if (!slides || slides.length === 0) return null;
+
+    const first = slides[0]?.contents;
+    if (first?.sliders) return first; // 이미 완성 구조
+
+    // 조각 합치기(필요 시 로직 고도화)
+    const merged = {
+      sliders: slides
+        .map(s => s.contents?.sliders || s.contents?.modules ? { title: s.contents?.title, modules: s.contents?.modules } : null)
+        .filter(Boolean),
+    };
+    return merged.sliders?.length ? merged : first; // 그래도 없으면 first를 리턴
+  };
+
+  /** 레슨 페이로드: 캐시 우선, 없으면 Slides로 빌드; 그래도 없으면 백업 API */
+  const getOrBuildLessonPayload = async (lessonId: number): Promise<any> => {
+    if (lessonPayloads[lessonId]) return lessonPayloads[lessonId];
+
+    // 컨텍스트 데이터에서 해당 레슨 찾기
+    let found: Lesson | undefined;
+    outer: for (const p of lessons) {
+      for (const s of p.Classes?.[0]?.Sections ?? []) {
+        const m = s.Lessons.find(l => l.id === lessonId);
+        if (m) { found = m; break outer; }
+      }
+    }
+
+    // ✅ LessonContext.tsx 내부에 “안전 호출 래퍼” 추가
+    const safeFetchSlidesByLesson = async (lessonId?: number): Promise<any> => {
+      const srv = lessonService as any;               // 시그니처 불일치를 흡수
+      const fn = srv.getSlidesByLesson;
+      if (typeof fn !== 'function') throw new Error('lessonService.getSlidesByLesson is not a function');
+
+      // 파라미터 개수(length)로 신규/기존 API 모두 대응
+      return fn.length >= 1 ? fn(lessonId) : fn();
+    };
+
+    // Slides 기반으로 빌드
+    let payload = buildPayloadFromSlides(found?.Slides ?? []);
+    // 백업: 필요 시 서버 호출 (시그니처가 lessonId를 받도록 통일 권장)
+    if (!payload) {
+      try { const payload = await safeFetchSlidesByLesson(lessonId); }
+      catch (e) { console.error('fallback fetch failed:', e); }
+    }
+
+    if (payload) {
+      setLessonPayloads(prev => ({ ...prev, [lessonId]: payload }));
+    }
+    return payload;
+  };
+
+  const value = useMemo<LessonContextType>(() => ({
+    lessons, setLessons, loading, reloadLessons: loadLessonData,
+    activeProductId, activeSectionId, activeLessonId,
+    setActiveProduct, setActivePSL,
+    lessonPayloads, getOrBuildLessonPayload,
+    getProduct, getSectionsOfProduct, getFirstUnfinishedPointer,
+  }), [
+    lessons, loading,
+    activeProductId, activeSectionId, activeLessonId,
+    lessonPayloads,
+  ]);
+
+  return <LessonContext.Provider value={value}>{children}</LessonContext.Provider>;
 };
 
 export const useLesson = (): LessonContextType => {
