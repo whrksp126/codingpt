@@ -84,6 +84,7 @@ yarn-error.log
 
 # Android
 android/app/debug.keystore
+android/app/keystore.properties
 android/app/build/
 
 # iOS

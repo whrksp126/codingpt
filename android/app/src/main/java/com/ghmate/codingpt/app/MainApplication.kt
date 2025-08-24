@@ -1,4 +1,4 @@
-package com.ghmate.codingpt
+package com.ghmate.codingpt.app
 
 import android.app.Application
 import com.facebook.react.PackageList
