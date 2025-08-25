@@ -8,21 +8,74 @@ import { html as fetchData } from '../../data/item/lesson_data.js';
 import LessonDetailModal from '../../components/Modal/LessonDetailModal';
 import lessonService from '../../services/lessonService';
 
-// ✅ product에서 섹션/레슨을 평탄화해서 id 오름차순 리스트로 만드는 유틸
-function flattenLessons(product: any) {
+// product에서 섹션/레슨을 평탄화해서 id 오름차순 리스트로 만드는 유틸
+// function flattenLessons(product: any) {
+//   const cls = product?.Classes?.[0];
+//   const sections = cls?.Sections ?? [];
+//   const flat: Array<{ sectionIndex: number; lessonIndex: number; lesson: any }> = [];
+
+//   sections.forEach((section: any, sIdx: number) => {
+//     (section.Lessons ?? []).forEach((lesson: any, lIdx: number) => {
+//       flat.push({ sectionIndex: sIdx, lessonIndex: lIdx, lesson });
+//     });
+//   });
+
+//   // id 기준 오름차순
+//   flat.sort((a, b) => (a.lesson?.id ?? 0) - (b.lesson?.id ?? 0));
+//   return flat;
+// }
+
+// ✅ product -> fetchData 호환 구조로 변환
+// - product.name        -> classData.title
+// - Classes[0].Sections -> classData.sections[*]
+// - Sections[*].Lessons -> sections[*].lessons[*]
+// - Lessons[*].Slides[0].contents.* 를 lessons[*]에 병합(flatten)
+function transformProductToClassData(product: any) {
   const cls = product?.Classes?.[0];
-  const sections = cls?.Sections ?? [];
-  const flat: Array<{ sectionIndex: number; lessonIndex: number; lesson: any }> = [];
 
-  sections.forEach((section: any, sIdx: number) => {
-    (section.Lessons ?? []).forEach((lesson: any, lIdx: number) => {
-      flat.push({ sectionIndex: sIdx, lessonIndex: lIdx, lesson });
-    });
-  });
+  return {
+    title: product?.name ?? '제목 없음',                  // fetchData.title
+    description: product?.description ?? '',             // 필요 시 사용
+    progress: 0,                                         // 현재 섹션 인덱스(앱 로직에 맞게 갱신)
+    sections: (cls?.Sections ?? []).map((section: any) => {
+      return {
+        title: section?.name ?? '섹션 제목 없음',          // fetchData.sections[*].title
+        progress: 0,                                     // 현재 레슨 인덱스(앱 로직에 맞게 갱신)
+        // ↓ 레슨 평탄화
+        lessons: (section?.Lessons ?? []).map((lesson: any) => {
+          // Slides[0].contents 에 실제 표시용 데이터가 들어있다고 했으니 안전하게 꺼냄
+          const firstSlide = (lesson?.Slides ?? [])[0] ?? {};
+          const contents   = firstSlide?.contents ?? {};
 
-  // id 기준 오름차순
-  flat.sort((a, b) => (a.lesson?.id ?? 0) - (b.lesson?.id ?? 0));
-  return flat;
+          // contents 안에 구조가 케이스별로 다를 수 있어 방어코드로 안전하게 추출
+          // - title 후보: contents.lessons?.[0]?.title || contents.title || lesson.name
+          const contentsLesson0 = Array.isArray(contents?.lessons) ? contents.lessons[0] : null;
+          const mergedTitle =
+            contentsLesson0?.title ??
+            contents?.title ??
+            lesson?.name ??
+            `Lesson ${lesson?.id ?? ''}`;
+
+          // sliders는 fetchData에서 레슨 실행 모듈들 배열을 의미
+          // - 위치 후보: contentsLesson0?.sliders || contents?.sliders || []
+          const mergedSliders =
+            (contentsLesson0?.sliders && Array.isArray(contentsLesson0.sliders))
+              ? contentsLesson0.sliders
+              : (Array.isArray(contents?.sliders) ? contents.sliders : []);
+
+          // 필요 없는 필드는 버리고, 필요한 것만 병합
+          return {
+            id: lesson?.id,                // 📌 fetchData 요구사항: id는 Lessons.id와 일치
+            title: mergedTitle,            // 화면에 보일 제목
+            isCompleted: false,            // 추후 myclass_status로 갱신
+            sliders: mergedSliders,        // 화면 모듈(없으면 [])
+            // 필요하면 아래와 같이 더 담아둘 수도 있음(추후 디버깅용)
+            // raw: { lesson, contents },
+          };
+        }),
+      };
+    }),
+  };
 }
 
 
@@ -32,20 +85,28 @@ const ClassProgressScreen: React.FC = () => {
   const [classData, setClassData] = useState<any>(null);
   const [modalVisible, setModalVisible] = useState(false);
   const [selectedLessonData, setSelectedLessonData] = useState<any>(null);
+  const { activeProductId, getProduct } = useLesson();
 
   useEffect(() => {
-    // TODO: productId 기반 실제 데이터 로드로 교체 가능
-    setClassData(fetchData.class_list[0]);
-    console.log('fetchData : ', fetchData);
-    console.log('fetchData : ', fetchData.class_list[0]);
+    const product = getProduct(activeProductId ?? 0);
+
+    const transformed = transformProductToClassData(product);
+    console.log('transformed : ', transformed);
+    setClassData(transformed);
+
+    // setClassData(fetchData.class_list[0]);
   }, []);
 
+  // 레슨 아이템 클릭 시 모달 오픈
+  // - sectionIndex, lessonIndex로 classData에서 해당 lesson을 찾아 모달에 전달
+  // - 모달 내부에서 "학습 시작" or "복습" 제어 예정(학습 여부는 추후 LessonContext/서버값 기반)
   const onPressLessonButton = (sectionIndex: number, lessonIndex: number) => {
-    const lessonData = classData.sections[sectionIndex].lessons[lessonIndex];
-    setSelectedLessonData(lessonData);
-    setModalVisible(true);
+    const lessonData = classData.sections[sectionIndex].lessons[lessonIndex]; // classData에서 해당 lesson을 찾아 모달에 전달
+    setSelectedLessonData(lessonData); // 모달에 전달
+    setModalVisible(true); // 모달 오픈
   }
 
+  // 초기 로딩 중이면 아무것도 렌더링하지 않음
   if(classData === null) return null;
 
   return (
@@ -72,6 +133,7 @@ const ClassProgressScreen: React.FC = () => {
       {/* 상단 카드 */}
       <View className="flex-col justify-between items-center px-[16px]">
         <View className="flex flex-row gap-[2px] rounded-[12px] bg-[#fff] overflow-hidden">
+          {/* 현재 선택된(또는 진행 중인) 섹션 제목 노출 카드 */}
           <Pressable className="flex-1 h-[78px] px-[16px] bg-[#93D333]">
             <View className="pt-[12px]">
               <Text className="text-[#FFFFFF] text-[16px] font-[700] opacity-70">{classData.title}</Text>
@@ -83,6 +145,7 @@ const ClassProgressScreen: React.FC = () => {
           </Pressable>
         </View>
       </View>
+      {/* ===== 본문: 섹션/레슨 리스트 ===== */}
       <ScrollView className="px-[16px]">
         {/* 섹션 레슨 리스트 */}
         {classData.sections.map((section: any, sectionIndex: number) => (
@@ -97,6 +160,10 @@ const ClassProgressScreen: React.FC = () => {
           {section.lessons.map((lesson: any, lessonIndex: number) => (
             <View key={`section_${sectionIndex}_lesson_${lessonIndex}`} className="px-[16px]">
               <View className="flex-col items-center justify-center">
+                {/* "시작" 말풍선 표시 조건:
+                      - classData.progress === 현재 섹션 인덱스
+                      - section.progress === 현재 레슨 인덱스
+                      ※ 즉, 이 (섹션, 레슨) 쌍이 현재 진행 포인터와 일치할 때 */}
                 {classData.progress === sectionIndex && section.progress === lessonIndex ? (
                 <View className="relative w-[88px] p-[12px] border border-[#93D333] rounded-[12px] bg-[#F0FFE5]">
                   <Text className="text-[#93D333] text-[17px] font-[700] text-center">시작</Text>
@@ -109,24 +176,26 @@ const ClassProgressScreen: React.FC = () => {
                 </>
                 )
                 }
-
+  
+                {/* 레슨 아이템 버튼(원형): 클릭 시 모달 오픈 */}
                 <Pressable className="py-[10px]" onPress={()=>{onPressLessonButton(sectionIndex, lessonIndex)}}>
                   <View className={`
                     flex items-center justify-center 
                     w-[70px] h-[70px] 
                     rounded-[35px] 
-                    ${classData.progress === sectionIndex && section.progress === lessonIndex ? 'bg-[#93D333]' : (
-                      lesson.isCompleted ? 'bg-[#93D333]' : 'bg-[#CCCCCC]'
-
-                    )}
-                    `}>
+                    ${
+                      // 진행 포인터에 해당하면 초록 / 완료도 초록 / 그 외 회색
+                      classData.progress === sectionIndex && section.progress === lessonIndex 
+                        ? 'bg-[#93D333]' 
+                        : (lesson.isCompleted ? 'bg-[#93D333]' : 'bg-[#CCCCCC]')
+                    }
+                    `}
+                  >
                     {classData.progress === sectionIndex && section.progress === lessonIndex ? (
-                      <Play width={42} height={42} fill="#fff" />
+                      <Play width={42} height={42} fill="#fff" /> // 현재 진행 레슨이면 재생(Play) 아이콘
                     ):(
-                      <Star width={42} height={42} fill="#fff" />
+                      <Star width={42} height={42} fill="#fff" /> // 완료된 레슨이면 별(Star) 아이콘
                     )}
-
-                    
                   </View>
                 </Pressable>
               </View>
@@ -137,6 +206,10 @@ const ClassProgressScreen: React.FC = () => {
       </ScrollView>
 
       {/* 모달 */}
+      {/* ===== 레슨 상세 모달 =====
+          - 선택된 레슨(selectedLessonData)을 props로 전달
+          - 내부에서 "학습 시작 / 복습" 분기 로직 구현 예정
+            (추후: LessonContext or 서버의 myclass_status로 학습 여부 판단) */}
       {modalVisible && selectedLessonData && (
         <LessonDetailModal 
           lessonData={selectedLessonData}
