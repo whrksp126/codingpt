@@ -90,20 +90,25 @@ class LessonService {
   // 레슨별 학습 상태 및 결과 저장
   async completeLessonWithResult(params: {
     userId: number;
-    productId: number;
+    myclassId: number;
     lessonId: number;
     result: any;  // curLesson 전체 JSON
   }): Promise<boolean> {
     try {
+      // 입력 데이터 검증
+      if (!params.userId || !params.myclassId || !params.lessonId) {
+        console.error('필수 파라미터 누락:', params);
+        return false;
+      }
+
       const response = await api.myclass.complete({
         user_id: params.userId,
-        product_id: params.productId,
+        myclass_id: params.myclassId,
         lesson_id: params.lessonId,
         result: params.result,
       });
+
       if (response.success && response.data) {
-        // TODO: 나중에 레슨 컨텍스트 업데이트 필요
-        console.log("레슨별 학습 결과 저장 서비스 response,", response);
         return response.success;
       }
       return false;

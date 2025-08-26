@@ -43,8 +43,12 @@ export async function apiRequest<T>(
 ): Promise<ApiResponse<T>> {
   try {
     const url = `${BACK_URL}${endpoint}`;
-    console.log('url', url);
+    console.log('API 요청 URL:', url);
+    // console.log('API 요청 메서드:', options.method);
+    // console.log('API 요청 바디:', options.body);
+    
     const headers = await getAuthHeaders(); 
+    // console.log('API 요청 헤더:', headers);
 
     const config: RequestInit = {
       method: options.method,
@@ -57,9 +61,11 @@ export async function apiRequest<T>(
     if (options.body && options.method !== 'GET') {
       config.body = JSON.stringify(options.body);
     }
-    console.log('config', config);
-    console.log('url', url);
+
     const response = await fetch(url, config);
+    // console.log('API 응답 상태:', response.status, response.statusText);
+    // console.log('API 응답 헤더:', Object.fromEntries(response.headers.entries()));
+    
     // access token 만료 시 refresh 시도
     if (response.status === 401 && retry) {
       const newAccessToken = await refreshAccessToken();
@@ -74,11 +80,17 @@ export async function apiRequest<T>(
         return apiRequest<T>(endpoint, cleanedOptions, false); // 한 번만 재시도
       }
     }
-    console.log('response', response);
+
     const data = await response.json();
+    console.log('API 응답 데이터:', data);
 
     if (!response.ok) {
-      throw new Error(data.message || 'API 요청 실패');
+      console.error('API 요청 실패:', {
+        status: response.status,
+        statusText: response.statusText,
+        data: data,
+      });
+      throw new Error(data.message || `HTTP ${response.status}: ${response.statusText}`);
     }
 
     return {
@@ -210,7 +222,7 @@ export const api = {
     // 레슨 완료 + 결과 저장
     complete: (payload: {
       user_id: number;
-      product_id: number;
+      myclass_id: number;
       lesson_id: number;
       result: any;
     }) =>

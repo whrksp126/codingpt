@@ -8,23 +8,6 @@ import { html as fetchData } from '../../data/item/lesson_data.js';
 import LessonDetailModal from '../../components/Modal/LessonDetailModal';
 import lessonService from '../../services/lessonService';
 
-// product에서 섹션/레슨을 평탄화해서 id 오름차순 리스트로 만드는 유틸
-// function flattenLessons(product: any) {
-//   const cls = product?.Classes?.[0];
-//   const sections = cls?.Sections ?? [];
-//   const flat: Array<{ sectionIndex: number; lessonIndex: number; lesson: any }> = [];
-
-//   sections.forEach((section: any, sIdx: number) => {
-//     (section.Lessons ?? []).forEach((lesson: any, lIdx: number) => {
-//       flat.push({ sectionIndex: sIdx, lessonIndex: lIdx, lesson });
-//     });
-//   });
-
-//   // id 기준 오름차순
-//   flat.sort((a, b) => (a.lesson?.id ?? 0) - (b.lesson?.id ?? 0));
-//   return flat;
-// }
-
 // ✅ product -> fetchData 호환 구조로 변환
 // - product.name        -> classData.title
 // - Classes[0].Sections -> classData.sections[*]
@@ -32,6 +15,11 @@ import lessonService from '../../services/lessonService';
 // - Lessons[*].Slides[0].contents.* 를 lessons[*]에 병합(flatten)
 function transformProductToClassData(product: any) {
   const cls = product?.Classes?.[0];
+  const statusList = product?.status;
+  console.log('statusList : ', statusList);
+  // id 기준 오름차순
+  // const flat = (product?.status ?? []).sort((a: any, b: any) => (a.id ?? 0) - (b.id ?? 0));
+  // console.log('flat : ', flat);
 
   return {
     title: product?.name ?? '제목 없음',                  // fetchData.title
@@ -63,14 +51,26 @@ function transformProductToClassData(product: any) {
               ? contentsLesson0.sliders
               : (Array.isArray(contents?.sliders) ? contents.sliders : []);
 
+          // lesson의 id와 일치하는 status 찾기
+          const lessonStatus = Array.isArray(statusList) 
+            ? statusList.find((s: any) => s.lesson_id === lesson?.id)
+            : null;
+          // 완료 여부 판단
+          const status = lessonStatus?.status;
+          console.log('status : ', status);
+          const isCompleted = status === 2? true : false;
+          console.log('isCompleted : ', isCompleted);
+
+
           // 필요 없는 필드는 버리고, 필요한 것만 병합
           return {
-            id: lesson?.id,                // 📌 fetchData 요구사항: id는 Lessons.id와 일치
+            lessonId: lesson?.id,                // 📌 fetchData 요구사항: id는 Lessons.id와 일치
             title: mergedTitle,            // 화면에 보일 제목
-            isCompleted: false,            // 추후 myclass_status로 갱신
+            isCompleted: isCompleted,      // 레슨 완료 여부(myclass_status)
             sliders: mergedSliders,        // 화면 모듈(없으면 [])
-            // 필요하면 아래와 같이 더 담아둘 수도 있음(추후 디버깅용)
-            // raw: { lesson, contents },
+            myclassId: lessonStatus?.myclass_id,
+            sectionId: section?.id,
+            result: lessonStatus?.results, // 레슨 결과(복습 모드 시 필요)
           };
         }),
       };

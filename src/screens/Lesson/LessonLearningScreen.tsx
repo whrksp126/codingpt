@@ -11,7 +11,7 @@ import PagerView from 'react-native-pager-view';
 
 
 interface SlideModule{
-  id: string;
+  id: number | string;
   type: 'paragraph' | 'image' | 'code' | 'webview' | 'multipleChoice' | 'codeFillTheGap';
   content: string;
   visibility: {
@@ -22,69 +22,125 @@ interface SlideModule{
     label: string;
     isCorrect: boolean;
   }[];
-  result?: any; // 문제 모듈의 결과 데이터
+  result?: any;       // 문제 모듈의 결과 데이터
+  readonly?: boolean; // 복습용: 입력 비활성화
 }
 
 interface Slide {
-  id: string;
+  id: number | string;
   title: string;
   modules: SlideModule[]
 }
 
 interface Lesson {
+  id: number | string;
+  title: string;
   sliders: Slide[];
+  isCompleted: boolean;
 }
 
 const LessonLearningScreen: React.FC<{ route: any }> = ({ route }) => {
-  const { lessonData } = route.params; // 레슨 데이터 (나중에 DB에서 가져와야함)
-  // console.log('lessonData : ', lessonData);
-  const pagerRef = useRef(null);
-  const [visibleSlides, setVisibleSlides] = useState([lessonData?.sliders[0]]);
-  // console.log('visibleSlides : ', visibleSlides); // 초기에 첫번째 슬라이드 데이터
-  
-  // const { popFullSheet } = useFullSheet();
+  // ✅ route 파라미터 확장
+  // - mode: 'learn' | 'review'
+  // - myclassId, lessonId: 저장에 필요
+  // - reviewResults: 복습일 때 주입할 저장된 결과(JSON)
+  const { lessonData } = route.params; // 레슨 데이터
+
+  const pagerRef = useRef<PagerView>(null);
   const { goBack, navigate } = useNavigation();
+
   const [curLesson, setCurLesson] = useState<Lesson | null>(lessonData);
   const [curSlideIndex, setCurSlideIndex] = useState<number>(0);
-
+  const [visibleSlides, setVisibleSlides] = useState([lessonData?.sliders[0]]);
+  // console.log('visibleSlides : ', visibleSlides); // 초기에 첫번째 슬라이드 데이터
   // sliders.length만큼 0을 넣어줍니다.
-  const [curSlideStep, setCurSlideStep] = useState<number[]>(Array(lessonData?.sliders.length).fill(0));
+  const [curSlideStep, setCurSlideStep] = useState<number[]>(
+    Array(lessonData?.sliders.length).fill(0)
+  );
   // console.log('curSlideStep : ', curSlideStep); // 0번지에 2가 들어가고 나머진 0
-
   const [isModuleAdded, setIsModuleAdded] = useState<boolean>(false);
-
   const [isNextButtonEnabled, setIsNextButtonEnabled] = useState<boolean>(false);
   const scrollViewRef = useRef<ScrollView>(null);
   const [webViewLoadCount, setWebViewLoadCount] = useState<number>(0);
-
   const [pendingGoToIndex, setPendingGoToIndex] = useState<number | null>(null);
 
-  // util: 현재 스텝에 문제 모듈이 있는지 판단
+  // util: 현재 스텝에 문제 모듈 존재 여부
   const hasProblemInStep = (slideIndex: number, step: number) => {
     const mods = curLesson?.sliders[slideIndex]?.modules ?? [];
     const stepMods = mods.filter(m => m.visibility?.type === 'step' && m.visibility?.value === step);
     return !!stepMods.find(m => m.type === 'multipleChoice' || m.type === 'codeFillTheGap');
   };
 
-  useEffect(() => {
-    console.log('route.params', route.params);
-    const initModules = getStepModules(curSlideStep[curSlideIndex]);
-    console.log('initModules', initModules);
-    const problemModule = getProblemModule(initModules || []);
-    console.log('problemModule', problemModule);
-    if(!problemModule){
-      setIsNextButtonEnabled(true);
-      console.log('isNextButtonEnabled', isNextButtonEnabled);
-    }
+  // 복습(리뷰)일 때: results 오버레이
+  // useEffect(() => {
+  //   if (!curLesson) return;
 
+  //   const rmap = curLesson?.result?.modules || {}; // { "sliderId#moduleId": {...} }
+  //   const patched = {
+  //     ...curLesson,
+  //     isCompleted: true,
+  //     sliders: curLesson.sliders.map((s) => ({
+  //       ...s,
+  //       modules: s.modules.map((m) => {
+  //         const key = `${s.id}#${m.id}`;
+  //         const picked = rmap[key];
+  //         if (!picked) return m; // 결과 없는 모듈은 그대로
+
+  //         // 공통: 읽기 전용
+  //         const base: SlideModule = { ...m, readonly: true };
+
+  //         if (m.type === 'multipleChoice') {
+  //           // questions[].answer.userAnswer, isCorrect 주입
+  //           const newModule: any = { ...base };
+  //           newModule.questions = (newModule.questions || []).map((q: any) => ({
+  //             ...q,
+  //             answer: {
+  //               ...q.answer,
+  //               userAnswer: picked.userAnswer,
+  //               isCorrect: picked.isCorrect
+  //             }
+  //           }));
+  //           return newModule;
+  //         }
+
+  //         if (m.type === 'codeFillTheGap') {
+  //           const newModule: any = { ...base };
+  //           newModule.files = (newModule.files || []).map((f: any) => ({
+  //             ...f,
+  //             isInteractive: false,
+  //             answers: (f.answers || []).map((a: any, idx: number) => ({
+  //               ...a,
+  //               userAnswer: picked.answers?.[idx] ?? a.userAnswer,
+  //               optionElIndex: picked.optionElIndex?.[idx] ?? a.optionElIndex
+  //             }))
+  //           }));
+  //           return newModule;
+  //         }
+
+  //         // paragraph/webview 등은 readonly만
+  //         return base;
+  //       })
+  //     }))
+  //   } as Lesson;
+
+  //   setCurLesson(patched);
+  //   setIsNextButtonEnabled(true); // 리뷰는 항상 다음 가능
+  // }, [lessonData]);
+
+  // 초기 진입: 첫 스텝에 문제 없으면 버튼 활성화
+  useEffect(() => {
+    const mods = getStepModules(curSlideStep[curSlideIndex]);
+    const hasProblem = !!getProblemModule(mods || []);
+    if (!hasProblem) setIsNextButtonEnabled(true);
   }, []);
 
+  // 슬라이드 변경 시 보이기 목록 갱신
   useEffect(() => { // 다음 슬라이드로 넘어가면
     setVisibleSlides(curLesson?.sliders.slice(0, visibleSlides.length) || []);
     // console.log('다음 슬라이드로 넘어가면 visibleSlides', visibleSlides);
   }, [curLesson]);
 
-  // 모듈 추가 시 즉시 다음 스텝 모듈 표현
+  // 모듈 추가 시 스텝 증가(다음 스텝 모듈 표현)
   useEffect(() => {
     if(isModuleAdded){
       setSortCurSlideModules();
@@ -104,13 +160,12 @@ const LessonLearningScreen: React.FC<{ route: any }> = ({ route }) => {
     if(curSlideIndex > (curLesson?.sliders?.length ?? 0) - 1){
       console.log("학습 종료 감지");
       navigate('lessonReport', { curLesson });
-
     }
   }, [curSlideIndex]);
 
+  // 새 슬라이드가 추가된 뒤에만 페이지 이동
   useEffect(() => {
     if (pendingGoToIndex !== null && visibleSlides.length > pendingGoToIndex) {
-      // 새 슬라이드가 실제로 추가된 것을 확인한 뒤 이동
       // 렌더가 완료된 다음 프레임에 이동 (마운트 보장)
       requestAnimationFrame(() => {
         pagerRef.current?.setPage(pendingGoToIndex);
@@ -140,14 +195,28 @@ const LessonLearningScreen: React.FC<{ route: any }> = ({ route }) => {
       const nextIndex = visibleSlides.length; // 새 슬라이드 index
       setVisibleSlides(prev => [...prev, curLesson?.sliders[prev.length]]);
       setPendingGoToIndex(nextIndex); // 이동 예약
-      // setTimeout(() => {
-      //   pagerRef.current?.setPage(visibleSlides.length); // 다음 슬라이드로 이동
-      // }, 150);
     }
   };
 
-  // 다음 버튼 클릭 시
+  // 다음 버튼 클릭 시 (확인 버튼)
   const onPressNext = () => {
+    // 리뷰 모드면 그냥 넘김
+    if (curLesson?.isCompleted === true) {
+      const nextStepModules = getStepModules(curSlideStep[curSlideIndex] + 1);
+      if (nextStepModules && nextStepModules.length > 0) {
+        setCurSlideStep(prev => {
+          const updated = [...prev];
+          updated[curSlideIndex] = (updated[curSlideIndex] || 0) + 1;
+          return updated;
+        });
+      } else {
+        setCurSlideIndex(curSlideIndex + 1);
+        goToNextSlide();
+      }
+      return;
+    }
+
+    // 학습 모드
     const curStepModules = getStepModules(curSlideStep[curSlideIndex]);
     const problemModule = getProblemModule(curStepModules || []);
     if(problemModule){
@@ -218,14 +287,6 @@ const LessonLearningScreen: React.FC<{ route: any }> = ({ route }) => {
             }
           }));
 
-          // 디버깅 로그
-          // console.log({
-          //   type: 'multipleChoice',
-          //   isAllCorrect,
-          //   filteredLen: filteredResultModules.length,
-          //   resultLen: resultModules.length,
-          // });
-
           curSlider.modules = [...newModules, ...resultModules];
           newSliders[curSlideIndex] = curSlider;
           newLesson.sliders = newSliders;
@@ -237,7 +298,6 @@ const LessonLearningScreen: React.FC<{ route: any }> = ({ route }) => {
 
         if(problemModule.type === 'codeFillTheGap'){
           const result = problemModule.result;
-
           setIsModuleAdded(true);
 
           const newLesson = { ...curLesson } as any;
@@ -311,9 +371,9 @@ const LessonLearningScreen: React.FC<{ route: any }> = ({ route }) => {
           setIsNextButtonEnabled(true);
         }
       } else {
-        // 채점 완료 한 경우
+        // 채점 완료된 경우: 다음 스텝 모듈 출력
         const nextStepModules = getStepModules(curSlideStep[curSlideIndex] + 1);
-        if (nextStepModules) {
+        if (nextStepModules && nextStepModules.length > 0) {
           // 다음 스텝이 있는 경우
           setCurSlideStep(prev => {
             const updated = [...prev];
@@ -322,46 +382,38 @@ const LessonLearningScreen: React.FC<{ route: any }> = ({ route }) => {
           })
         } else {
           // 다음 스텝이 없는 경우
-          // setCurSlideIndex(curSlideIndex + 1);
           goToNextSlide();
         }
       }
     } else {
-      // 현재 스텝에 문제가 미포함된 경우
+      // 현재 스텝이 문제가 없는 경우: 다음 스텝 모듈 출력
       const nextStepModules = getStepModules(curSlideStep[curSlideIndex] + 1)
       if(nextStepModules.length > 0){
-        // 다음 스텝이 있는 경우
-        // 다음 스탭 모듈 출력
+        // 다음 스텝이 있는 경우, 다음 스탭 모듈 출력
         setCurSlideStep(prev => {
           const updated = [...prev];
           updated[curSlideIndex] = (updated[curSlideIndex] || 0) + 1;
           return updated;
         })
-        // 다음 스탭에 문제가 있는 경우
+        // 다음 스탭에 문제가 있는 경우: 확인 버튼 비활성화
         const problemModule = getProblemModule(nextStepModules || []);
         if(problemModule){
-          // 확인 버튼 비활성화
-          setIsNextButtonEnabled(false)
-          // 사지선다 문제는 하나라도 선택을 기다림
-          // 코드 빈칸 선택 채우기 문제는 하나라도 선택하길 기다림
+          setIsNextButtonEnabled(false); // 확인 버튼 비활성화
         }
-      }else{
-        // 다음 스텝이 없는 경우ㅠ
+      } else {
+        // 다음 스텝이 없는 경우
         setCurSlideIndex(curSlideIndex + 1);
-        goToNextSlide();
-        // 다음 슬라이드로 이동
+        goToNextSlide(); // 다음 슬라이드로 이동
       }
-      
-
     }
   }
 
-  // modules에서 특정 스텝 데이터만 조회
+  // modules에서 특정 스텝 데이터만 조회 (현재 슬라이드의 특정 스텝 모듈만)
   const getStepModules = (step: number) => {
-    const stepModules = curLesson?.sliders[curSlideIndex].modules.filter((module) => module?.visibility?.type === 'step' && module.visibility.value === step)
+    const stepModules = curLesson?.sliders[curSlideIndex].modules
+      .filter((m) => m?.visibility?.type === 'step' && m.visibility.value === step) || [];
     return stepModules
-  }
-
+  };
 
   // 새로운 모듈이 추가될 때 스크롤을 맨 아래로 이동
   useEffect(() => {
@@ -370,31 +422,54 @@ const LessonLearningScreen: React.FC<{ route: any }> = ({ route }) => {
     }, 100);
   }, [webViewLoadCount]);
 
-  // 문제 유형 모듈 반환
+  // 문제 유형 모듈 찾기
   const getProblemModule = (modules: SlideModule[]) => {
-    const found = modules.find(module => module.type === 'multipleChoice' || module.type === 'codeFillTheGap');
+    const found = modules.find(m => m.type === 'multipleChoice' || m.type === 'codeFillTheGap');
     return found ? found : null;
-  }
+  };
 
+  // ---------- ★ 결과 추출(JSON) ----------
+  function extractResultsFromLesson(lesson: Lesson, lid?: number | string) {
+    const modules: Record<string, any> = {};
+    (lesson.sliders || []).forEach((s) => {
+      (s.modules || []).forEach((m: any) => {
+        if (m.type === 'multipleChoice' && Array.isArray(m.questions)) {
+          const ua = m.questions?.[0]?.answer?.userAnswer ?? null;
+          const ic = m.questions?.[0]?.answer?.isCorrect ?? null;
+          if (ua !== null) modules[`${s.id}#${m.id}`] = { type: 'multipleChoice', userAnswer: ua, isCorrect: ic };
+        }
+        if (m.type === 'codeFillTheGap' && Array.isArray(m.files)) {
+          const answers = m.files?.[0]?.answers?.map((a: any) => a.userAnswer ?? null) || [];
+          const optionElIndex = m.files?.[0]?.answers?.map((a: any) => a.optionElIndex ?? null) || [];
+          if (answers.some((v: any) => v !== null)) {
+            modules[`${s.id}#${m.id}`] = { type: 'codeFillTheGap', answers, optionElIndex };
+          }
+        }
+      });
+    });
+    console.log('결과 추출 완료')
+    console.log('lesson.id : ', lesson.id);
+    console.log('lid : ', lid);
+    console.log('completed_at : ', new Date().toISOString());
+    console.log('extractResultsFromLesson : ', modules);
+
+    return {
+      lesson_id: lid ?? lesson.id,
+      completed_at: new Date().toISOString(),
+      modules
+    };
+  }
   
   if (!curLesson) return null;
-  
 
   return (
     <>
       {/* 상단 헤더 */}
       <View className="flex-row items-center gap-[16px] h-[50px] px-[16px] border-b border-[#ccc]">
-        <Pressable onPress={() => goBack()}>
-          <X width={35} height={35} fill="#ccc" />
-        </Pressable>
-        {/* <Pressable onPress={popFullSheet}>
-          <X width={35} height={35} fill="#ccc" />
-        </Pressable> */}
+        <Pressable onPress={() => goBack()}><X width={35} height={35} fill="#ccc" /></Pressable>
         <View className="flex-1 bg-[#E5E5E5] rounded-[10px] overflow-hidden">
-          <View
-            className="h-[20px] rounded-[10px] bg-[#FFC800]"
-            style={{ width: `${((visibleSlides.length) / curLesson.sliders.length) * 100}%` }}
-          />
+          <View className="h-[20px] rounded-[10px] bg-[#FFC800]"
+            style={{ width: `${((visibleSlides.length) / curLesson.sliders.length) * 100}%` }} />
         </View>
         <View className="flex-row items-center gap-[5px]">
           <HeartStraight width={35} height={35} fill="#EE5555" />
@@ -402,24 +477,19 @@ const LessonLearningScreen: React.FC<{ route: any }> = ({ route }) => {
         </View>
       </View>
 
-      {/* 슬라이드 컨텐츠 */}
-
+      {/* 본문(슬라이드 컨텐츠) */}
       <View style={{ flex: 1 }}>
       <PagerView
         ref={pagerRef}
         style={{ flex: 1 }}
         initialPage={0}
-        onPageSelected={e => {
-          setCurSlideIndex(e.nativeEvent.position);
-        }}
+        onPageSelected={e => setCurSlideIndex(e.nativeEvent.position)}
       >
         {visibleSlides.map((slide, idx) => (
           <View key={`slide-${idx}`} className="flex-1" >
             <ScrollView ref={scrollViewRef} className="flex-1">
               <View className="flex-col gap-[20px] px-[16px] pt-[20px]">
-                <Text className="text-[#111] text-[18px] font-[700]">
-                  {slide.title || '제목 없음'}
-                </Text>
+              <Text className="text-[#111] text-[18px] font-[700]">{slide.title || '제목 없음'}</Text>
 
                 {slide.modules
                   .filter(module => (module.visibility?.type === 'step' ? module.visibility.value <= curSlideStep[idx] : true))
@@ -469,6 +539,7 @@ const LessonLearningScreen: React.FC<{ route: any }> = ({ route }) => {
                           moduleIndex={moduleIndex}
                           curLesson={curLesson}
                           setCurLesson={setCurLesson}
+                          readonly={(module as any).readonly === true} // ✅ 복습모드 비활성
                         />
                         </View>
                       );
@@ -481,6 +552,7 @@ const LessonLearningScreen: React.FC<{ route: any }> = ({ route }) => {
                             moduleIndex={moduleIndex}
                             curLesson={curLesson}
                             setCurLesson={setCurLesson}
+                            readonly={(module as any).readonly === true}   // ✅ 복습모드 비활성
                             onLoadComplete={() => {
                               setWebViewLoadCount(prev => prev + 1);
                             }}
@@ -513,11 +585,9 @@ const LessonLearningScreen: React.FC<{ route: any }> = ({ route }) => {
               </Pressable>
             </View>
           </View>
-
         ))}
       </PagerView>
     </View>
-
     </>
   );
 };

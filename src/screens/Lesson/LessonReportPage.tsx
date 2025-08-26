@@ -2,20 +2,18 @@ import { useEffect, useRef } from 'react';
 import { View, Text, Pressable, Image } from 'react-native';
 import { useNavigation } from '../../contexts/NavigationContext';
 import { useUser } from '../../contexts/UserContext';
+import { useLesson } from '../../contexts/LessonContext';
 import userService from '../../services/userService';
 import lessonService from '../../services/lessonService';
 import { CaretLeft, Lightning, Target } from '../../assets/SvgIcon';
 
 // 학습 종료 페이지
 const LessonReportPage: React.FC<{ route: any }> = ({ route }) => {
-  const { curLesson, lessonResult, productId, sectionId, lessonId } = route.params;
+  const { curLesson } = route.params;
   console.log("curLesson,", curLesson);
-  console.log("lessonResult,", lessonResult);
-  console.log("productId,", productId);
-  console.log("sectionId,", sectionId);
-  console.log("lessonId,", lessonId);
-
   const { user, setUser, refreshUser } = useUser();
+  const { activeProductId } = useLesson();
+  console.log('activeProductId : ', activeProductId);
 
   // XP 계산: 추후 정답률/난이도로 확장 가능
   const calcEarnedXp = (lesson: any) => {
@@ -23,15 +21,12 @@ const LessonReportPage: React.FC<{ route: any }> = ({ route }) => {
     return 20; // 우선 고정치
   };
 
+  // 서버에 학습 기록 저장
   useEffect(() => {
-    // 서버에 학습 기록 저장
-    // 슬라이드를 통으로 저장하는게 좋을 듯,
-    
-    if (!user?.id || !productId || !sectionId || !lessonId) return;
-    console.log("curLesson,", curLesson);
+    if (!user?.id) return;
 
     // 복습 모드가 아닌 경우에만 학습 기록 저장
-    if (!lessonResult?.isReview) {
+    if (curLesson.isCompleted === false) {
       // 1) 경험치(XP) 업데이트
       const earned = calcEarnedXp(curLesson); // XP 계산
       userService.updateXp(user.id, earned).then((res) => {
@@ -46,21 +41,24 @@ const LessonReportPage: React.FC<{ route: any }> = ({ route }) => {
       // 2) 레슨 학습상태 업데이트 및 결과(results) 저장
       lessonService.completeLessonWithResult({
         userId: user.id,
-        productId: productId,
-        lessonId: lessonId,
+        myclassId: curLesson.myclassId,
+        lessonId: curLesson.lessonId,
         result: curLesson,
       }).then((res) => {
         console.log("2) 학습 기록 저장 res,", res);
+        if (!res) {
+          console.error("학습 기록 저장 실패: 서버 응답이 false입니다.");
+        }
       }).catch((err) => {
-        console.log("학습 기록 저장 실패:", err);
+        console.error("학습 기록 저장 실패:", err);
       });
 
       // 3) 잔디 추가 및 총 학습 일수 업데이트
       userService.postStudyHeatmap({
         userId: user.id,
-        productId: productId,
-        sectionId: sectionId,
-        lessonId: lessonId,
+        productId: activeProductId ?? 0,
+        sectionId: curLesson.sectionId,
+        lessonId: curLesson.lessonId,
       }).then(async (res) => {
         console.log("3) 학습 일수 업데이트 res,", res);
         await refreshUser();
@@ -70,7 +68,7 @@ const LessonReportPage: React.FC<{ route: any }> = ({ route }) => {
     } else {
       console.log("복습 모드 - 학습 기록 저장 건너뜀");
     }
-  }, [user?.id, productId, sectionId, lessonId, curLesson, lessonResult]);
+  }, []);
 
   return (
     <View className="relative flex-1">
